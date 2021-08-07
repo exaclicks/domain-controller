@@ -44,8 +44,18 @@ class DailyQuote extends Command
         $domains = Domain::all();
 
         foreach ($domains as $domain) {
+            $opts = [
+                "http" => [
+                    "method" => "GET",
+                    "header" => "Accept-language: tr\r\n" .
+                        "Cookie: foo=bar\r\n"
+                ]
+            ];
+            
+            // DOCS: https://www.php.net/manual/en/function.stream-context-create.php
+            $context = stream_context_create($opts);
+            $html = file_get_contents($domain->name, false, $context);
 
-            $html = file_get_contents($domain->name);
 
             $search_word= "The requested URL could not be retrieved";
             $isBanned = strpos($html, $search_word);
