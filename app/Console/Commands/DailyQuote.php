@@ -44,7 +44,7 @@ class DailyQuote extends Command
 
 
 // list of country codes to use
-$countries = array('TR');
+$countries = array('tr');
 
 // get new control client for connecting to Tor's control port
 $tc = new ControlClient();
