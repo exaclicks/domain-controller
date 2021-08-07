@@ -25,8 +25,7 @@
             <th>Name</th>
             <th>Hosting</th>
             <th>Status</th>
-            <th>Bought Time</th>
-            <th>Finish Time</th>
+            <th>Aktivetion Date</th>
             <th width="280px">Action</th>
         </tr>
         @foreach ($domains as $domain)
@@ -35,12 +34,11 @@
                 <td>{{ $domain->name }}</td>
                 <td>{{ $domain->hosting }}</td>
                 @if ($domain->status === 0)
-                <td style="background-color:green;color:white;">Sorun Yok</td>
+                <td style="background-color:green;color:white;">Aktif</td>
                 @else
-                <td style="background-color:red;color:white;">Banlandı</td>
+                <td style="background-color:red;color:white;">Deaktif</td>
                 @endif
-                <td>{{$domain->bought_time}}</td>
-                <td>{{$domain->finish_time}}</td>
+                <td>{{$domain->created_at}}</td>
                 <td>
                     <form action="{{ route('domains.destroy', $domain->id) }}" method="POST">
 
