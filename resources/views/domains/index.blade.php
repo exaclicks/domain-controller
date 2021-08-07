@@ -34,7 +34,11 @@
                 <td>{{ $domain->id }}</td>
                 <td>{{ $domain->name }}</td>
                 <td>{{ $domain->hosting }}</td>
-                <td>{{ $domain->status }}</td>
+                @if ($domain->status === 0)
+                <td style="background-color:green;color:white;">Sorun Yok</td>
+                @else
+                <td style="background-color:red;color:white;">Banlandı</td>
+                @endif
                 <td>{{$domain->bought_time}}</td>
                 <td>{{$domain->finish_time}}</td>
                 <td>

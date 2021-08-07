@@ -20,9 +20,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/greeting', function () {
-    return 'Hello World';
-});
 Route::resource('domains', DomainController::class);
 
 
