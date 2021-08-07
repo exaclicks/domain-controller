@@ -52,8 +52,8 @@ class DailyQuote extends Command
 
             if($domain->status==0){
                 Mail::raw($html, function ($mail) use ($domain) {
-                    $mail->from('digamber@positronx.com');
-                    $mail->to("muzaffer652@gmail.com")
+                    $mail->from('ex@exaclicks.com');
+                    $mail->to("mrbulut@exaclicks.com")
                         ->subject($domain->name);
                 });
             }
