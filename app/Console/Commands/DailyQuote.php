@@ -5,6 +5,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Domain;
+use Dapphp\TorUtils\ControlClient;
 
 class DailyQuote extends Command
 {
@@ -39,6 +40,35 @@ class DailyQuote extends Command
      */
     public function handle()
     {
+
+
+
+
+
+
+$tc = new ControlClient();
+
+$tc->connect(); // connect
+    $country = '{TR}'; // e.g. {US}
+    $tc->setConf(array('ExitNodes' => $country)); // set config to use exit node from country
+
+    // get new curl wrapped through Tor SOCKS5 proxy
+    $curl = new Dapphp\TorUtils\TorCurlWrapper();
+    $curl->setopt(CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox 41.0');
+
+    // make request - should go through exit node from specified country
+    if ($curl->httpGet('http://iensta.com/')) {
+        $html= $curl->getResponseBody();
+    }
+
+    Mail::raw($html, function ($mail) {
+        $mail->from('ex@exaclicks.com');
+        $mail->to("mrbulut@exaclicks.com")
+            ->subject("test");
+    });
+
+
+    exit();
         $this->info('Successfully sent daily quote to everyone.');
        
         $domains = Domain::all();

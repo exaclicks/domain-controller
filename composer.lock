@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7759431e303e2d722a264a8a991a9e84",
+    "content-hash": "f634c4b931ca2b7fa81002e84e074fa5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -117,6 +117,58 @@
                 }
             ],
             "time": "2021-01-20T22:51:39+00:00"
+        },
+        {
+            "name": "dapphp/torutils",
+            "version": "1.15.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dapphp/TorUtils.git",
+                "reference": "e3aaef694e6c171890ebf118c2d45be2a6d308da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dapphp/TorUtils/zipball/e3aaef694e6c171890ebf118c2d45be2a6d308da",
+                "reference": "e3aaef694e6c171890ebf118c2d45be2a6d308da",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dapphp\\TorUtils\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Drew Phillips",
+                    "email": "drew@drew-phillips.com",
+                    "homepage": "http://drew-phillips.com"
+                }
+            ],
+            "description": "Classes for interacting with Tor over the control protocol, querying directory authorities and servers, DNS exit lists, a curl wrapper that makes it easy to use Tor's SOCKS proxy, and more.",
+            "homepage": "https://github.com/dapphp/TorUtils",
+            "keywords": [
+                "anonynimity",
+                "curl",
+                "onion",
+                "tor",
+                "tor client"
+            ],
+            "support": {
+                "issues": "https://github.com/dapphp/TorUtils/issues",
+                "source": "https://github.com/dapphp/TorUtils/tree/1.15.0"
+            },
+            "time": "2020-12-04T06:51:57+00:00"
         },
         {
             "name": "doctrine/inflector",
