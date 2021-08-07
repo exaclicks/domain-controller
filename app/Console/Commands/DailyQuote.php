@@ -43,36 +43,8 @@ class DailyQuote extends Command
     {
 
 
-// list of country codes to use
-$countries = array('tr');
-
-// get new control client for connecting to Tor's control port
-$tc = new ControlClient();
-
-$tc->connect(); // connect
-$html='';
-foreach($countries as $country) {
 
 
-    // get new curl wrapped through Tor SOCKS5 proxy
-    $curl = new TorCurlWrapper();
-    $curl->setopt(CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox 41.0');
-
-    // make request - should go through exit node from specified country
-    if ($curl->httpGet('http://iensta.com')) {
-        $html= $curl->getResponseBody();
-    }
-}
-
-
-    Mail::raw($html, function ($mail) {
-        $mail->from('ex@exaclicks.com');
-        $mail->to("mrbulut@exaclicks.com")
-            ->subject("test");
-    });
-
-
-    exit();
         $this->info('Successfully sent daily quote to everyone.');
        
         $domains = Domain::all();
