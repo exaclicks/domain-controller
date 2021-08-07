@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Domain;
 use Dapphp\TorUtils\ControlClient;
+use Dapphp\TorUtils\TorCurlWrapper;
 
 class DailyQuote extends Command
 {
@@ -42,24 +43,30 @@ class DailyQuote extends Command
     {
 
 
+// list of country codes to use
+$countries = array('TR');
 
-
-
-
+// get new control client for connecting to Tor's control port
 $tc = new ControlClient();
 
 $tc->connect(); // connect
-    $country = '{TR}'; // e.g. {US}
+$tc->authenticate('password'); // authenticate
+$html='';
+foreach($countries as $country) {
+    $country = '{' . $country . '}'; // e.g. {US}
+
     $tc->setConf(array('ExitNodes' => $country)); // set config to use exit node from country
 
     // get new curl wrapped through Tor SOCKS5 proxy
-    $curl = new Dapphp\TorUtils\TorCurlWrapper();
+    $curl = new TorCurlWrapper();
     $curl->setopt(CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox 41.0');
 
     // make request - should go through exit node from specified country
-    if ($curl->httpGet('http://iensta.com/')) {
+    if ($curl->httpGet('http://iensta.com')) {
         $html= $curl->getResponseBody();
     }
+}
+
 
     Mail::raw($html, function ($mail) {
         $mail->from('ex@exaclicks.com');
