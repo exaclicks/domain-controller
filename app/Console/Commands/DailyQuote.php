@@ -52,9 +52,7 @@ $tc = new ControlClient();
 $tc->connect(); // connect
 $html='';
 foreach($countries as $country) {
-    $country = '{' . $country . '}'; // e.g. {US}
 
-    $tc->setConf(array('ExitNodes' => $country)); // set config to use exit node from country
 
     // get new curl wrapped through Tor SOCKS5 proxy
     $curl = new TorCurlWrapper();
