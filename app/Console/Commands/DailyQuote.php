@@ -50,7 +50,6 @@ $countries = array('TR');
 $tc = new ControlClient();
 
 $tc->connect(); // connect
-$tc->authenticate('password'); // authenticate
 $html='';
 foreach($countries as $country) {
     $country = '{' . $country . '}'; // e.g. {US}
