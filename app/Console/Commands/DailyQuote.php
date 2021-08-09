@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Console\Commands;
+
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\Domain;
-use Dapphp\TorUtils\ControlClient;
-use Dapphp\TorUtils\TorCurlWrapper;
+use phpseclib3\Net\SSH2;
 
 class DailyQuote extends Command
 {
@@ -32,7 +32,7 @@ class DailyQuote extends Command
     public function __construct()
     {
         parent::__construct();
-    }  
+    }
 
     /**
      * Execute the console command.
@@ -45,53 +45,57 @@ class DailyQuote extends Command
 
 
 
-        $this->info('Successfully sent daily quote to everyone.');
-       
+       // status -1 ise sorun var kodda sorun var.
+
+       // status 0 ise çalışıyor
+
+       // status 1 ise banlandı
+
+       // status 2 ise taşındı.
+
+        $ssh = new SSH2('5.2.82.44');
+        if (!$ssh->login('root', 'g#bpyOrvjt')) {
+            $this->info('ssh connection failed');
+        }
+
+        $moved_text = "The document has moved ";
+        $isMoved = "";
+
+
         $domains = Domain::all();
 
         foreach ($domains as $domain) {
-            $opts = [
-                "http" => [
-                    "method" => "GET",
-                    "header" => "Accept-language: tr\r\n" .
-                        "Cookie: foo=bar\r\n"
-                ]
-            ];
-            
-            // DOCS: https://www.php.net/manual/en/function.stream-context-create.php
-            $context = stream_context_create($opts);
-            $html = file_get_contents($domain->name, false, $context);
+            $status = -1;
+            $link = $domain->name;
+            $html = $ssh->exec('curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" ' . $link);
 
 
-            $search_word= "The requested URL could not be retrieved";
-            $isBanned = strpos($html, $search_word);
-
-            if($domain->status==0){
-                Mail::raw($html, function ($mail) use ($domain) {
-                    $mail->from('ex@exaclicks.com');
-                    $mail->to("mrbulut@exaclicks.com")
-                        ->subject($domain->name);
-                });
+            if ($html != '') {
+                $isMoved = strpos($html, $moved_text);
+                if ($isMoved!='') {
+                    $status = 2;
+                } else {
+                    $status = 0;
+                }
+            } else {
+                $status = 1;
             }
-           
-
-         /*     if(isset($isBanned) && $domain->status==0){
-
-                $domain->status = 1;
+            if ($domain->status != 1) {
+                $domain->status = $status;
                 $domain->save();
 
-                Mail::raw($domain->name ." engellendi.", function ($mail) use ($domain) {
-                    $mail->from('digamber@positronx.com');
-                    $mail->to("muzaffer652@gmail.com")
-                        ->subject($domain->name);
-                });
-            }  */
 
-
-          
+                if($status == 1){
+                    Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
+                        $mail->from('ex@exaclicks.com');
+                        $mail->to("mrbulut@exaclicks.com")
+                            ->subject($domain->name);
+                    });
+                }
+            
+            }
         }
 
-      
-        $this->info('Successfully sent daily quote to everyone.');
+
     }
 }

@@ -33,10 +33,14 @@
                 <td>{{ $domain->id }}</td>
                 <td>{{ $domain->name }}</td>
                 <td>{{ $domain->hosting }}</td>
-                @if ($domain->status === 0)
+                @if ($domain->status === -1)
+                <td style="background-color:orange;color:white;">Hata var!!!</td>
+                @elseif($domain->status === 0)
                 <td style="background-color:green;color:white;">Aktif</td>
-                @else
+                @elseif($domain->status === 1)
                 <td style="background-color:red;color:white;">Deaktif</td>
+                @elseif($domain->status === 2)
+                <td style="background-color:blue;color:white;">Taşınmış</td>
                 @endif
                 <td>{{$domain->created_at}}</td>
                 <td>
