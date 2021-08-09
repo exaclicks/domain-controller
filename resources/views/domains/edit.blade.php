@@ -46,6 +46,21 @@
                     <strong>status:</strong>
                     <input type="text" name="status" class="form-control" placeholder="{{ $domain->status }}"
                         value="{{ $domain->status }}">
+
+
+                        <p>
+
+       // status -1 ise sorun var kodda sorun var. <br>
+
+// status 0 ise çalışıyor <br>
+
+// status 1 ise banlandı <br>
+
+// status 2 ise taşındı. <br>
+
+// status 3 ise banlandıgı hakkında email gönderildi. <br>
+
+                        </p>
                 </div>
             </div>
             

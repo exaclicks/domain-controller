@@ -41,14 +41,16 @@
                 <td style="background-color:red;color:white;">Deaktif</td>
                 @elseif($domain->status === 2)
                 <td style="background-color:blue;color:white;">Taşınmış</td>
+                @elseif($domain->status === 3)
+                <td style="background-color:red;color:white;">Deaktif - Mail gönderildi.</td>
                 @endif
                 <td>{{$domain->created_at}}</td>
                 <td>
                     <form action="{{ route('domains.destroy', $domain->id) }}" method="POST">
 
-                        <a href="{{ route('domains.show', $domain->id) }}" title="show">
+<!--                         <a href="{{ route('domains.show', $domain->id) }}" title="show">
                             <i class="fas fa-eye text-success  fa-lg"></i>
-                        </a>
+                        </a> -->
 
                         <a href="{{ route('domains.edit', $domain->id) }}">
                             <i class="fas fa-edit  fa-lg"></i>

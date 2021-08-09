@@ -53,6 +53,8 @@ class DailyQuote extends Command
 
        // status 2 ise taşındı.
 
+        // status 3 ise banlandıgı hakkında email gönderildi.
+
         $ssh = new SSH2('5.2.82.44');
         if (!$ssh->login('root', 'g#bpyOrvjt')) {
             $this->info('ssh connection failed');
@@ -80,7 +82,7 @@ class DailyQuote extends Command
             } else {
                 $status = 1;
             }
-            if ($domain->status != 1) {
+            if ($domain->status != 1 && $domain->status!=3 ) {
                 $domain->status = $status;
                 $domain->save();
 
@@ -91,6 +93,15 @@ class DailyQuote extends Command
                         $mail->to("mrbulut@exaclicks.com")
                             ->subject($domain->name);
                     });
+
+                    Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
+                        $mail->from('ex@exaclicks.com');
+                        $mail->to("ali@exaclicks.com")
+                            ->subject($domain->name);
+                    });
+
+                    $domain->status = 3;
+                    $domain->save();
                 }
             
             }
