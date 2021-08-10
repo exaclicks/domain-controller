@@ -5,8 +5,10 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
+use App\Models\BannedList;
 use App\Models\Domain;
 use phpseclib3\Net\SSH2;
+use Carbon\Carbon;
 
 class DailyQuote extends Command
 {
@@ -55,6 +57,8 @@ class DailyQuote extends Command
 
         // status 3 ise banlandıgı hakkında email gönderildi.
 
+     
+
         $ssh = new SSH2('5.2.82.44');
         if (!$ssh->login('root', 'g#bpyOrvjt')) {
             $this->info('ssh connection failed');
@@ -73,6 +77,7 @@ class DailyQuote extends Command
             $html = $ssh->exec($command);
 
 
+
             if ($html != '') {
                 $isMoved = strpos($html, $moved_text);
                 if ($isMoved!='') {
@@ -83,6 +88,7 @@ class DailyQuote extends Command
             } else {
                 $status = 1;
             }
+          
             if ($domain->status != 1 && $domain->status!=3 ) {
               
 
@@ -96,26 +102,57 @@ class DailyQuote extends Command
                      if($response!=''){
                         $isCanConnectWithThisServer = true;
                      }
-
+                     
 
                      if($isCanConnectWithThisServer){
-                        $domain->status = $status;
-                        $domain->save();
+                        $bannedItem = new BannedList();
+                        $getBannedItem = BannedList::where('domain_id', $domain->id);
+                        
+                        $todayDate = Carbon::now();
+                        $bannedItem->how_many_times = 1;
+                    
+                        if($getBannedItem->first()){
+                            $bannedItem  = $getBannedItem->first();
+                            $bannedItem->how_many_times = $bannedItem->how_many_times + 1;
+                            $diff = $todayDate->diffInMinutes($bannedItem->banned_time);
+                            if($diff >= 30){
+                                $bannedItem->how_many_times = 1;
+                            }
 
-                        Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
-                            $mail->from('ex@exaclicks.com');
-                            $mail->to("mrbulut@exaclicks.com")
-                                ->subject($domain->name);
-                        });
-    
-                        Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
-                            $mail->from('ex@exaclicks.com');
-                            $mail->to("ali@exaclicks.com")
-                                ->subject($domain->name);
-                        }); 
-    
-                        $domain->status = 3;
-                        $domain->save();
+                            $bannedItem->banned_time = $todayDate;
+                            $bannedItem->save();
+                        }else{
+                            $bannedItem->domain_id = $domain->id;
+                            $bannedItem->banned_time = $todayDate;
+                            
+                            $bannedItem->save();
+                        }
+
+                        
+
+
+                        if($bannedItem->how_many_times > 15){
+                            $domain->status = $status;
+                            $domain->save();
+                            Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
+                                $mail->from('ex@exaclicks.com');
+                                $mail->to("mrbulut@exaclicks.com")
+                                    ->subject($domain->name);
+                            });
+        
+
+                             Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
+                                $mail->from('ex@exaclicks.com');
+                                $mail->to("ali@exaclicks.com")
+                                    ->subject($domain->name);
+                            }); 
+        
+                            $domain->status = 3;
+                            $domain->save();
+                        }
+
+
+                        
                      }
                    
                 }

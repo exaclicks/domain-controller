@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
+use App\Models\BannedList;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use phpseclib3\Net\SSH2;
 /*
@@ -57,11 +59,24 @@ Route::get('/yeniicerik', function () {
 
 
 
+
 Route::get('/', function () {
 
+/*     $getBannedItem = BannedList::where('domain_id', 1);
+    $getBannedItem = $getBannedItem->first();
+    $day = Carbon::now();
+    $date = Carbon::createFromFormat('Y-m-d H:i:s', $day);
+    $date->subDay(); // Subtracts 1 
+    $getBannedItem->banned_time =$date;
+    $getBannedItem->save();
+ */
 
-   
+   // BannedList::truncate();
 
+/*    $bannedItem =  BannedList::all();
+   foreach ($bannedItem  as $key => $value) {
+      echo $value->id."--".$value->domain_id."---".$value->how_many_times."---".$value->banned_time."<br>";
+   }  */
     return view('welcome');
     exit();
   
