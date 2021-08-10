@@ -57,6 +57,14 @@ Route::get('/yeniicerik', function () {
 
 });
 
+Route::get('/banlanmalogu', function () {
+       // BannedList::truncate();
+
+   $bannedItem =  BannedList::all();
+   foreach ($bannedItem  as $key => $value) {
+      echo $value->id."--".$value->domain_id."---".$value->how_many_times."---".$value->banned_time."<br>";
+   }  
+});
 
 
 
