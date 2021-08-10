@@ -62,7 +62,8 @@ Route::get('/', function () {
 
    
 
-
+    return view('welcome');
+    exit();
   
 
     $moved_text = "The document has moved ";
@@ -82,8 +83,7 @@ Route::get('/', function () {
     echo $html;
 exit();
 
-return view('welcome');
-exit();
+
 
 
 
