@@ -67,7 +67,7 @@ class DailyQuote extends Command
         $ssh = new SSH2($TR_SERVER_IP);
         if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
             Mail::raw(" this server don't connect to ".$TR_SERVER_IP, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM,$TR_SERVER_IP)  {
-                $mail->from('info@domain-controller.com');
+                $mail->from('ex@exaclicks.com');
                 $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
                     ->subject(" this server don't connect to ".$TR_SERVER_IP);
             }); 
