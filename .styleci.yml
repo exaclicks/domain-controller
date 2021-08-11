@@ -1,13 +1,14 @@
-php:
-  preset: laravel
-  disabled:
-    - no_unused_imports
-  finder:
-    not-name:
-      - index.php
-      - server.php
-js:
-  finder:
-    not-name:
-      - webpack.mix.js
-css: true
+preset: laravel
+
+enabled:
+  - align_double_arrow
+
+disabled:
+  - unused_use
+
+finder:
+  not-name:
+    - index.php
+    - server.php
+    - CheckIsUserActivated.php
+    - SocialController.php

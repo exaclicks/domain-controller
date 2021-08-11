@@ -20,7 +20,8 @@ class CreateDomainsTable extends Migration
             $table->integer('status');
             $table->timestamp('bought_time')->nullable();
             $table->timestamp('finish_time')->nullable();
-
+            $table->integer('domain_status')->default('0');
+            $table->timestamps();
             
         });
     }
