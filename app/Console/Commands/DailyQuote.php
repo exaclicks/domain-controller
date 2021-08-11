@@ -66,7 +66,7 @@ class DailyQuote extends Command
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
         $ssh = new SSH2($TR_SERVER_IP);
         if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
-            
+            exit();
             Mail::raw(" this server don't connect to ".$TR_SERVER_IP, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM,$TR_SERVER_IP)  {
                 $mail->from('ex@exaclicks.com');
                 $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
