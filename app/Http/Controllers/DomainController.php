@@ -54,7 +54,7 @@ class DomainController extends Controller
         $domain->save();
 
         return redirect()->route('domains.index')
-            ->with('success', 'Domain created successfully.');
+            ->with('success', 'Domain oluşturma başarıyla tamamlandı');
     }
 
     /**
@@ -96,7 +96,7 @@ class DomainController extends Controller
         $domain->update($request->all());
 
         return redirect()->route('domains.index')
-            ->with('success', 'Domain updated successfully');
+            ->with('success', 'Domain güncellemesi başarıyla tamamlandı');
     }
     /**
      * Remove the specified resource from storage.
@@ -109,6 +109,6 @@ class DomainController extends Controller
         $domain->delete();
 
         return redirect()->route('domains.index')
-            ->with('success', 'Domain deleted successfully');
+            ->with('success', 'Domain kaldırma başarıyla tamamlandı');
     }
 }

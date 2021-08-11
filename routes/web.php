@@ -5,8 +5,12 @@ use App\Http\Controllers\DomainController;
 use App\Models\BannedList;
 use App\Models\Domain;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
+use DigitalOceanV2\Client;
+use DigitalOceanV2\ResultPager;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request as HttpRequest;
 use phpseclib3\Net\SSH2;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,67 +24,149 @@ use phpseclib3\Net\SSH2;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
-Route::get('/test', function () {
+Route::get('/moveToNewDomain/{oldDomainName}/{newDomainName}', function ($oldDomainName, $newDomainName) {
+    $progressIsSuccess = false;
+    $addNewDropletRequest = HttpRequest::create('/addNewDroplet/' . $newDomainName, 'GET');
+    $dropletId = Route::dispatch($addNewDropletRequest)->getOriginalContent();
 
-   $domains =  Domain::all();
-
-   foreach ( $domains as $key => $value) {
-      echo $key."---".$value."<br>";
-   }
+    $addNewDomainRecordsRequest = HttpRequest::create('/addNewDomainRecords/' . $newDomainName . "/" . $dropletId, 'GET');
+    $progressIsSuccess = Route::dispatch($addNewDomainRecordsRequest)->getOriginalContent();
+    if($progressIsSuccess){
+        return "Taşıma başarılı.";
+    }else {
+        return "Taşıma Başarısız.";
+    }
 });
 
 
-Route::get('/yeniicerik', function () {
+Route::get('/addNewDomainRecords/{newDomainName}/{dropletId}', function ($newDomainName, $dropletId) {
 
-    $text = "Firma'nın yeni üyelere özel olarak düzenlediği ilk üyelik bonusu kampanyası oldukça cazip. Bonustan üye olduktan sonra ilk para yatırma işleminde yararlanılıyor. Bu nedenle yatırım yaparken bonus alacaksanız eğer maksimum tutarda almanızı tavsiye ederiz.
+    //259223638
+    try {
 
-    Yeni üyelere özel olan ilk üyelik bonusu tam olarak 1.000 TL ve yatırılan paranın %200'ü oranında veriliyor. Yani 500 TL yatırım yaptığınızda 1.000 TL bonus alabiliyorsunuz. En az 10 Tl yatırarak da bu bonustan yararlanabiliyorsunuz.. Alınan bonus spor bahislerinde, casino oyunlarında ve sanal bahislerde kullanılabiliyor.
-    
-    İlk kez yatırım yapanlara özel bir başka bonus ise hoşgeldin bonusu paketidir. Bu pakette ise 1.500 Euro ve 150 Freespin alma imkanı var. En az 10 Euro yatırarak bu kampanyadan yararlanmak mümkün. İlk dört yatırıma özel olarak verilmektedir. Düzenli yatırım yapan ve yüksek tutarda bonus almak isteyenler için kaçırılmayacak bir fırsat!";
+        $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+        $client = new Client();
+        $client->authenticate($token);
+        $domainRecord = $client->domainRecord();
+        $droplet = $client->droplet();
+        sleep(10);
+        comeBack:
+        $droplet123 = $droplet->getById($dropletId);
+        if(count($droplet123->networks) == 0){
+            sleep(5);
+            goto comeBack;
+        }
 
+        $dropletIpAdress = $droplet123->networks[1]->ipAddress;
+        $hostingIp = $dropletIpAdress;
+        $digitalocean_nameservers_ipies = ["173.245.58.51", "173.245.59.41", "198.41.222.173"];
+        $new_nameservers = ['ns1.' . $newDomainName, 'ns2.' . $newDomainName, 'ns3.' . $newDomainName];
+        $domainRecordInfos = $domainRecord->getAll($newDomainName);
+        //CREATE NEW DOMAİN RECORDS
+        $domainRecordInfos = $domainRecord->getAll($newDomainName);
+
+        //Delete old dns
+        foreach ($domainRecordInfos as $value) {
+            if ($value->type != "SOA") {
+                $domainRecord->remove($newDomainName, $value->id);
+            }
+        }
+
+        //create new dns and nameservers;
+        $created = $domainRecord->create($newDomainName, 'A', '@', $hostingIp, null, null, null, null, null, 3600);
+        $created = $domainRecord->create($newDomainName, 'A', 'www', $hostingIp, null, null, null, null, null, 3600);
+        $created = $domainRecord->create($newDomainName, 'NS', '@', $new_nameservers[1] . ".", null, null, null, null, null, 86400);
+        $created = $domainRecord->create($newDomainName, 'NS', '@', $new_nameservers[1] . ".", null, null, null, null, null, 86400);
+        $created = $domainRecord->create($newDomainName, 'NS', '@', $new_nameservers[2] . ".", null, null, null, null, null, 86400);
+        $created = $domainRecord->create($newDomainName, 'A', $new_nameservers[0], $digitalocean_nameservers_ipies[0], null, null, null, null, null, 3600);
+        $created = $domainRecord->create($newDomainName, 'A', $new_nameservers[1], $digitalocean_nameservers_ipies[1], null, null, null, null, null, 3600);
+        $created = $domainRecord->create($newDomainName, 'A', $new_nameservers[2], $digitalocean_nameservers_ipies[2], null, null, null, null, null, 3600);
+
+
+        return true;
+    } catch (\Throwable $th) {
+        return false;
+    }
+});
+
+
+Route::get('/addNewDroplet/{newDomainName}', function ($newDomainName) {
+    $dropletId = 0;
+    try {
+
+        $snapshotsDropletId = '89112810';
+        $location = 'fra1';
+        $device = 's-1vcpu-1gb';
+        $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+        $client = new Client();
+        $client->authenticate($token);
+        $droplet = $client->droplet();
+
+
+
+
+        $sshKeysRequest = HttpRequest::create('/checkSshKeys', 'GET');
+        $sshKeys = Route::dispatch($sshKeysRequest)->getOriginalContent();
+
+        $snapIdRequest = HttpRequest::create('/checkSnapshots/' . $snapshotsDropletId, 'GET');
+        $snapId = Route::dispatch($snapIdRequest)->getOriginalContent();
+
+
+        $created = $droplet->create($newDomainName, $location, $device, $snapId, false, false, false, $sshKeys);
+        $dropletId = $created->id;
+    } catch (\Throwable $th) {
+        return $dropletId;
+    }
+
+
+    return $dropletId;
+});
+
+Route::get('/checkSnapshots/{dropletId}', function ($dropletId) {
+    $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
     $client = new Client();
-
-    $level = "good"; // new sentence;
-    $level2 = "one"; // fixgrammer;
-    $dest = "tr";
-
-
-    $api = "https://aiarticlespinner.co/frontend/rewritenow";
-    $response = $client->request('POST',   $api, [
-        'user-agent'             => "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Mobile Safari/537.36",
-        'origin'          => "https://aiarticlespinner.co",
-        'referer'         => "https://aiarticlespinner.co/",
-        'protocols'       => ['http', 'https'],
-        "content-type" =>"application/x-www-form-urlencoded; charset=UTF-8",
-       
-        "cookie" =>'G_ENABLED_IDPS=google; __gads=ID=1241ef94ed69b331-22a90a199bc900f5:T=1628531273:RT=1628531273:S=ALNI_MaODW7PCPWdtyvVcpf28oXcLAmrDw; G_AUTHUSER_H=0; ci_session=a:9:{s:10:"session_id";s:32:"f4b32b053a61a36a262c0120f2852e4f";s:10:"ip_address";s:14:"195.158.85.225";s:10:"user_agent";s:120:"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.164 Safari/537.3";s:13:"last_activity";i:1628536719;s:9:"user_data";s:0:"";s:6:"userid";s:3:"252";s:8:"username";s:14:"Muzaffer Bulut";s:5:"email";s:17:"miksmtr@gmail.com";s:10:"is_premium";s:1:"0";}e0992d630b58a458f267f4dbcd5aaa48; FCCDCF=[null,null,["[[],[],[],[],null,null,true]",1628536741290],null,null]',
-        'form_params' => [
-            'text' => $text,
-            'level' => $level,
-            'dest' => $dest
-        ]
-    ]);
-    print_r($response); // OK
-
-
-
-
+    $droplet = $client->droplet();
+    $client->authenticate($token);
+    $images = $droplet->getSnapshots($dropletId);
+    // print_r($images[count($images)-1]);
+    return $images[count($images) - 1]->id;
 });
+
+Route::get('/checkSshKeys', function () {
+    $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+    $client = new Client();
+    $client->authenticate($token);
+    $keyIds = [];
+
+    // return the key api
+    $key = $client->key();
+
+    // return a collection of Key entity
+    $keys = $key->getAll();
+
+    foreach ($keys as $key => $value) {
+        array_push($keyIds, $value->id);
+    }
+    // print_r($images[count($images)-1]);
+    return $keyIds;
+});
+
+
 
 Route::get('/banlanmalogu', function () {
-       // BannedList::truncate();
+    // BannedList::truncate();
 
-   $bannedItem =  BannedList::all();
-   foreach ($bannedItem  as $key => $value) {
-      echo $value->id."--".$value->domain_id."---".$value->how_many_times."---".$value->banned_time."<br>";
-   }  
+    $bannedItem =  BannedList::all();
+    foreach ($bannedItem  as $key => $value) {
+        echo $value->id . "--" . $value->domain_id . "---" . $value->how_many_times . "---" . $value->banned_time . "<br>";
+    }
 });
 
 
 
 Route::get('/', function () {
 
-/*     $getBannedItem = BannedList::where('domain_id', 1);
+    /*     $getBannedItem = BannedList::where('domain_id', 1);
     $getBannedItem = $getBannedItem->first();
     $day = Carbon::now();
     $date = Carbon::createFromFormat('Y-m-d H:i:s', $day);
@@ -89,15 +175,15 @@ Route::get('/', function () {
     $getBannedItem->save();
  */
 
-   // BannedList::truncate();
+    // BannedList::truncate();
 
-/*    $bannedItem =  BannedList::all();
+    /*    $bannedItem =  BannedList::all();
    foreach ($bannedItem  as $key => $value) {
       echo $value->id."--".$value->domain_id."---".$value->how_many_times."---".$value->banned_time."<br>";
    }  */
     return view('welcome');
     exit();
-  
+
 
     $moved_text = "The document has moved ";
 
@@ -114,7 +200,7 @@ Route::get('/', function () {
 
 
     echo $html;
-exit();
+    exit();
 
 
 
@@ -123,7 +209,7 @@ exit();
 
     if ($html != '') {
         $isMoved = strpos($html, $moved_text);
-        if ($isMoved!='') {
+        if ($isMoved != '') {
             $status = "moved";
         } else {
             $status = "working";
@@ -135,9 +221,6 @@ exit();
     echo $status . "<br><br>";
 
     echo $html;
-
-
-
 });
 
 
