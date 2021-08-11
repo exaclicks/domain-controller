@@ -73,6 +73,8 @@ class DailyQuote extends Command
                 $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
                     ->subject(" this server don't connect to ".$TR_SERVER_IP);
             }); 
+
+            exit();
            
         }
 
