@@ -15,7 +15,7 @@ class UpdateDomainsTable extends Migration
     {
 
         Schema::table('domains', function (Blueprint $table) {
-            $table->integer('domain_status');
+            $table->integer('domain_status')->default('0');
         });
 
     }
