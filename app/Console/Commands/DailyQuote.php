@@ -64,6 +64,8 @@ class DailyQuote extends Command
         $TR_SERVER_PASSWORD = Config::get('values.TR_SERVER_PASSWORD');
         $WHICH_MAIL_FOR_BANNED = Config::get('values.WHICH_MAIL_FOR_BANNED');
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
+        exit();
+       
         $ssh = new SSH2($TR_SERVER_IP);
         if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
             exit();
