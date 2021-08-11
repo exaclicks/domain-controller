@@ -102,6 +102,7 @@ class DailyQuote extends Command
             } else {
                 $status = 1;
             }
+            $domain->save();
           
             if ($domain->status != 1 && $domain->status!=3 ) {
               
@@ -145,7 +146,7 @@ class DailyQuote extends Command
                         
 
 
-                        if($bannedItem->how_many_times > 20){
+                        if($bannedItem->how_many_times > 0){
 
                             if($ACTION_TYPE==0){
                                 $domain->status = $status;
@@ -155,12 +156,10 @@ class DailyQuote extends Command
                                     $mail->from('info@domain-controller.com');
                                     $mail->to($WHICH_MAIL_FOR_BANNED)
                                         ->subject($domain->name);
-                                }); 
-            
+                                });  
+                                $domain->domain_status = 1; //  1 taşınması gerekiyor. 2 taşındı.
                                 $domain->status = 3;
                                 $domain->save();
-                            }else{
-                                //code for redirect and move
                             }
                             
                         }

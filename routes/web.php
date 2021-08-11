@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
 use App\Models\BannedList;
+use App\Models\Domain;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use phpseclib3\Net\SSH2;
@@ -20,10 +21,12 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
 Route::get('/test', function () {
-    $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
 
-    echo $TR_SERVER_IP."--".$TR_SERVER_IP."<br>";
+   $domains =  Domain::all();
 
+   foreach ( $domains as $key => $value) {
+      echo $key."---".$value."<br>";
+   }
 });
 
 
