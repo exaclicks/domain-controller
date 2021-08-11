@@ -16,8 +16,15 @@ use phpseclib3\Net\SSH2;
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
+Route::get('/test', function () {
+    $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
 
+    echo $TR_SERVER_IP."--".$TR_SERVER_IP."<br>";
+
+});
 
 
 Route::get('/yeniicerik', function () {

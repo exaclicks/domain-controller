@@ -9,6 +9,8 @@ use App\Models\BannedList;
 use App\Models\Domain;
 use phpseclib3\Net\SSH2;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 class DailyQuote extends Command
 {
@@ -56,12 +58,19 @@ class DailyQuote extends Command
        // status 2 ise taşındı.
 
         // status 3 ise banlandıgı hakkında email gönderildi.
-
-     
-
-        $ssh = new SSH2('5.2.82.44');
-        if (!$ssh->login('root', 'g#bpyOrvjt')) {
-            $this->info('ssh connection failed');
+        $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
+        $ACTION_TYPE= Config::get('values.ACTION_TYPE');
+        $TR_SERVER_SSH_USERNAME = Config::get('values.TR_SERVER_SSH_USERNAME');
+        $TR_SERVER_PASSWORD = Config::get('values.TR_SERVER_PASSWORD');
+        $WHICH_MAIL_FOR_BANNED = Config::get('values.WHICH_MAIL_FOR_BANNED');
+        $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
+        $ssh = new SSH2($TR_SERVER_IP);
+        if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
+            Mail::raw(" this server don't connect to ".$TR_SERVER_IP, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM,$TR_SERVER_IP)  {
+                $mail->from('info@domain-controller.com');
+                $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
+                    ->subject(" this server don't connect to ".$TR_SERVER_IP);
+            }); 
         }
 
         $moved_text = "The document has moved ";
@@ -115,7 +124,7 @@ class DailyQuote extends Command
                             $bannedItem  = $getBannedItem->first();
                             $bannedItem->how_many_times = $bannedItem->how_many_times + 1;
                             $diff = $todayDate->diffInMinutes($bannedItem->banned_time);
-                            if($diff >= 30){
+                            if($diff >= 60){
                                 $bannedItem->how_many_times = 1;
                             }
 
@@ -131,24 +140,24 @@ class DailyQuote extends Command
                         
 
 
-                        if($bannedItem->how_many_times > 15){
-                            $domain->status = $status;
-                            $domain->save();
-                            Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
-                                $mail->from('ex@exaclicks.com');
-                                $mail->to("mrbulut@exaclicks.com")
-                                    ->subject($domain->name);
-                            });
-        
+                        if($bannedItem->how_many_times > 20){
 
-                             Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain) {
-                                $mail->from('ex@exaclicks.com');
-                                $mail->to("ali@exaclicks.com")
-                                    ->subject($domain->name);
-                            }); 
+                            if($ACTION_TYPE==0){
+                                $domain->status = $status;
+                                $domain->save();
         
-                            $domain->status = 3;
-                            $domain->save();
+                                 Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain,$WHICH_MAIL_FOR_BANNED)  {
+                                    $mail->from('info@domain-controller.com');
+                                    $mail->to($WHICH_MAIL_FOR_BANNED)
+                                        ->subject($domain->name);
+                                }); 
+            
+                                $domain->status = 3;
+                                $domain->save();
+                            }else{
+                                //code for redirect and move
+                            }
+                            
                         }
 
 
