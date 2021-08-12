@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CodeController;
 use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Route;
@@ -211,6 +212,9 @@ Route::get('/', function () {
 
 
 Route::resource('domains', DomainController::class);
+Route::resource('codes', CodeController::class);
+
+
 
 
 

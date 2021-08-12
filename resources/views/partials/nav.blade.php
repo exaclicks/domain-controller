@@ -46,11 +46,6 @@
                     </li>
                 @endrole
                 @role('admin')
-                <a class="nav-link " href="/configs"  role="button" aria-haspopup="true" aria-expanded="false">
-                            Configs
-                 </a>
-                @endrole
-                @role('admin')
                 <a class="nav-link " href="/codes"  role="button" aria-haspopup="true" aria-expanded="false">
                             Codes
                  </a>
