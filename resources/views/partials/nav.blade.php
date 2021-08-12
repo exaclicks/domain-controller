@@ -28,10 +28,7 @@
                                 {!! trans('titles.adminNewUser') !!}
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('themes','themes/create') ? 'active' : null }}" href="{{ url('/themes') }}">
-                                {!! trans('titles.adminThemesList') !!}
-                            </a>
-                            <div class="dropdown-divider"></div>
+                           
                             <a class="dropdown-item {{ Request::is('logs') ? 'active' : null }}" href="{{ url('/logs') }}">
                                 {!! trans('titles.adminLogs') !!}
                             </a>
@@ -43,21 +40,48 @@
                             <a class="dropdown-item {{ Request::is('phpinfo') ? 'active' : null }}" href="{{ url('/phpinfo') }}">
                                 {!! trans('titles.adminPHP') !!}
                             </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('routes') ? 'active' : null }}" href="{{ url('/routes') }}">
-                                {!! trans('titles.adminRoutes') !!}
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('active-users') ? 'active' : null }}" href="{{ url('/active-users') }}">
-                                {!! trans('titles.activeUsers') !!}
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('blocker') ? 'active' : null }}" href="{{ route('laravelblocker::blocker.index') }}">
-                                {!! trans('titles.laravelBlocker') !!}
-                            </a>
+                            
+                          
                         </div>
                     </li>
                 @endrole
+                @role('admin')
+                <a class="nav-link " href="/configs"  role="button" aria-haspopup="true" aria-expanded="false">
+                            Configs
+                 </a>
+                @endrole
+                @role('admin')
+                <a class="nav-link " href="/codes"  role="button" aria-haspopup="true" aria-expanded="false">
+                            Codes
+                 </a>
+                @endrole
+                @role('admin')
+                <a class="nav-link " href="/hostings"  role="button" aria-haspopup="true" aria-expanded="false">
+                            Hostings
+                 </a>
+                @endrole
+                @role('admin')
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDomainsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Domains
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDomainsDropdown">
+                            <a class="dropdown-item {{ (Request::is('roles') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('laravelroles::roles.index') }}">
+                                New Domains
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item {{ (Request::is('domains') || Request::is('permissions')) ? 'active' : null }}" href="{{ url('/domains') }}">
+                                Running Domains
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            
+                            
+                          
+                        </div>
+                    </li>
+                @endrole
+
+             
             </ul>
             {{-- Right Side Of Navbar --}}
             <ul class="navbar-nav ml-auto">

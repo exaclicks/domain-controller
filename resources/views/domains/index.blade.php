@@ -7,8 +7,9 @@
                 <h2>Domain List </h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('domains.create') }}" title="Create a domain"> <i class="fas fa-plus-circle"></i>
+                <a class="btn btn-success margin-bottom-1 mb-1" href="{{ route('domains.create') }}" title="Create a domain">Create</i>
                     </a>
+
             </div>
         </div>
     </div>
@@ -53,7 +54,7 @@
                         </a> -->
 
                         <a href="{{ route('domains.edit', $domain->id) }}">
-                            <i class="fas fa-edit  fa-lg"></i>
+                            <i class="fa fa-pencil fa-fw "></i>
 
                         </a>
 
@@ -61,7 +62,7 @@
                         @method('DELETE')
 
                         <button type="submit" title="delete" style="border: none; background-color:transparent;">
-                            <i class="fas fa-trash fa-lg text-danger"></i>
+                            <i class="fa fa-trash-o fa-fw text-danger"></i>
 
                         </button>
                     </form>

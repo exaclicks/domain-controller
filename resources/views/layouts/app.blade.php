@@ -58,7 +58,7 @@
 
             @include('partials.nav')
 
-            <main class="py-4">
+            <main class="container">
 
                 <div class="container">
                     <div class="row">
