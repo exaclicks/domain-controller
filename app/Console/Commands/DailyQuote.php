@@ -102,12 +102,12 @@ class DailyQuote extends Command
             } else {
                 $status = 1;
             }
-            $domain->save();
+            $domain->status = $status;
           
             if ($domain->status != 1 && $domain->status!=3 ) {
               
 
-                if($status == 1){
+                if($domain->status == 1){
 
                     $isCanConnectWithThisServer = false;
 
@@ -149,7 +149,6 @@ class DailyQuote extends Command
                         if($bannedItem->how_many_times > 0){
 
                             if($ACTION_TYPE==0){
-                                $domain->status = $status;
                                 $domain->save();
         
                                  Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain,$WHICH_MAIL_FOR_BANNED)  {
