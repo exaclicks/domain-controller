@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
@@ -26,6 +27,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 
+Route::get('/testDomainChecker', function () {
+
+  
+});
 
 
 
@@ -123,7 +128,7 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
         $progressIsSuccess = false;
         $addNewDropletRequest = HttpRequest::create('/addNewDroplet/' . $newDomainName, 'GET');
         $dropletId = Route::dispatch($addNewDropletRequest)->getOriginalContent();
-    
+
         $addNewDomainRecordsRequest = HttpRequest::create('/addNewDomainRecords/' . $newDomainName . "/" . $dropletId, 'GET');
         $progressIsSuccess = Route::dispatch($addNewDomainRecordsRequest)->getOriginalContent();
         if ($progressIsSuccess) {
@@ -132,13 +137,13 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
             return "Taşıma Başarısız.";
         }
     });
-    
-    
+
+
     Route::get('/addNewDomainRecords/{newDomainName}/{dropletId}', function ($newDomainName, $dropletId) {
-    
+
         //259223638
         try {
-    
+
             $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
             $client = new Client();
             $client->authenticate($token);
@@ -151,7 +156,7 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
                 sleep(5);
                 goto comeBack;
             }
-    
+
             $dropletIpAdress = $droplet123->networks[1]->ipAddress;
             $hostingIp = $dropletIpAdress;
             $digitalocean_nameservers_ipies = ["173.245.58.51", "173.245.59.41", "198.41.222.173"];
@@ -159,14 +164,14 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
             $domainRecordInfos = $domainRecord->getAll($newDomainName);
             //CREATE NEW DOMAİN RECORDS
             $domainRecordInfos = $domainRecord->getAll($newDomainName);
-    
+
             //Delete old dns
             foreach ($domainRecordInfos as $value) {
                 if ($value->type != "SOA") {
                     $domainRecord->remove($newDomainName, $value->id);
                 }
             }
-    
+
             //create new dns and nameservers;
             $created = $domainRecord->create($newDomainName, 'A', '@', $hostingIp, null, null, null, null, null, 3600);
             $created = $domainRecord->create($newDomainName, 'A', 'www', $hostingIp, null, null, null, null, null, 3600);
@@ -176,19 +181,19 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
             $created = $domainRecord->create($newDomainName, 'A', "ns1", $digitalocean_nameservers_ipies[0], null, null, null, null, null, 3600);
             $created = $domainRecord->create($newDomainName, 'A', "ns2", $digitalocean_nameservers_ipies[1], null, null, null, null, null, 3600);
             $created = $domainRecord->create($newDomainName, 'A', "ns3", $digitalocean_nameservers_ipies[2], null, null, null, null, null, 3600);
-    
-    
+
+
             return true;
         } catch (\Throwable $th) {
             return false;
         }
     });
-    
-    
+
+
     Route::get('/addNewDroplet/{newDomainName}', function ($newDomainName) {
         $dropletId = 0;
         try {
-    
+
             $snapshotsDropletId = '256918286';
             $location = 'fra1';
             $device = 's-1vcpu-1gb';
@@ -196,50 +201,50 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
             $client = new Client();
             $client->authenticate($token);
             $droplet = $client->droplet();
-    
-    
-    
-    
+
+
+
+
             $sshKeysRequest = HttpRequest::create('/checkSshKeys', 'GET');
             $sshKeys = Route::dispatch($sshKeysRequest)->getOriginalContent();
-    
+
             $snapIdRequest = HttpRequest::create('/checkSnapshots/' . $snapshotsDropletId, 'GET');
             $snapId = Route::dispatch($snapIdRequest)->getOriginalContent();
-    
-    
+
+
             $created = $droplet->create($newDomainName, $location, $device, $snapId, false, false, false, $sshKeys);
             $dropletId = $created->id;
         } catch (\Throwable $th) {
             return $dropletId;
         }
-    
-    
+
+
         return $dropletId;
     });
-    
+
     Route::get('/checkSnapshots/{dropletId}', function ($dropletId) {
         $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
         $client = new Client();
         $droplet = $client->droplet();
         $client->authenticate($token);
         $images = $droplet->getSnapshots($dropletId);
-        
+
         // print_r($images[count($images)-1]);
         return $images[count($images) - 1]->id;
     });
-    
+
     Route::get('/checkSshKeys', function () {
         $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
         $client = new Client();
         $client->authenticate($token);
         $keyIds = [];
-    
+
         // return the key api
         $key = $client->key();
-    
+
         // return a collection of Key entity
         $keys = $key->getAll();
-    
+
         foreach ($keys as $key => $value) {
             array_push($keyIds, $value->id);
         }
@@ -289,7 +294,7 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
 
 
 
-    
+
 
 
     // Show users profile - viewable by other users.
