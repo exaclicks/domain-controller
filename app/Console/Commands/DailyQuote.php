@@ -133,14 +133,14 @@ class DailyQuote extends Command
 
 
 
-                if ($bannedItem->how_many_times > 4) {
+                if ($bannedItem->how_many_times > 15) {
 
                     if ($ACTION_TYPE == 0) {
                         $domain->save();
 
                         Mail::raw($domain->name . " engellendi. <br> " , function ($mail) use ($domain, $WHICH_MAIL_FOR_BANNED) {
-                            $mail->from('ex@exaclicks.com');// DONT CHANGE
-                            $mail->to("mrbulut@exaclicks.com")
+                            $mail->from("ex@exaclicks.com");
+                            $mail->to($WHICH_MAIL_FOR_BANNED)
                                 ->subject($domain->name);
                         });
                         $domain->domain_status = 1; //  1 taşınması gerekiyor. 2 taşındı.
