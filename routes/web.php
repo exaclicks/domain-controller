@@ -100,6 +100,7 @@ Route::get('/', function () {
 });
 
 
+Route::resource('domains', DomainController::class);
 
 
 
@@ -286,7 +287,6 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
     Route::get('/home', ['as' => 'public.home',   'uses' => 'App\Http\Controllers\UserController@index']);
 
 
-    Route::resource('domains', DomainController::class);
 
 
     
