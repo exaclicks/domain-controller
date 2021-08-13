@@ -117,7 +117,7 @@ class DailyQuote extends Command
                     $bannedItem  = $getBannedItem->first();
                     $bannedItem->how_many_times = $bannedItem->how_many_times + 1;
                     $diff = $todayDate->diffInMinutes($bannedItem->banned_time);
-                    if ($diff >= 60) {
+                    if ($diff >= 120) {
                         $bannedItem->how_many_times = 1;
                     }
 
@@ -133,7 +133,7 @@ class DailyQuote extends Command
 
 
 
-                if ($bannedItem->how_many_times > 15) {
+                if ($bannedItem->how_many_times > 30) {
 
                     if ($ACTION_TYPE == 0) {
                         $domain->save();
