@@ -150,6 +150,20 @@ Route::get('/banlanmalogu', function () {
 });
 
 
+Route::get('/testercode', function () {
+    // BannedList::truncate();
+
+    $domains =  Domain::all();
+    foreach ($domains  as $key => $domain) {
+        $domain->used = 1;
+
+        $domain->save();
+    
+    }
+});
+
+
+
 
 Route::get('/', function () {
 
