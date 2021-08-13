@@ -153,13 +153,13 @@ Route::get('/banlanmalogu', function () {
 Route::get('/testercode', function () {
     // BannedList::truncate();
 
-    $domains =  Domain::all();
+    /* $domains =  Domain::all();
     foreach ($domains  as $key => $domain) {
         $domain->status = 0;
 
         $domain->save();
     
-    }
+    } */
 });
 
 
