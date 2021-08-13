@@ -22,7 +22,7 @@
             <th>Name</th>
             <th>Hosting</th>
             <th>Status</th>
-            <th>Aktivetion Date</th>
+            <th>Activation Date</th>
             <th width="280px">Action</th>
         </tr>
         @foreach ($domains as $domain)
