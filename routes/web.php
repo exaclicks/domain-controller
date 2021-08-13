@@ -155,7 +155,7 @@ Route::get('/testercode', function () {
 
     $domains =  Domain::all();
     foreach ($domains  as $key => $domain) {
-        $domain->used = 1;
+        $domain->status = 0;
 
         $domain->save();
     
