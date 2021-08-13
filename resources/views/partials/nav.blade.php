@@ -61,8 +61,8 @@
                             Domains
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDomainsDropdown">
-                            <a class="dropdown-item {{ (Request::is('roles') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('laravelroles::roles.index') }}">
-                                New Domains
+                            <a class="dropdown-item {{ (Request::is('un_used_domain_index') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('un_used_domain_index') }}">
+                                Unused Domains
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item {{ (Request::is('domains') || Request::is('permissions')) ? 'active' : null }}" href="{{ url('/domains') }}">

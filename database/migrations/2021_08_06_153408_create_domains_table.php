@@ -18,9 +18,9 @@ class CreateDomainsTable extends Migration
             $table->string('name');
             $table->text('hosting');
             $table->integer('status');
-            $table->timestamp('bought_time')->nullable();
+            $table->timestamp('brought_time')->nullable();
             $table->timestamp('finish_time')->nullable();
-            $table->integer('domain_status')->default('0');
+            $table->integer('domain_status')->default('0'); //  1 taşınması gerekiyor. 2 taşındı.
             $table->timestamps();
             
         });

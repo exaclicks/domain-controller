@@ -212,6 +212,7 @@ Route::get('/', function () {
 
 
 Route::resource('domains', DomainController::class);
+
 Route::resource('codes', CodeController::class);
 
 
@@ -360,17 +361,25 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
         // print_r($images[count($images)-1]);
         return $keyIds;
     });
+    
+});
+
+
 
     Route::get('/', 'App\Http\Controllers\WelcomeController@welcome')->name('welcome');
     Route::get('/terms', 'App\Http\Controllers\TermsController@terms')->name('terms');
-});
+    Route::get('/un_used_domain_create', 'App\Http\Controllers\DomainController@un_used_domain_create')->name('un_used_domain_create');
+    Route::post('/un_used_domain_delete', 'App\Http\Controllers\DomainController@un_used_destroy')->name('un_used_domain_delete');
+    Route::get('/un_used_domain_index', 'App\Http\Controllers\DomainController@un_used_domain_index')->name('un_used_domain_index');
+    Route::post('/un_used_domain_store', 'App\Http\Controllers\DomainController@un_used_domain_store')->name('un_used_domain_store');
 
-// Authentication Routes
+
+    // Authentication Routes
 Auth::routes();
 
 // Public Routes
 Route::group(['middleware' => ['web', 'activity', 'checkblocked']], function () {
-
+ 
     // Activation Routes
     Route::get('/activate', ['as' => 'activate', 'uses' => 'App\Http\Controllers\Auth\ActivateController@initial']);
 
@@ -396,11 +405,9 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'checkblocked']]
 
 // Registered and Activated User Routes
 Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'checkblocked']], function () {
-
+ 
     //  Homepage Route - Redirect based on user role is in controller.
     Route::get('/home', ['as' => 'public.home',   'uses' => 'App\Http\Controllers\UserController@index']);
-
-
 
 
 
@@ -415,6 +422,8 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
 
 // Registered, activated, and is current user routes.
 Route::group(['middleware' => ['auth', 'activated', 'currentUser', 'activity', 'twostep', 'checkblocked']], function () {
+    
+   
 
     // User Profile and Account Routes
     Route::resource(

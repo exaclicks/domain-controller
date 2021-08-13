@@ -16,7 +16,8 @@ class Domain extends Model
         'name',
         'hosting',
         'status',
-        'bought_time',
+        'start_time',
         'finish_time',
+        "used"
     ];
 }

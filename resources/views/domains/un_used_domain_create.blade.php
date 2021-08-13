@@ -12,8 +12,8 @@
         </div>
     </div>
 
- 
-    <form action="{{ route('domains.store') }}" method="POST" >
+  
+    <form action="{{ route('un_used_domain_store') }}" method="POST" >
         @csrf
 
         <div class="row">
