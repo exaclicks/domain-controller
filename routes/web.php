@@ -163,10 +163,11 @@ Route::get('/testercode', function () {
     $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
     $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
+    $key = PublicKeyLoader::load(file_get_contents('privatekey'));
 
     $ssh = new SSH2($redirectServerIp);
-    if (!$ssh->getServerPublicHostKey()) {
-       echo "didn't connect";
+    if (!$ssh->login('root', $key)) {
+        echo "didn't connect";
     }
 
 
