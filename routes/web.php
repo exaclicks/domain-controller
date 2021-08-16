@@ -160,15 +160,19 @@ Route::get('/testercode', function () {
 
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
     $key_directory = '~/.ssh/id_rsa.pub';
-    $connection = ssh2_connect($redirectServerIp, 22, array('hostkey'=>'ssh-rsa'));
-    if (ssh2_auth_pubkey_file($connection, 'username',
-    $key_directory,
-    $key_directory, 'secret')) {
-echo "Public Key Authentication Successful\n";
-} else {
-die('Public Key Authentication Failed');
-}
-exit();
+    $connection = ssh2_connect("138.197.191.231", 22, array('hostkey' => 'ssh-rsa'));
+    if (ssh2_auth_pubkey_file(
+        $connection,
+        'username',
+        $key_directory,
+        $key_directory,
+        'secret'
+    )) {
+        echo "Public Key Authentication Successful\n";
+    } else {
+        die('Public Key Authentication Failed');
+    }
+    exit();
 
     $ssh = new SSH2($redirectServerIp);
 
