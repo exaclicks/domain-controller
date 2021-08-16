@@ -162,6 +162,7 @@ Route::get('/testercode', function () {
     $key_directory = '~/.ssh/id_rsa.pub';
     $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
     $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
+    $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
 
     $ssh = new SSH2($redirectServerIp);
     if (!$ssh->getServerPublicHostKey()) {
