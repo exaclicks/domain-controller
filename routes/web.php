@@ -160,17 +160,15 @@ Route::get('/testercode', function () {
 
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
     $key_directory = '~/.ssh/id_rsa.pub';
-    $ssh = ssh2_connect("138.197.191.231", 22, array('hostkey' => 'ssh-rsa'));
-    if (ssh2_auth_pubkey_file(
-        $ssh,
-        'username',
-        $key_directory,
-        $key_directory,
-        'secret'
-    )) {
-        echo "Public Key Authentication Successful\n";
-    } 
-   
+    $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
+    $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
+
+    $ssh = new SSH2($redirectServerIp);
+    if (!$ssh->getServerPublicHostKey()) {
+       echo "didn't connect";
+    }
+
+
 
 
     $oldDomainName = "TESTTT.com";
@@ -193,9 +191,7 @@ Route::get('/testercode', function () {
     </VirtualHost>" >> /etc/apache2/sites-available/' . $oldDomainName . '.conf';
 
 
-   echo $stream = ssh2_exec($ssh, $execute_code);
-
- 
+    echo $stream = ssh2_exec($ssh, $execute_code);
 });
 
 
