@@ -18,6 +18,7 @@ class Domain extends Model
         'status',
         'start_time',
         'finish_time',
+        'domain_status',
         "used"
     ];
 }

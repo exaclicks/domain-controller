@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\CodeController;
+use App\Http\Controllers\BetCompanyController;
+
 use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
 use App\Models\BannedList;
 use App\Models\Domain;
+use App\Models\GitDomain;
 use Carbon\Carbon;
 use DigitalOceanV2\Client;
 use DigitalOceanV2\ResultPager;
@@ -152,7 +155,16 @@ Route::get('/banlanmalogu', function () {
 
 Route::get('/testercode', function () {
     // BannedList::truncate();
+    $new = new GitDomain();
+    $new->git_id = 1;
+    $new->domain_id = 1;
+    $new->save();
 
+    $all = GitDomain::all();
+    foreach ($all  as $key => $domain) {
+         echo $domain->domain_id;
+    
+    } 
     /* $domains =  Domain::all();
     foreach ($domains  as $key => $domain) {
         $domain->status = 0;
@@ -230,7 +242,7 @@ Route::resource('domains', DomainController::class);
 Route::resource('codes', CodeController::class);
 
 
-
+Route::resource('bet_companies', BetCompanyController::class);
 
 
 /*
@@ -255,17 +267,16 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
 
         $addNewDomainRecordsRequest = HttpRequest::create('/addNewDomainRecords/' . $newDomainName . "/" . $dropletId, 'GET');
         $progressIsSuccess = Route::dispatch($addNewDomainRecordsRequest)->getOriginalContent();
-        if ($progressIsSuccess) {
-            return "Taşıma başarılı.";
-        } else {
-            return "Taşıma Başarısız.";
-        }
+    
+        
+        return $progressIsSuccess;
+       
     });
 
 
     Route::get('/addNewDomainRecords/{newDomainName}/{dropletId}', function ($newDomainName, $dropletId) {
 
-        //259223638
+      
         try {
 
             $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
@@ -313,12 +324,50 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
         }
     });
 
+    Route::get('/moveToRedirectServer/{oldDomainName}', function ($oldDomainName) {
+
+      
+        try {
+
+            $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+            $client = new Client();
+            $client->authenticate($token);
+            $domainRecord = $client->domainRecord();
+            $droplet = $client->droplet();
+            $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
+
+            $digitalocean_nameservers_ipies = ["173.245.58.51", "173.245.59.41", "198.41.222.173"];
+            $new_nameservers = ['ns1.' . $oldDomainName, 'ns2.' . $oldDomainName, 'ns3.' . $oldDomainName];
+            $domainRecordInfos = $domainRecord->getAll($oldDomainName);
+            //CREATE NEW DOMAİN RECORDS
+            $domainRecordInfos = $domainRecord->getAll($oldDomainName);
+
+            //Delete old dns
+            foreach ($domainRecordInfos as $value) {
+                if ($value->type != "SOA") {
+                    $domainRecord->remove($oldDomainName, $value->id);
+                }
+            }
+
+            //create new dns and nameservers;
+            $created = $domainRecord->create($oldDomainName, 'A', '@', $redirectServerIp, null, null, null, null, null, 3600);
+            $created = $domainRecord->create($oldDomainName, 'A', 'www', $redirectServerIp, null, null, null, null, null, 3600);
+            $created = $domainRecord->create($oldDomainName, 'NS', '@', $new_nameservers[1] . ".", null, null, null, null, null, 86400);
+            $created = $domainRecord->create($oldDomainName, 'NS', '@', $new_nameservers[1] . ".", null, null, null, null, null, 86400);
+            $created = $domainRecord->create($oldDomainName, 'NS', '@', $new_nameservers[2] . ".", null, null, null, null, null, 86400);
+            $created = $domainRecord->create($oldDomainName, 'A', "ns1", $digitalocean_nameservers_ipies[0], null, null, null, null, null, 3600);
+            $created = $domainRecord->create($oldDomainName, 'A', "ns2", $digitalocean_nameservers_ipies[1], null, null, null, null, null, 3600);
+            $created = $domainRecord->create($oldDomainName, 'A', "ns3", $digitalocean_nameservers_ipies[2], null, null, null, null, null, 3600);
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    });
 
     Route::get('/addNewDroplet/{newDomainName}', function ($newDomainName) {
         $dropletId = 0;
         try {
-
-            $snapshotsDropletId = '256918286';
+            $snapshotsDropletId = Config::get('values.SNAPSHOT_ID');
             $location = 'fra1';
             $device = 's-1vcpu-1gb';
             $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
@@ -346,6 +395,7 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
         return $dropletId;
     });
 
+
     Route::get('/checkSnapshots/{dropletId}', function ($dropletId) {
         $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
         $client = new Client();
@@ -355,6 +405,36 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
 
         // print_r($images[count($images)-1]);
         return $images[count($images) - 1]->id;
+    });
+
+    Route::get('/oldDomainNewApacheConfigForRedirect/{oldDomainName}', function ($oldDomainName) {
+        $response = false;
+        $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
+        $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
+        $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM'); 
+        $fileName = ' nano /etc/apache2/sites-available/instfy.com.conf' ; 
+
+
+
+        $execute_code = 'echo "insert text here" >> /etc/apache2/sites-available/'.$oldDomainName.'conf';
+        $ssh = new SSH2($redirectServerIp);
+        if (!$ssh->login('root',$redirectServerDefaultPassword)) {
+            Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
+                $mail->from('ex@exaclicks.com');
+                $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
+                    ->subject(" this server don't connect to " . $redirectServerIp);
+            });
+            exit();
+        }
+        $command = 'curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" www.google.com' ;
+
+       $response =  $ssh->exec($command);
+       echo "sonuc:".$response;
+        echo $ssh->exec('/etc/apache2/sites-available/'.$oldDomainName.'conf');
+        
+
+        return $response;
+       
     });
 
     Route::get('/checkSshKeys', function () {

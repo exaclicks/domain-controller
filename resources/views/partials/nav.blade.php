@@ -51,8 +51,8 @@
                  </a>
                 @endrole
                 @role('admin')
-                <a class="nav-link " href="/hostings"  role="button" aria-haspopup="true" aria-expanded="false">
-                            Hostings
+                <a class="nav-link " href="/bet_companies"  role="button" aria-haspopup="true" aria-expanded="false">
+                            Bet Companies
                  </a>
                 @endrole
                 @role('admin')
