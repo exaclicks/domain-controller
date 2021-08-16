@@ -160,26 +160,18 @@ Route::get('/testercode', function () {
 
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
     $key_directory = '~/.ssh/id_rsa.pub';
-    $connection = ssh2_connect("138.197.191.231", 22, array('hostkey' => 'ssh-rsa'));
+    $ssh = ssh2_connect("138.197.191.231", 22, array('hostkey' => 'ssh-rsa'));
     if (ssh2_auth_pubkey_file(
-        $connection,
+        $ssh,
         'username',
         $key_directory,
         $key_directory,
         'secret'
     )) {
         echo "Public Key Authentication Successful\n";
-    } else {
-        die('Public Key Authentication Failed');
-    }
-    exit();
+    } 
+   
 
-    $ssh = new SSH2($redirectServerIp);
-
-    if (!$ssh->getServerPublicHostKey()) {
-        echo "girmedi";
-    }
-    $ssh->login('root');
 
     $oldDomainName = "TESTTT.com";
     $execute_code = 'echo "<VirtualHost *:80>
@@ -201,8 +193,9 @@ Route::get('/testercode', function () {
     </VirtualHost>" >> /etc/apache2/sites-available/' . $oldDomainName . '.conf';
 
 
+   echo $stream = ssh2_exec($ssh, $execute_code);
 
-    $ssh->exec($execute_code);
+ 
 });
 
 
