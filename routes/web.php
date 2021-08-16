@@ -15,6 +15,8 @@ use DigitalOceanV2\Client;
 use DigitalOceanV2\ResultPager;
 use Illuminate\Http\Request as HttpRequest;
 use phpseclib3\Net\SSH2;
+use phpseclib3\Crypt\RSA;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -126,7 +128,7 @@ Route::get('/testDomainChecker', function () {
                     if ($ACTION_TYPE == 0) {
                         $domain->save();
 
-              /*           Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain, $WHICH_MAIL_FOR_BANNED) {
+                        /*           Mail::raw($domain->name . " engellendi. <br> " . $html, function ($mail) use ($domain, $WHICH_MAIL_FOR_BANNED) {
                             $mail->from('ex@exaclicks.com'); // DONT CHANGE
                             $mail->to($WHICH_MAIL_FOR_BANNED)
                                 ->subject($domain->name);
@@ -152,26 +154,51 @@ Route::get('/banlanmalogu', function () {
     }
 });
 
+use phpseclib3\Crypt\PublicKeyLoader;
 
 Route::get('/testercode', function () {
-    // BannedList::truncate();
-    $new = new GitDomain();
-    $new->git_id = 1;
-    $new->domain_id = 1;
-    $new->save();
 
-    $all = GitDomain::all();
-    foreach ($all  as $key => $domain) {
-         echo $domain->domain_id;
-    
-    } 
-    /* $domains =  Domain::all();
-    foreach ($domains  as $key => $domain) {
-        $domain->status = 0;
+    $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
+    $key_directory = '~/.ssh/id_rsa.pub';
+    $connection = ssh2_connect($redirectServerIp, 22, array('hostkey'=>'ssh-rsa'));
+    if (ssh2_auth_pubkey_file($connection, 'username',
+    $key_directory,
+    $key_directory, 'secret')) {
+echo "Public Key Authentication Successful\n";
+} else {
+die('Public Key Authentication Failed');
+}
+exit();
 
-        $domain->save();
+    $ssh = new SSH2($redirectServerIp);
+
+    if (!$ssh->getServerPublicHostKey()) {
+        echo "girmedi";
+    }
+    $ssh->login('root');
+
+    $oldDomainName = "TESTTT.com";
+    $execute_code = 'echo "<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
     
-    } */
+        ServerName ' . $oldDomainName . '
+    
+        ServerAlias www.' . $oldDomainName . '
+    
+        DocumentRoot /var/www/1xbet-html-page
+    
+        Redirect / https://' . $oldDomainName . '/               
+    
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+    
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    
+    </VirtualHost>" >> /etc/apache2/sites-available/' . $oldDomainName . '.conf';
+
+
+
+    $ssh->exec($execute_code);
 });
 
 
@@ -267,16 +294,15 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
 
         $addNewDomainRecordsRequest = HttpRequest::create('/addNewDomainRecords/' . $newDomainName . "/" . $dropletId, 'GET');
         $progressIsSuccess = Route::dispatch($addNewDomainRecordsRequest)->getOriginalContent();
-    
-        
+
+
         return $progressIsSuccess;
-       
     });
 
 
     Route::get('/addNewDomainRecords/{newDomainName}/{dropletId}', function ($newDomainName, $dropletId) {
 
-      
+
         try {
 
             $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
@@ -326,14 +352,13 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
 
     Route::get('/moveToRedirectServer/{oldDomainName}', function ($oldDomainName) {
 
-      
+
         try {
 
             $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
             $client = new Client();
             $client->authenticate($token);
             $domainRecord = $client->domainRecord();
-            $droplet = $client->droplet();
             $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
 
             $digitalocean_nameservers_ipies = ["173.245.58.51", "173.245.59.41", "198.41.222.173"];
@@ -407,18 +432,36 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
         return $images[count($images) - 1]->id;
     });
 
-    Route::get('/oldDomainNewApacheConfigForRedirect/{oldDomainName}', function ($oldDomainName) {
+    Route::get('/oldDomainNewApacheConfigForRedirect/{oldDomainName}/{newDomainName}', function ($oldDomainName, $newDomainName) {
         $response = false;
         $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-        $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
-        $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM'); 
-        $fileName = ' nano /etc/apache2/sites-available/instfy.com.conf' ; 
+        $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
+        $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
 
 
 
-        $execute_code = 'echo "insert text here" >> /etc/apache2/sites-available/'.$oldDomainName.'conf';
+        $execute_code = 'echo "<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
+    
+        ServerName ' . $oldDomainName . '
+    
+        ServerAlias www.' . $oldDomainName . '
+    
+        DocumentRoot /var/www/1xbet-html-page
+    
+        Redirect / https://' . $newDomainName . '/               
+    
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+    
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    
+    </VirtualHost>" >> /etc/apache2/sites-available/' . $oldDomainName . '.conf';
+
+
+
         $ssh = new SSH2($redirectServerIp);
-        if (!$ssh->login('root',$redirectServerDefaultPassword)) {
+        if (!$ssh->login('root', $redirectServerDefaultPassword)) {
             Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
                 $mail->from('ex@exaclicks.com');
                 $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
@@ -426,15 +469,85 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
             });
             exit();
         }
-        $command = 'curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" www.google.com' ;
 
-       $response =  $ssh->exec($command);
-       echo "sonuc:".$response;
-        echo $ssh->exec('/etc/apache2/sites-available/'.$oldDomainName.'conf');
-        
+        $ssh->exec($execute_code);
+        $ssh->exec('a2ensite ' . $oldDomainName . '.conf');
+        $ssh->exec('systemctl restart apache2');
+
+        //SSL CONFİG
+        $ssh->exec('certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
+        sleep(15);
+        $ssh->exec('1');
+
+
 
         return $response;
-       
+    });
+
+
+    Route::get('/newDomainNewApacheConfigForRedirect/{newDomainName}', function ($newDomainName) {
+        $response = false;
+        $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
+        $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
+        $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+        $client = new Client();
+        $client->authenticate($token);
+        $droplet = $client->droplet();
+        $droplets = $droplet->getAll();
+        $newServerIp = 1;
+        foreach ($droplets as  $droplet) {
+            if ($droplet->name == $newDomainName)
+                $newServerIp = $droplet->networks[1]->ipAddress;
+        }
+        if ($newServerIp == 1)
+            exit();
+
+
+
+
+
+        $execute_code = 'echo "<VirtualHost *:80>
+
+        ServerAdmin webmaster@localhost
+    
+        ServerName ' . $oldDomainName . '
+    
+        ServerAlias www.' . $oldDomainName . '
+    
+        DocumentRoot /var/www/1xbet-html-page
+    
+        Redirect / https://' . $newDomainName . '/               
+    
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+    
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    
+    </VirtualHost>" >> /etc/apache2/sites-available/' . $oldDomainName . '.conf';
+
+
+
+        $ssh = new SSH2($newServerIp);
+        if (!$ssh->login('root', $redirectServerDefaultPassword)) {
+            Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
+                $mail->from('ex@exaclicks.com');
+                $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
+                    ->subject(" this server don't connect to " . $redirectServerIp);
+            });
+            exit();
+        }
+
+        $ssh->exec($execute_code);
+        $ssh->exec('a2ensite ' . $oldDomainName . '.conf');
+        $ssh->exec('systemctl restart apache2');
+
+        //SSL CONFİG
+        $ssh->exec('certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
+        sleep(15);
+        $ssh->exec('1');
+
+
+
+        return $response;
     });
 
     Route::get('/checkSshKeys', function () {
@@ -455,25 +568,24 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
         // print_r($images[count($images)-1]);
         return $keyIds;
     });
-    
 });
 
 
 
-    Route::get('/', 'App\Http\Controllers\WelcomeController@welcome')->name('welcome');
-    Route::get('/terms', 'App\Http\Controllers\TermsController@terms')->name('terms');
-    Route::get('/un_used_domain_create', 'App\Http\Controllers\DomainController@un_used_domain_create')->name('un_used_domain_create');
-    Route::post('/un_used_domain_delete', 'App\Http\Controllers\DomainController@un_used_destroy')->name('un_used_domain_delete');
-    Route::get('/un_used_domain_index', 'App\Http\Controllers\DomainController@un_used_domain_index')->name('un_used_domain_index');
-    Route::post('/un_used_domain_store', 'App\Http\Controllers\DomainController@un_used_domain_store')->name('un_used_domain_store');
+Route::get('/', 'App\Http\Controllers\WelcomeController@welcome')->name('welcome');
+Route::get('/terms', 'App\Http\Controllers\TermsController@terms')->name('terms');
+Route::get('/un_used_domain_create', 'App\Http\Controllers\DomainController@un_used_domain_create')->name('un_used_domain_create');
+Route::post('/un_used_domain_delete', 'App\Http\Controllers\DomainController@un_used_destroy')->name('un_used_domain_delete');
+Route::get('/un_used_domain_index', 'App\Http\Controllers\DomainController@un_used_domain_index')->name('un_used_domain_index');
+Route::post('/un_used_domain_store', 'App\Http\Controllers\DomainController@un_used_domain_store')->name('un_used_domain_store');
 
 
-    // Authentication Routes
+// Authentication Routes
 Auth::routes();
 
 // Public Routes
 Route::group(['middleware' => ['web', 'activity', 'checkblocked']], function () {
- 
+
     // Activation Routes
     Route::get('/activate', ['as' => 'activate', 'uses' => 'App\Http\Controllers\Auth\ActivateController@initial']);
 
@@ -499,7 +611,7 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'checkblocked']]
 
 // Registered and Activated User Routes
 Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'checkblocked']], function () {
- 
+
     //  Homepage Route - Redirect based on user role is in controller.
     Route::get('/home', ['as' => 'public.home',   'uses' => 'App\Http\Controllers\UserController@index']);
 
@@ -516,8 +628,8 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
 
 // Registered, activated, and is current user routes.
 Route::group(['middleware' => ['auth', 'activated', 'currentUser', 'activity', 'twostep', 'checkblocked']], function () {
-    
-   
+
+
 
     // User Profile and Account Routes
     Route::resource(
