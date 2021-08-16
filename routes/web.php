@@ -192,7 +192,8 @@ Route::get('/testercode', function () {
     </VirtualHost>" >> /etc/apache2/sites-available/' . $oldDomainName . '.conf';
 
 
-    echo $stream = ssh2_exec($ssh, $execute_code);
+    echo         $ssh->exec($execute_code);
+
 });
 
 
