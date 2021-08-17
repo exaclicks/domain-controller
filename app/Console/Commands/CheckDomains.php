@@ -50,7 +50,7 @@ class CheckDomains extends Command
           
           
            $responseMoveToDomain = HttpRequest::create('/moveToNewDomain/'.$oldDomainName.'/'.$newDomainName , 'GET');
-           $responseNewDomainNewApacheConfigForRedirect = HttpRequest::create('/newDomainNewApacheConfigForRedirect/'.$newDomainName , 'GET');
+           $responseNewDomainNewApacheConfigForRedirect = HttpRequest::create('/newDomainNewApacheConfigForRedirect/'.$oldDomainName .'/'.$newDomainName, 'GET');
            $responseMoveToRedirectServer = HttpRequest::create('/moveToRedirectServer/'.$oldDomainName, 'GET'); 
            $responseOldDomainNewApacheConfigForRedirect = HttpRequest::create('/oldDomainNewApacheConfigForRedirect/'.$oldDomainName .'/'.$newDomainName, 'GET');
   

@@ -232,6 +232,7 @@ return [
         'Gravatar'      => Creativeorange\Gravatar\Facades\Gravatar::class,
         'Image'         => Intervention\Image\Facades\Image::class,
         'Uuid'          => jeremykenedy\Uuid\Uuid::class,
+
     ],
 
 ];

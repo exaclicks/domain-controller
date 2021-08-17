@@ -14,8 +14,6 @@ use Carbon\Carbon;
 use DigitalOceanV2\Client;
 use DigitalOceanV2\ResultPager;
 use Illuminate\Http\Request as HttpRequest;
-use phpseclib3\Net\SSH2;
-use phpseclib3\Crypt\RSA;
 
 
 /*
@@ -31,7 +29,8 @@ use phpseclib3\Crypt\RSA;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-
+use Illuminate\Support\Facades\Crypt;
+use phpseclib3\Net\SSH2;
 
 Route::get('/testDomainChecker', function () {
 
@@ -155,24 +154,28 @@ Route::get('/banlanmalogu', function () {
 });
 
 use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\System\SSH\Agent;
+
 
 Route::get('/testercode', function () {
 
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-    $key_directory = '~/.ssh/id_rsa.pub';
-    $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
+    $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
     $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
-    $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-    $key = PublicKeyLoader::load(file_get_contents('privatekey'));
 
     $ssh = new SSH2($redirectServerIp);
+
+    $key = PublicKeyLoader::load(file_get_contents('/Users/muzaffer/private.txt'));
+    $ssh->setPreferredAlgorithms(['hostkey' => ['ssh-rsa']]);
+
     if (!$ssh->login('root', $key)) {
-        echo "didn't connect";
+
+echo "baglanmadi";
+        exit();
     }
 
 
-
-
+    exit();
     $oldDomainName = "TESTTT.com";
     $execute_code = 'echo "<VirtualHost *:80>
 
@@ -431,7 +434,7 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     Route::get('/oldDomainNewApacheConfigForRedirect/{oldDomainName}/{newDomainName}', function ($oldDomainName, $newDomainName) {
         $response = false;
         $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-        $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
+        $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
 
 
@@ -481,9 +484,10 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     });
 
 
-    Route::get('/newDomainNewApacheConfigForRedirect/{newDomainName}', function ($newDomainName) {
+    Route::get('/newDomainNewApacheConfigForRedirect/{oldDomainName}/{newDomainName}', function ($oldDomainName,$newDomainName) {
         $response = false;
-        $redirectServerDefaultPassword = Config::get('values.REDİRECT_REDİRECT_SERVER_DEFAULT_PASSWORD');
+        $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
+        $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
         $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
         $client = new Client();
