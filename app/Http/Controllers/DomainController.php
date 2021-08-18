@@ -395,7 +395,7 @@ class DomainController extends Controller
 
 
 
-
+echo $public_key_root;
         // ADD NEW DOMAİN APACHE CONFİG
         $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
         if (!ssh2_auth_pubkey_file(
