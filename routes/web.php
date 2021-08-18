@@ -5,7 +5,7 @@ use App\Http\Controllers\BetCompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\DropletController;
-
+use DigitalOceanV2\Client;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,31 +24,18 @@ use phpseclib3\System\SSH\Agent;
 
 // Homepage Route
 Route::get('/testercode', function () {
-    $public_key_root = Config::get('values.REDİRECT_SERVER_IP');
-    $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
-    $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
-    if (!ssh2_auth_pubkey_file(
-        $connection,
-        'root',
-        $public_key_root,
-        $private_key_root,
-        'secret'
+    $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+    $client = new Client();
+    $client->authenticate($token);
+    $domainRecord = $client->domainRecord();
+    $domainRecordInfos = $domainRecord->getAll("insksa.com");
 
-    )) {
-        exit();
+    //Delete old dns
+    foreach ($domainRecordInfos as $value) {
+        if ($value->type != "SOA") {
+            $domainRecord->remove("insksa.com", $value->id);
+        }
     }
-    $response_execute = ssh2_exec($connection, '/usr/local/bin/php -i');
-
-    
-    /* $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-    $ssh = new SSH2($redirectServerIp);
-    $privateKey = $ssh->getServerPublicHostKey();
-    $key = file_get_contents('/Users/muzaffer/.ssh/id_rsa.pub');
-    $agent = new Agent('/private/tmp/com.apple.launchd.ZgE3pqhaFi/Listeners');
-     $ssh = new SSH2($redirectServerIp);
-    $response = $ssh->login('root',"asd");
-    echo $ssh->exec("echo 5");
-    echo $response; */
 });
 
 Route::get('/get_new_sentence', 'App\Http\Controllers\RewriterController@get_new_sentence')->name('get_new_sentence');
@@ -69,6 +56,9 @@ Route::resource('bet_companies', BetCompanyController::class);
 Route::group(['middleware' => ['web', 'checkblocked']], function () {
     //ADD NEW DROPLET
     Route::get('/add_new_droplet', 'App\Http\Controllers\DropletController@add_new_droplet')->name('add_new_droplet');
+    //DELETE NEW DROPLET
+    Route::get('/delete_droplet', 'App\Http\Controllers\DropletController@delete_droplet')->name('delete_droplet');
+
     // THİS APİ CAN ADD NEW DNS RECORDS AND APACHE CONFİG
     Route::get('/add_new_domain_server_records', 'App\Http\Controllers\DomainController@add_new_domain_server_records')->name('add_new_domain_server_records');
     // THİS APİ CAN ADD OLD DNS RECORDS AND REDİRECT SERVER APACHE CONFİG

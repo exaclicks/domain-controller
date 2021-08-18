@@ -57,4 +57,43 @@ class DropletController extends Controller
         return $dropletId;
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function delete_droplet(Request $request)
+    {
+        $request->validate([
+            'old_domain_name' => 'required',
+        ]);
+
+        $oldDomainName = $request->get('old_domain_name');
+        $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+        $client = new Client();
+        $client->authenticate($token);
+        $dropletClient = $client->droplet();
+        $droplets = $dropletClient->getAll();
+        $response = false;
+        $newDropletId = 0;
+
+        try {
+            foreach ($droplets as  $droplet) {
+                if ($droplet->name == $oldDomainName)
+                    $newDropletId = $droplet->id;
+            }
+            if ($newDropletId != 0) {
+                $dropletClient->remove($newDropletId);
+            }
+
+
+            $response  = true;
+        } catch (\Throwable $th) {
+            return $response;
+        }
+
+
+        return $response;
+    }
 }

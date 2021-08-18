@@ -325,6 +325,8 @@ class DomainController extends Controller
             ssh2_exec($connection,'2');
             //
 
+
+     
             return true;
         } catch (\Throwable $th) {
             return false;
@@ -423,6 +425,14 @@ class DomainController extends Controller
         sleep(15);
         ssh2_exec($connection,'2');
         ///
+
+
+        //DELETE OLD DROPLET
+
+        $deleteDropletRequest = Request::create('/delete_droplet?old_domain_name=' . $oldDomainName, 'GET');
+        $deleteDropletRequestResponse = Route::dispatch($deleteDropletRequest)->getOriginalContent();
+        
+        
         return $response;
     }
 }
