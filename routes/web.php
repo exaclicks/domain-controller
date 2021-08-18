@@ -27,7 +27,7 @@ Route::get('/testercode', function () {
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
     $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
      $public_key_root = "/var/www/.ssh/id_dsa.pub";
-    $private_key_root = "/var/www/.ssh/id_rsa";
+    $private_key_root = "/var/www/.ssh/id_dsa";
     if (ssh2_auth_pubkey_file(
         $connection,
         'root',
