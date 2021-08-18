@@ -30,7 +30,7 @@ Route::get('/testercode', function () {
     $private_key_root = "/var/www/id_rsa";
     if (ssh2_auth_pubkey_file(
         $connection,
-        'root@',
+        'root',
         $public_key_root,
         $private_key_root,
         'secret'
