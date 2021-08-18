@@ -295,8 +295,9 @@ class DomainController extends Controller
         </VirtualHost>" >> /etc/apache2/sites-available/' . $newDomainName . '.conf';
     
 
+            sleep(15);
 
-            $connection = ssh2_connect($hostingIp, 22, array('hostkey' => 'ssh-rsa'));
+            $connection = ssh2_connect($newServerIp, 22, array('hostkey' => 'ssh-rsa'));
             if (!ssh2_auth_pubkey_file(
                 $connection,
                 'root',
@@ -432,7 +433,7 @@ class DomainController extends Controller
         $deleteDropletRequest = Request::create('/delete_droplet?old_domain_name=' . $oldDomainName, 'GET');
         $deleteDropletRequestResponse = Route::dispatch($deleteDropletRequest)->getOriginalContent();
         
-        
+
         return $response;
     }
 }
