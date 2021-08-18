@@ -25,18 +25,10 @@ use phpseclib3\System\SSH\Agent;
 // Homepage Route
 Route::get('/testercode', function () {
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-    $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
+    $connection = ssh2_connect($redirectServerIp, 22);
      $public_key_root = "/var/www/id_rsa.pub";
     $private_key_root = "/var/www/id_rsa";
-    echo file_get_contents($public_key_root);
-    if (ssh2_auth_pubkey_file(
-        $connection,
-        'root',
-        $public_key_root,
-        $private_key_root,
-        'secret'
-
-    )) {
+    if (ssh2_auth_agent($connection, 'root')) {
         echo "Public Key Authentication Successful\n";
     } else {
         die('Public Key Authentication Failed');
