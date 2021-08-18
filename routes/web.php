@@ -29,7 +29,7 @@ Route::get('/testercode' , function () {
 
     if (ssh2_auth_pubkey_file($connection, 'root',
     '/root/.ssh/id_rsa.pub',
-    '/root/.ssh/id_rsa.pub', 'secret')) {
+    '/root/.ssh/id_rsa', 'secret')) {
 echo "Public Key Authentication Successful\n";
 } else {
 die('Public Key Authentication Failed');
