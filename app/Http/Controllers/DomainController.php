@@ -322,7 +322,7 @@ class DomainController extends Controller
             //SSL CONFİG
             ssh2_exec($connection,'certbot --apache -d ' . $newDomainName . ' -d www.' . $oldDomainName);
             sleep(15);
-            ssh2_exec($connection,'1');
+            ssh2_exec($connection,'2');
             //
 
             return true;
@@ -421,7 +421,7 @@ class DomainController extends Controller
         //SSL CONFİG
         ssh2_exec($connection,'certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
         sleep(15);
-        ssh2_exec($connection,'1');
+        ssh2_exec($connection,'2');
         ///
         return $response;
     }
