@@ -23,4 +23,10 @@ return [
      'GIT_USER_NAME' => '',
      'GIT_PASSWORD' => '',
 
+
+     // REWRITER
+
+     'REWRITER_API_URL' => 'https://rewriter-paraphraser-text-changer-multi-language.p.rapidapi.com/rewrite',
+     'REWRITER_API_TOKEN' => 'c8e3299296mshd8efaf5f1fc687ap1b6076jsn5b433a67e25b'
+
 ];
