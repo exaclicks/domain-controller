@@ -196,7 +196,7 @@ class DomainController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function banlanma_logu(Request $request)
+    public function banlanmalogu(Request $request)
     {
         $bannedItem =  BannedList::all();
         foreach ($bannedItem  as $key => $value) {
