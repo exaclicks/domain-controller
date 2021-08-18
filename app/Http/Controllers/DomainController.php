@@ -250,6 +250,9 @@ class DomainController extends Controller
                 goto comeBack;
             }
 
+
+            sleep(30);
+
             $dropletIpAdress = $droplet123->networks[1]->ipAddress;
             $hostingIp = $dropletIpAdress;
             $digitalocean_nameservers_ipies = ["173.245.58.51", "173.245.59.41", "198.41.222.173"];
@@ -276,6 +279,7 @@ class DomainController extends Controller
             $created = $domainRecord->create($newDomainName, 'A', "ns3", $digitalocean_nameservers_ipies[2], null, null, null, null, null, 3600);
             //////////////////            
 
+            sleep(60);
             //STEP 3 CREATE NEW APACHE CONFİGS
    
         
@@ -291,7 +295,7 @@ class DomainController extends Controller
         </VirtualHost>" >> /etc/apache2/sites-available/' . $newDomainName . '.conf';
     
 
-            sleep(30);
+    
 
             $connection = ssh2_connect($hostingIp, 22, array('hostkey' => 'ssh-rsa'));
             if (!ssh2_auth_pubkey_file(
@@ -315,10 +319,11 @@ class DomainController extends Controller
             ssh2_exec($connection,$execute_code);
             ssh2_exec($connection,'a2ensite ' . $newDomainName . '.conf');
             ssh2_exec($connection,'systemctl restart apache2');
+            sleep(60);
 
             //SSL CONFİG
             ssh2_exec($connection,'certbot --apache -d ' . $newDomainName . ' -d www.' . $oldDomainName);
-            sleep(15);
+            sleep(30);
             ssh2_exec($connection,'2');
             //
 
@@ -393,6 +398,7 @@ class DomainController extends Controller
         ///
 
 
+        sleep(60);
 
         // ADD NEW DOMAİN APACHE CONFİG
         $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
@@ -416,7 +422,7 @@ class DomainController extends Controller
         ssh2_exec($connection,$execute_code);
         ssh2_exec($connection,'a2ensite ' . $oldDomainName . '.conf');
         ssh2_exec($connection,'systemctl restart apache2');
-
+        sleep(60);
         //SSL CONFİG
         ssh2_exec($connection,'certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
         sleep(15);
