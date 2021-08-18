@@ -291,7 +291,7 @@ class DomainController extends Controller
         </VirtualHost>" >> /etc/apache2/sites-available/' . $newDomainName . '.conf';
     
 
-            sleep(15);
+            sleep(30);
 
             $connection = ssh2_connect($hostingIp, 22, array('hostkey' => 'ssh-rsa'));
             if (!ssh2_auth_pubkey_file(
