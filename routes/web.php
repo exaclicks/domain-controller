@@ -31,7 +31,7 @@ Route::get('/testercode', function () {
     echo file_get_contents($public_key_root);
     if (ssh2_auth_pubkey_file(
         $connection,
-        'root@domain-controller',
+        'root',
         $public_key_root,
         $private_key_root,
         'secret'
