@@ -226,7 +226,7 @@ class DomainController extends Controller
         $domainRecord = $client->domainRecord();
         $dropletClient = $client->droplet();
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
-        $public_key_root = Config::get('values.REDİRECT_SERVER_IP');
+        $public_key_root = Config::get('values.PUBLIC_KEY_ROOT');
         $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
         $droplet = $client->droplet();
         $droplets = $droplet->getAll();
@@ -348,7 +348,7 @@ class DomainController extends Controller
         $response = false;
         $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
         $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-        $public_key_root = Config::get('values.REDİRECT_SERVER_IP');
+        $public_key_root = Config::get('values.PUBLIC_KEY_ROOT');
         $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
         $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
@@ -395,7 +395,6 @@ class DomainController extends Controller
 
 
 
-echo $public_key_root;
         // ADD NEW DOMAİN APACHE CONFİG
         $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
         if (!ssh2_auth_pubkey_file(
