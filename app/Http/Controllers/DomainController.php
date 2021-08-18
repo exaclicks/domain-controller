@@ -278,11 +278,7 @@ class DomainController extends Controller
 
             //STEP 3 CREATE NEW APACHE CONFİGS
    
-            $newServerIp = 1;
-            foreach ($droplets as  $droplet) {
-                if ($droplet->name == $newDomainName)
-                    $newServerIp = $droplet->networks[1]->ipAddress;
-            }
+        
 
             $document_root ='1xbet-html-page';
             $execute_code = 'echo "<VirtualHost *:80>
@@ -297,7 +293,7 @@ class DomainController extends Controller
 
             sleep(15);
 
-            $connection = ssh2_connect($newServerIp, 22, array('hostkey' => 'ssh-rsa'));
+            $connection = ssh2_connect($hostingIp, 22, array('hostkey' => 'ssh-rsa'));
             if (!ssh2_auth_pubkey_file(
                 $connection,
                 'root',
