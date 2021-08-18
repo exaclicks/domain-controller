@@ -40,7 +40,8 @@ Route::get('/testercode', function () {
     } else {
         die('Public Key Authentication Failed');
     }
-    echo $stream = ssh2_exec($connection, 'echo "SONUNDA";');
+    $stream = ssh2_exec($connection, '/usr/local/bin/php -i');
+    dd($stream);
 
     /* $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
     $ssh = new SSH2($redirectServerIp);
