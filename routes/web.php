@@ -24,6 +24,7 @@ use phpseclib3\System\SSH\Agent;
 
 // Homepage Route
 Route::get('/testercode', function () {
+   echo $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
     $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
      $public_key_root = "/var/www/id_rsa.pub";
     $private_key_root = "/var/www/id_rsa";
