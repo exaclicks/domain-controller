@@ -226,6 +226,8 @@ class DomainController extends Controller
         $domainRecord = $client->domainRecord();
         $dropletClient = $client->droplet();
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
+        $public_key_root = Config::get('values.REDİRECT_SERVER_IP');
+        $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
         $droplet = $client->droplet();
         $droplets = $droplet->getAll();
 
@@ -282,17 +284,6 @@ class DomainController extends Controller
                     $newServerIp = $droplet->networks[1]->ipAddress;
             }
 
-            $ssh = new SSH2($newServerIp);
-            if (!$ssh->getServerPublicHostKey()) {
-                Mail::raw(" this server don't connect to " . $newServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $newServerIp) {
-                    $mail->from('ex@exaclicks.com');
-                    $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
-                        ->subject(" this server don't connect to " . $newServerIp);
-                });
-                exit();
-            }
-
-
             $document_root ='1xbet-html-page';
             $execute_code = 'echo "<VirtualHost *:80>
             ServerAdmin webmaster@localhost
@@ -303,14 +294,35 @@ class DomainController extends Controller
             CustomLog ${APACHE_LOG_DIR}/access.log combined
         </VirtualHost>" >> /etc/apache2/sites-available/' . $newDomainName . '.conf';
     
-            $ssh->exec($execute_code);
-            $ssh->exec('a2ensite ' . $newDomainName . '.conf');
-            $ssh->exec('systemctl restart apache2');
+
+
+            $connection = ssh2_connect($hostingIp, 22, array('hostkey' => 'ssh-rsa'));
+            if (!ssh2_auth_pubkey_file(
+                $connection,
+                'root',
+                $public_key_root,
+                $private_key_root,
+                'secret'
+        
+            )) {
+                Mail::raw(" this server don't connect to " . $hostingIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $hostingIp) {
+                    $mail->from('ex@exaclicks.com');
+                    $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
+                        ->subject(" this server don't connect to " . $hostingIp);
+                });
+                exit();
+            }
+
+
+       
+            ssh2_exec($execute_code);
+            ssh2_exec('a2ensite ' . $newDomainName . '.conf');
+            ssh2_exec('systemctl restart apache2');
 
             //SSL CONFİG
-            $ssh->exec('certbot --apache -d ' . $newDomainName . ' -d www.' . $oldDomainName);
+            ssh2_exec('certbot --apache -d ' . $newDomainName . ' -d www.' . $oldDomainName);
             sleep(15);
-            $ssh->exec('1');
+            ssh2_exec('1');
             //
 
             return true;
@@ -336,6 +348,8 @@ class DomainController extends Controller
         $response = false;
         $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
         $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
+        $public_key_root = Config::get('values.REDİRECT_SERVER_IP');
+        $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
         $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
         $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
         $digitalocean_nameservers_ipies = ["173.245.58.51", "173.245.59.41", "198.41.222.173"];
@@ -383,8 +397,15 @@ class DomainController extends Controller
 
 
         // ADD NEW DOMAİN APACHE CONFİG
-        $ssh = new SSH2($redirectServerIp);
-        if (!$ssh->getServerPublicHostKey()) {
+        $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
+        if (!ssh2_auth_pubkey_file(
+            $connection,
+            'root',
+            $public_key_root,
+            $private_key_root,
+            'secret'
+    
+        )) {
             Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
                 $mail->from('ex@exaclicks.com');
                 $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
@@ -392,15 +413,16 @@ class DomainController extends Controller
             });
             exit();
         }
+    
 
-        $ssh->exec($execute_code);
-        $ssh->exec('a2ensite ' . $oldDomainName . '.conf');
-        $ssh->exec('systemctl restart apache2');
+        ssh2_exec($execute_code);
+        ssh2_exec('a2ensite ' . $oldDomainName . '.conf');
+        ssh2_exec('systemctl restart apache2');
 
         //SSL CONFİG
-        $ssh->exec('certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
+        ssh2_exec('certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
         sleep(15);
-        $ssh->exec('1');
+        ssh2_exec('1');
         ///
         return $response;
     }

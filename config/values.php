@@ -17,6 +17,9 @@ return [
      'REDİRECT_SERVER_DEFAULT_PASSWORD' => 'UR%X;i&5X^&E',
      
 
+     //SERVER
+     'PUBLIC_KEY_ROOT'=>"/var/www/id_rsa.pub",
+     'PRIVATE_KEY_ROOT'=>"/var/www/id_rsa",
      
      // GIT ACCOUNT
 
