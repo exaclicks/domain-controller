@@ -315,14 +315,14 @@ class DomainController extends Controller
 
 
        
-            ssh2_exec($execute_code);
-            ssh2_exec('a2ensite ' . $newDomainName . '.conf');
-            ssh2_exec('systemctl restart apache2');
+            ssh2_exec($connection,$execute_code);
+            ssh2_exec($connection,'a2ensite ' . $newDomainName . '.conf');
+            ssh2_exec($connection,'systemctl restart apache2');
 
             //SSL CONFİG
-            ssh2_exec('certbot --apache -d ' . $newDomainName . ' -d www.' . $oldDomainName);
+            ssh2_exec($connection,'certbot --apache -d ' . $newDomainName . ' -d www.' . $oldDomainName);
             sleep(15);
-            ssh2_exec('1');
+            ssh2_exec($connection,'1');
             //
 
             return true;
@@ -414,14 +414,14 @@ class DomainController extends Controller
         }
     
 
-        ssh2_exec($execute_code);
-        ssh2_exec('a2ensite ' . $oldDomainName . '.conf');
-        ssh2_exec('systemctl restart apache2');
+        ssh2_exec($connection,$execute_code);
+        ssh2_exec($connection,'a2ensite ' . $oldDomainName . '.conf');
+        ssh2_exec($connection,'systemctl restart apache2');
 
         //SSL CONFİG
-        ssh2_exec('certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
+        ssh2_exec($connection,'certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
         sleep(15);
-        ssh2_exec('1');
+        ssh2_exec($connection,'1');
         ///
         return $response;
     }
