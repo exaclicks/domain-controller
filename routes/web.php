@@ -23,17 +23,23 @@ use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\System\SSH\Agent;
 
 // Homepage Route
-Route::get('/testercode' , function () {
+Route::get('/testercode', function () {
     $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
-    $connection = ssh2_connect($redirectServerIp, 22, array('hostkey'=>'ssh-rsa'));
+    $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
+    $public_key_root = "/root/.ssh/id_rsa.pub";
+    $private_key_root = "/root/.ssh/id_rsa";
 
-    if (ssh2_auth_pubkey_file($connection, 'root',
-    '/root/.ssh/id_rsa.pub',
-    '/root/.ssh/id_rsa', 'secret')) {
-echo "Public Key Authentication Successful\n";
-} else {
-die('Public Key Authentication Failed');
-}
+    if (ssh2_auth_pubkey_file(
+        $connection,
+        'root',
+        $public_key_root,
+        $private_key_root,
+
+    )) {
+        echo "Public Key Authentication Successful\n";
+    } else {
+        die('Public Key Authentication Failed');
+    }
     /* $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
     $ssh = new SSH2($redirectServerIp);
     $privateKey = $ssh->getServerPublicHostKey();
@@ -43,7 +49,6 @@ die('Public Key Authentication Failed');
     $response = $ssh->login('root',"asd");
     echo $ssh->exec("echo 5");
     echo $response; */
-
 });
 
 Route::get('/get_new_sentence', 'App\Http\Controllers\RewriterController@get_new_sentence')->name('get_new_sentence');
@@ -63,13 +68,12 @@ Route::resource('bet_companies', BetCompanyController::class);
 // Homepage Route
 Route::group(['middleware' => ['web', 'checkblocked']], function () {
     //ADD NEW DROPLET
-    Route::get('/add_new_droplet', 'App\Http\Controllers\DropletController@add_new_droplet')->name('add_new_droplet');    
+    Route::get('/add_new_droplet', 'App\Http\Controllers\DropletController@add_new_droplet')->name('add_new_droplet');
     // THİS APİ CAN ADD NEW DNS RECORDS AND APACHE CONFİG
-    Route::get('/add_new_domain_server_records', 'App\Http\Controllers\DomainController@add_new_domain_server_records')->name('add_new_domain_server_records');    
+    Route::get('/add_new_domain_server_records', 'App\Http\Controllers\DomainController@add_new_domain_server_records')->name('add_new_domain_server_records');
     // THİS APİ CAN ADD OLD DNS RECORDS AND REDİRECT SERVER APACHE CONFİG
-    Route::get('/old_domain_move_redirect_server', 'App\Http\Controllers\DomainController@old_domain_move_redirect_server')->name('old_domain_move_redirect_server');    
-    Route::get('/banlanmalogu', 'App\Http\Controllers\DomainController@banlanmalogu')->name('banlanmalogu');    
-    
+    Route::get('/old_domain_move_redirect_server', 'App\Http\Controllers\DomainController@old_domain_move_redirect_server')->name('old_domain_move_redirect_server');
+    Route::get('/banlanmalogu', 'App\Http\Controllers\DomainController@banlanmalogu')->name('banlanmalogu');
 });
 
 
