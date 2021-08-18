@@ -34,6 +34,7 @@ Route::get('/testercode', function () {
         'root',
         $public_key_root,
         $private_key_root,
+        'secret'
 
     )) {
         echo "Public Key Authentication Successful\n";
