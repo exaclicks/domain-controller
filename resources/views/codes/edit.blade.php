@@ -47,6 +47,13 @@
 
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
+                    <strong>limit:</strong>
+                    <input type="number" name="limit" value="{{ $code->limit }}" class="form-control" placeholder="limit">
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
                     <strong>git_address:</strong>
                     <input type="text" name="git_address" value="{{ $code->git_address }}" class="form-control" placeholder="git_address">
                 </div>

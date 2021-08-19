@@ -22,6 +22,7 @@
         <th>Name</th>
         <th>Type</th>
         <th>Description</th>
+        <th>Limit</th>
         <th>Git Address</th>
         <th width="280px">Action</th>
     </tr>
@@ -31,6 +32,7 @@
         <td>{{ $code->name }}</td>
         <td>{{ $code->type }}</td>
         <td>{{ $code->description }}</td>
+        <td>{{ $code->limit }}</td>
         <td>{{ $code->git_address }}</td>
         <td>
             <form action="{{ route('codes.destroy', $code->id) }}" method="POST">

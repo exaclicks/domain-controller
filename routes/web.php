@@ -5,6 +5,8 @@ use App\Http\Controllers\BetCompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\DropletController;
+use App\Models\Code;
+use App\Models\GitDomain;
 use DigitalOceanV2\Client;
 /*
 |--------------------------------------------------------------------------
@@ -26,50 +28,14 @@ use phpseclib3\System\SSH\Agent;
 Route::get('/testercode', function () {
 
 
-    $newDomainName ="test.com";
-    $oldDomainName = "oldtest.com";
-    $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
-    $client = new Client();
-    $client->authenticate($token);
-    $domainRecord = $client->domainRecord();
-    $dropletClient = $client->droplet();
-    $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
-    $public_key_root = Config::get('values.PUBLIC_KEY_ROOT');
-    $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
-    $droplet = $client->droplet();
-    $droplets = $droplet->getAll();
-    $connection = ssh2_connect("206.189.61.106", 22, array('hostkey' => 'ssh-rsa'));
-    if (!ssh2_auth_pubkey_file(
-        $connection,
-        'root',
-        $public_key_root,
-        $private_key_root,
-        'secret'
+        $codes = GitDomain::all();
 
-    )) {
-       echo 5;
-        exit();
-    }
-    $document_root ='1xbet-html-page';
-
-    $execute_code = 'echo "<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    ServerName ' . $newDomainName . '
-    ServerAlias www.' . $newDomainName . '
-    DocumentRoot /var/www/'.$document_root.'
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>" >> /etc/apache2/sites-available/' . $newDomainName . '.conf';
+        foreach ($codes as $key => $value) {
+            # code...
+            echo $value->git_id . "---" . $value->domain_id."---".$value->setup."<br>";
+        }
 
 
-    ssh2_exec($connection,$execute_code);
-    ssh2_exec($connection,'a2ensite ' . $newDomainName . '.conf');
-    ssh2_exec($connection,'systemctl restart apache2');
-
-    //SSL CONFİG
-    ssh2_exec($connection,'certbot --apache -d ' . $newDomainName . ' -d www.' . $oldDomainName);
-    sleep(15);
-    ssh2_exec($connection,'2');
 });
 
 Route::get('/get_new_sentence', 'App\Http\Controllers\RewriterController@get_new_sentence')->name('get_new_sentence');
@@ -92,6 +58,14 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     Route::get('/add_new_droplet', 'App\Http\Controllers\DropletController@add_new_droplet')->name('add_new_droplet');
     //DELETE NEW DROPLET
     Route::get('/delete_droplet', 'App\Http\Controllers\DropletController@delete_droplet')->name('delete_droplet');
+
+    // GİT
+    Route::get('/add_new_git_domain', 'App\Http\Controllers\GitController@add_new_git_domain')->name('add_new_git_domain');
+    Route::get('/delete_git_domain', 'App\Http\Controllers\GitController@delete_git_domain')->name('delete_git_domain');
+
+
+
+
 
     // THİS APİ CAN ADD NEW DNS RECORDS AND APACHE CONFİG
     Route::get('/add_new_domain_server_records', 'App\Http\Controllers\DomainController@add_new_domain_server_records')->name('add_new_domain_server_records');

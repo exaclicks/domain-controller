@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Config;
 use DigitalOceanV2\Client;
 use App\Models\BannedList;
+use App\Models\Code;
+use App\Models\GitDomain;
 use phpseclib3\Net\SSH2;
 use Illuminate\Support\Facades\Mail;
 
@@ -349,6 +351,112 @@ class DomainController extends Controller
     {
         $oldDomainName = $request->get('old_domain_name');
         $newDomainName = $request->get('new_domain_name');
+        $response = false;
+        $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
+        $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');
+        $public_key_root = Config::get('values.PUBLIC_KEY_ROOT');
+        $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
+        $redirectServerDefaultPassword = Config::get('values.REDİRECT_SERVER_DEFAULT_PASSWORD');
+        $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
+        $digitalocean_nameservers_ipies = ["173.245.58.51", "173.245.59.41", "198.41.222.173"];
+        $new_nameservers = ['ns1.' . $oldDomainName, 'ns2.' . $oldDomainName, 'ns3.' . $oldDomainName];
+        $client = new Client();
+        $client->authenticate($token);
+        $domainRecord = $client->domainRecord();
+        $domainRecordInfos = $domainRecord->getAll($oldDomainName);
+
+
+        $execute_code = 'echo "<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName ' . $oldDomainName . '
+        ServerAlias www.' . $oldDomainName . '
+        DocumentRoot /var/www/1xbet-html-page
+        Redirect / https://' . $newDomainName . '/               
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+    </VirtualHost>" >> /etc/apache2/sites-available/' . $oldDomainName . '.conf';
+
+
+
+
+        // ADD OLD DOMAİN RECORDS
+
+        //Delete old dns
+        foreach ($domainRecordInfos as $value) {
+            if ($value->type != "SOA") {
+                $domainRecord->remove($oldDomainName, $value->id);
+            }
+        }
+
+        //create new dns and nameservers;
+        $created = $domainRecord->create($oldDomainName, 'A', '@', $redirectServerIp, null, null, null, null, null, 3600);
+        $created = $domainRecord->create($oldDomainName, 'A', 'www', $redirectServerIp, null, null, null, null, null, 3600);
+        $created = $domainRecord->create($oldDomainName, 'NS', '@', $new_nameservers[1] . ".", null, null, null, null, null, 86400);
+        $created = $domainRecord->create($oldDomainName, 'NS', '@', $new_nameservers[1] . ".", null, null, null, null, null, 86400);
+        $created = $domainRecord->create($oldDomainName, 'NS', '@', $new_nameservers[2] . ".", null, null, null, null, null, 86400);
+        $created = $domainRecord->create($oldDomainName, 'A', "ns1", $digitalocean_nameservers_ipies[0], null, null, null, null, null, 3600);
+        $created = $domainRecord->create($oldDomainName, 'A', "ns2", $digitalocean_nameservers_ipies[1], null, null, null, null, null, 3600);
+        $created = $domainRecord->create($oldDomainName, 'A', "ns3", $digitalocean_nameservers_ipies[2], null, null, null, null, null, 3600);
+        ///
+
+
+        sleep(60);
+
+        // ADD NEW DOMAİN APACHE CONFİG
+        $connection = ssh2_connect($redirectServerIp, 22, array('hostkey' => 'ssh-rsa'));
+        if (!ssh2_auth_pubkey_file(
+            $connection,
+            'root',
+            $public_key_root,
+            $private_key_root,
+            'secret'
+    
+        )) {
+            Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
+                $mail->from('ex@exaclicks.com');
+                $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
+                    ->subject(" this server don't connect to " . $redirectServerIp);
+            });
+            exit();
+        }
+    
+
+        ssh2_exec($connection,$execute_code);
+        ssh2_exec($connection,'a2ensite ' . $oldDomainName . '.conf');
+        ssh2_exec($connection,'systemctl restart apache2');
+        sleep(60);
+        //SSL CONFİG
+        ssh2_exec($connection,'certbot --apache -d ' . $oldDomainName . ' -d www.' . $oldDomainName);
+        sleep(15);
+        ssh2_exec($connection,'2');
+        ///
+
+
+        //DELETE OLD DROPLET
+
+        $deleteDropletRequest = Request::create('/delete_droplet?old_domain_name=' . $oldDomainName, 'GET');
+        $deleteDropletRequestResponse = Route::dispatch($deleteDropletRequest)->getOriginalContent();
+        
+
+        return $response;
+    }
+
+
+
+      /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function add_new_domain_with_github(Request $request)
+    {
+        $oldDomainName = $request->get('old_domain_name');
+        $newDomainName = $request->get('new_domain_name');
+        $unUsedDomains =Domain::where('domain_status',0)->where('used',0)->where('status',0)->get();
+        $git_repositories = Code::all();
+        $git_domains = GitDomain::all();
+
         $response = false;
         $token = Config::get('values.DIGITALOCEAN_ACCESS_TOKEN');
         $redirectServerIp = Config::get('values.REDİRECT_SERVER_IP');

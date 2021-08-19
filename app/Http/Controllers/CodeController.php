@@ -40,12 +40,16 @@ class CodeController extends Controller
             'name' => 'required',
             'git_address' => 'required',
             'type' => 'required',
+            'limit' => 'required',
+
         ]);
 
         $code = Code::create([
             'name' => $request->get('name'),
             'type' => $request->get('type'),
             'git_address' => $request->get('git_address'),
+            'limit' => $request->get('limit'),
+
             'description' => $request->get('description')
         ]);
 
@@ -89,6 +93,7 @@ class CodeController extends Controller
             'name' => 'required',
             'git_address' => 'required',
             'type' => 'required',
+            'limit' => 'required',
             'description' => 'required',
         ]);
 

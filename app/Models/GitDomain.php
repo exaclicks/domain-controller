@@ -12,6 +12,8 @@ class GitDomain extends Model
 
     protected $fillable = [
         'git_id',
-        "domain_id"
+        "domain_id",
+        "setup",
+
     ];
 }

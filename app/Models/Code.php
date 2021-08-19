@@ -15,6 +15,7 @@ class Code extends Model
     protected $fillable = [
         'name',
         'type',
+        'limit',
         'description',
         'git_address',
     ];
