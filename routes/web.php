@@ -4,25 +4,9 @@ use App\Http\Controllers\CodeController;
 use App\Http\Controllers\BetCompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
-use App\Http\Controllers\DropletController;
-use App\Models\Code;
 use App\Models\GitDomain;
-use DigitalOceanV2\Client;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use phpseclib3\Net\SSH2;
-use phpseclib3\Crypt\PublicKeyLoader;
-use phpseclib3\System\SSH\Agent;
+
 
 // Homepage Route
 Route::get('/testercode', function () {
@@ -45,6 +29,7 @@ Route::get('/un_used_domain_create', 'App\Http\Controllers\DomainController@un_u
 Route::post('/un_used_domain_delete', 'App\Http\Controllers\DomainController@un_used_destroy')->name('un_used_domain_delete');
 Route::get('/un_used_domain_index', 'App\Http\Controllers\DomainController@un_used_domain_index')->name('un_used_domain_index');
 Route::post('/un_used_domain_store', 'App\Http\Controllers\DomainController@un_used_domain_store')->name('un_used_domain_store');
+Route::get('/movable_and_used_domain_index', 'App\Http\Controllers\DomainController@movable_and_used_domain_index')->name('movable_and_used_domain_index');
 
 
 Route::resource('domains', DomainController::class);
@@ -64,6 +49,12 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     Route::get('/delete_git_domain', 'App\Http\Controllers\GitController@delete_git_domain')->name('delete_git_domain');
 
 
+
+
+    // ACTIONS
+
+    Route::get('/new_add_and_old_delete_request', 'App\Http\Controllers\ActionController@new_add_and_old_delete_request')->name('new_add_and_old_delete_request');
+    Route::get('/new_add_request', 'App\Http\Controllers\ActionController@new_add_request')->name('new_add_request');
 
 
 

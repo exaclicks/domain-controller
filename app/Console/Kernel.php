@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\DeleteExpiredActivations::class,
         Commands\DailyQuote::class,
-
+        Commands\CheckDomains::class,
+        Commands\AddNewDomain::class,
     ];
 
     /**
@@ -28,8 +29,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('quote:everyMinute')
-        ->everyMinute();
+        $schedule->command('quote:everyMinute')->everyMinute();
+        $schedule->command('quote:addNewDomain')->everyMinute();
+        $schedule->command('quote:checkDomains')->everyMinute();
         $schedule->command('activations:clean')->daily();
     }
 
@@ -41,7 +43,6 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-
         require base_path('routes/console.php');
     }
 }

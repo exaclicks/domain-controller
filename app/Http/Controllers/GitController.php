@@ -26,7 +26,7 @@ class GitController extends Controller
         $request->validate([
             'new_domain_name' => 'required',
         ]);
-        $response = false;
+        $response=null;
         $newDomainName = $request->get('new_domain_name');
         $domain = Domain::where('name', $newDomainName)->get()->first();
     
@@ -61,10 +61,11 @@ class GitController extends Controller
             $new_git_domain->domain_id = $domain_id;
             $new_git_domain->setup = 0;
             $new_git_domain->save();
-            $response = true;
+            $response = $new_git_domain;
         }else{
-            $response = false;
+            $response = $git_domain;
         }
+
 
         return $response;
     }

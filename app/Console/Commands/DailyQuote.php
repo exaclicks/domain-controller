@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use App\Models\BannedList;
 use App\Models\Domain;
+use App\Models\Log;
 use phpseclib3\Net\SSH2;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -70,6 +71,11 @@ class DailyQuote extends Command
                 ->subject(" this server don't connect to " . $TR_SERVER_IP);
         });
 
+        $log = new Log();
+        $log->type = -1;
+        $log->title = "Hata";
+        $log->description = "$TR_SERVER_IP ipli servere bağlanılmıyor.";
+        $log->save();
         exit();
     }
 
@@ -77,7 +83,7 @@ class DailyQuote extends Command
     $isMoved = "";
 
 
-    $domains = Domain::all();
+    $domains = Domain::where("used",1)->get();
     foreach ($domains as $domain) {
         $status = -1;
         $link = $domain->name;
@@ -137,14 +143,21 @@ class DailyQuote extends Command
 
                     if ($ACTION_TYPE == 0) {
                         $domain->save();
-
-                        Mail::raw($domain->name . " engellendi. <br> " , function ($mail) use ($domain, $WHICH_MAIL_FOR_BANNED) {
-                            $mail->from("ex@exaclicks.com");
-                            $mail->to($WHICH_MAIL_FOR_BANNED)
-                                ->subject($domain->name);
-                        });
-                        $domain->domain_status = 1; //  1 taşınması gerekiyor. 2 taşındı.
+                        if($domain->movable==0){
+                            Mail::raw($domain->name . " engellendi. <br> " , function ($mail) use ($domain, $WHICH_MAIL_FOR_BANNED) {
+                                $mail->from("ex@exaclicks.com");
+                                $mail->to($WHICH_MAIL_FOR_BANNED)
+                                    ->subject($domain->name);
+                            });
+                          
+                        }
+                        $log = new Log();
+                        $log->type = 1;
+                        $log->title = "Uyarı";
+                        $log->description = "$domain->name banlandı.";
+                        $log->save();
                         $domain->status = 3;
+                        $domain->domain_status = 1; //  1 taşınması gerekiyor. 2 taşındı.
                         $domain->save();
                     }
                 }

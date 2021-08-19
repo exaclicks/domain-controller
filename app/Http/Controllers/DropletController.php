@@ -75,7 +75,7 @@ class DropletController extends Controller
         $client->authenticate($token);
         $dropletClient = $client->droplet();
         $droplets = $dropletClient->getAll();
-        $response = false;
+        $response = 0;
         $newDropletId = 0;
 
         try {
@@ -88,7 +88,7 @@ class DropletController extends Controller
             }
 
 
-            $response  = true;
+            $response  = $newDropletId;
         } catch (\Throwable $th) {
             return $response;
         }

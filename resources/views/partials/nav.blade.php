@@ -65,8 +65,12 @@
                             Unused Domains
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item {{ (Request::is('domains') || Request::is('permissions')) ? 'active' : null }}" href="{{ url('/domains') }}">
+                        <a class="dropdown-item {{ (Request::is('movable_and_used_domain_index') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('movable_and_used_domain_index') }}">
                             Running Domains
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item {{ (Request::is('domains') || Request::is('permissions')) ? 'active' : null }}" href="{{ url('/domains') }}">
+                            Unmovable Running Domains
                         </a>
                         <div class="dropdown-divider"></div>
 

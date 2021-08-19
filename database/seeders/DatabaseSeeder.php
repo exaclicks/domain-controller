@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ThemesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(BetCompaniesTableSeeder::class);
+        $this->call(ServerSettingsTableSeeder::class);
 
         Model::reguard();
     }

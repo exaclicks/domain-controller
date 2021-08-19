@@ -3,8 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Models\Domain;
+use App\Models\GitDomain;
+use App\Models\Log;
+use App\Models\ServerSetting;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Routing\Route;
 
 class CheckDomains extends Command
 {
@@ -41,23 +45,63 @@ class CheckDomains extends Command
     {
 
 
-        $bannedDomains = Domain::where('domain_status',1)->where('used',1)->where('status',3)->get();
-        $unUsedDomains= Domain::where('domain_status',0)->where('used',0)->where('status',0)->get();
-        foreach ($bannedDomains as $key => $bannedDomain) {
-           $oldDomainName = $bannedDomain->name;
-           $newDomainName = $unUsedDomains->first()->name;
-          
-          
-          
-           $responseMoveToDomain = HttpRequest::create('/moveToNewDomain/'.$oldDomainName.'/'.$newDomainName , 'GET');
-           $responseNewDomainNewApacheConfigForRedirect = HttpRequest::create('/newDomainNewApacheConfigForRedirect/'.$oldDomainName .'/'.$newDomainName, 'GET');
-           $responseMoveToRedirectServer = HttpRequest::create('/moveToRedirectServer/'.$oldDomainName, 'GET'); 
-           $responseOldDomainNewApacheConfigForRedirect = HttpRequest::create('/oldDomainNewApacheConfigForRedirect/'.$oldDomainName .'/'.$newDomainName, 'GET');
-  
-          
-         
-           
+        $server_settings = ServerSetting::all()->first();
+        $domains = Domain::where('domain_status', 1)->where('used', 1)->where('status', 3)->where('movable', 1)->get();
+        $newDomain = Domain::where('domain_status', 0)->where('used', 0)->where('status', 0)->where('movable', 1)->get()->first();
+        $newDomainName = $newDomain->name;
+        $continueProccess = true;
+        if($server_settings->is_server_busy){
+            return 0;
         }
+        $server_settings->is_server_busy = true;
+        $server_settings->save();
+        
+        foreach ($domains as $oldDomain) {
+
+            if (!$newDomain) {
+                $log = new Log();
+                $log->type = 1;
+                $log->title = "Uyarı";
+                $log->description = "Domainler bitmiş, yeni domain eklenmeli";
+                $log->save();
+
+                $continueProccess = false;
+            }
+
+            if ($continueProccess) {
+                $oldDomainName = $oldDomain->name;
+                $oldGitDomain =  GitDomain::where("where", $oldDomain->id)->get()->first();
+                $newGitDomain = new GitDomain();
+                $newGitDomain->git_id = $oldGitDomain->git_id;
+                $newGitDomain->domain_id = $newDomain->id;
+                $oldGitDomain->delete();
+                $newGitDomain->save();
+                $continueProccess = true;
+            }
+
+            if ($continueProccess) {
+                $new_add_and_old_deleteResponse = HttpRequest::create('/new_add_and_old_delete_request?new_domain_name=' . $newDomainName . '&old_domain_name=' . $oldDomainName, 'GET');
+                $deleteProccessResponse = Route::dispatch($new_add_and_old_deleteResponse)->getOriginalContent();
+                if (!$deleteProccessResponse)
+                    $continueProccess = false;
+            }
+
+            if ($continueProccess) {
+                $newDomain->used = 1;
+                $newDomain->save();
+                $oldDomain->domain_status = 2;
+                $oldDomain->save(); // TAŞINDI.
+                $log = new Log();
+            $log->type = 0;
+            $log->title = "Başarılı";
+            $log->description = $oldDomain->name . " tamamen taşındı ve .".$newDomain->name . " yeni domain kullanıma hazır.";
+        
+            }
+        }
+
+
+        $server_settings->is_server_busy = false;
+        $server_settings->save();
         return 0;
     }
 }
