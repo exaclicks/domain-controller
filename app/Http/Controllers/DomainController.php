@@ -123,6 +123,7 @@ class DomainController extends Controller
             'status' => 0,
             'movable' =>  $request->get('movable'),
             'used' => 0,
+            'doain_status' => 0,
         ]);
 
         $domain->save();
