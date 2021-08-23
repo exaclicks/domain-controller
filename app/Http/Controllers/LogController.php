@@ -14,7 +14,7 @@ class LogController extends Controller
      */
     public function index()
     {
-        $logs = Log::limit(10)->sortByDesc('created_at')->get();
+        $logs = Log::limit(10)->get()->sortByDesc('created_at');
         return view('log.index', compact('logs'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
 
