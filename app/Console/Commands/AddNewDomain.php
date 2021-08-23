@@ -67,7 +67,6 @@ class AddNewDomain extends Command
                 break;
             }
         }
-        dd($git_id);
 
 
         if ($git_id == 0) {
@@ -92,6 +91,8 @@ class AddNewDomain extends Command
         }
 
        if ($continueProccess) {
+        dd($git_id);
+
             $oldGitDomain =  GitDomain::where("id", $newDomain->id)->get()->first();
             if ($oldGitDomain)
                 $oldGitDomain->delete();
