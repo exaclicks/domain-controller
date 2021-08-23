@@ -85,7 +85,7 @@ class ActionController extends Controller
             $log = new Log();
             $log->type = -1;
             $log->title = "Hata";
-            $log->description = "$newDomainName için droplet ve dns kayıtları işlemini yaparken bir hata  meydana geldi..";
+            $log->description = "$newDomainName için droplet ve dns kayıtları işlemini yaparken bir hata meydana geldi..";
             $log->save();
             $continueProccess = false;
             $this->deleteErrorProcces($newDomainName);
@@ -138,7 +138,6 @@ class ActionController extends Controller
             $log->description = "$newDomainName droplet oluşturma ve yeni dns recordsları sırasında bir hata meydana geldiği için yapılan işlemler geri alındı.";
             $log->save();
 
-            echo $newDomainName . " droplet ve dns recordsları silindi." . "<br>";
         } else {
             $log = new Log();
             $log->type = -1;

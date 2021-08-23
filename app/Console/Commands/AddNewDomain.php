@@ -50,8 +50,7 @@ class AddNewDomain extends Command
         $git_id = 0;
         $newDomain = Domain::where('domain_status', 0)->where('used', 0)->where('status', 0)->where('movable', 1)->get()->first();
         $server_settings = ServerSetting::all()->first();
-        $server_settings->is_server_busy = false;
-        $server_settings->save();
+     
         if ($server_settings->is_server_busy) {
             return 0;
         }
