@@ -55,7 +55,7 @@ class CheckDomains extends Command
         $newDomainName = '';
            $server_settings->is_server_busy = true;
         $server_settings->save(); 
-
+$oldDomainName='';
         foreach ($domains as $oldDomain) {
 
             if (!$newDomain) {

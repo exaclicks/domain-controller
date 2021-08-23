@@ -26,33 +26,32 @@ class GitController extends Controller
         $request->validate([
             'new_domain_name' => 'required',
         ]);
-        $response=null;
+        $response = null;
         $newDomainName = $request->get('new_domain_name');
         $domain = Domain::where('name', $newDomainName)->get()->first();
-    
+
         $domain_id = $domain->id;
         $codes = Code::all();
         $git_domains_limit_array = [];
         $git_id = 0;
-        $git_domains=[];
+        $git_domains = [];
 
 
 
         foreach ($codes as  $value) {
-            $git_domains = GitDomain::where("git_id",$value->id)->get();
+            $git_domains = GitDomain::where("git_id", $value->id)->get();
             $git_domains_limit = count($git_domains);
-            if($value->limit > ($git_domains_limit-1)){
+            if ($value->limit > ($git_domains_limit - 1)) {
                 $git_domains_limit_array[$value->id] = $git_domains_limit;
             }
-
         }
 
-dd($git_domains_limit_array);
 
-        $minimum_value = min($git_domains_limit_array);
+        if (count($git_domains_limit_array) > 0) {
+            $minimum_value = min($git_domains_limit_array);
+            $git_id = array_search($minimum_value, $git_domains_limit_array);
+        }
 
-        $git_id = array_search($minimum_value, $git_domains_limit_array);
-        
 
 
         $git_domain = GitDomain::where('domain_id', $domain_id)->get()->first();
@@ -63,7 +62,7 @@ dd($git_domains_limit_array);
             $new_git_domain->setup = 0;
             $new_git_domain->save();
             $response = $new_git_domain->id;
-        }else{
+        } else {
             $response = $git_domain->id;
         }
 
@@ -83,15 +82,14 @@ dd($git_domains_limit_array);
             'old_domain_name' => 'required',
         ]);
         $oldDomainName = $request->get('old_domain_name');
-         $domain_id = Domain::where('name', $oldDomainName)->get()->first()->id;
+        $domain_id = Domain::where('name', $oldDomainName)->get()->first()->id;
 
         $git_domain = GitDomain::where('domain_id', $domain_id)->get()->first();
         try {
             $git_domain->delete();
             return true;
         } catch (\Throwable $th) {
-           return false;
+            return false;
         }
-
     }
 }
