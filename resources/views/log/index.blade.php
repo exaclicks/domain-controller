@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-  Log Information
+  Server Logs
 @endsection
 
 @section('template_linked_css')

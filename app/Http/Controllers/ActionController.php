@@ -22,10 +22,7 @@ class ActionController extends Controller
      */
     public function new_add_and_old_delete_request(Request $request)
     {
-        $request->validate([
-            'new_domain_name' => 'required',
-            'old_domain_name' => 'required',
-        ]);
+     
         $newDomainName = $request->get('new_domain_name');
         $oldDomainName = $request->get('old_domain_name');
         $newDomainName = Domain::where('name', $newDomainName)->get()->first()->name;
@@ -67,7 +64,7 @@ class ActionController extends Controller
 
 
 
-    public function add_new($newDomainName)
+    public function add_new($newDomainName, $oldDomainName=null)
     {
         $continueProccess = true;
         $add_new_domain_server_records = HttpRequest::create('/add_new_domain_server_records?new_domain_name=' . $newDomainName, 'GET');
