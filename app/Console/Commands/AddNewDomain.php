@@ -55,10 +55,10 @@ class AddNewDomain extends Command
         if ($server_settings->is_server_busy) {
             return 0;
         }
-/* 
+
         $server_settings->is_server_busy = true;
         $server_settings->save();
- */
+
         foreach ($codes as $key => $code) {
 
             $git_domains = GitDomain::where("git_id", $code->id)->get();
@@ -92,7 +92,7 @@ class AddNewDomain extends Command
             }
         }
 
-/*         if ($continueProccess) {
+       if ($continueProccess) {
             $oldGitDomain =  GitDomain::where("id", $newDomain->id)->get()->first();
             if ($oldGitDomain)
                 $oldGitDomain->delete();
@@ -101,7 +101,7 @@ class AddNewDomain extends Command
             $newGitDomain->domain_id = $newDomain->id;
             $newGitDomain->save();
             $continueProccess = true;
-        } */
+        } 
 
         if ($continueProccess) {
 

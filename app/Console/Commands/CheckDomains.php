@@ -53,8 +53,8 @@ class CheckDomains extends Command
             return 0;
         }
         $newDomainName = '';
-        /*       $server_settings->is_server_busy = true;
-        $server_settings->save(); */
+           $server_settings->is_server_busy = true;
+        $server_settings->save(); 
 
         foreach ($domains as $oldDomain) {
 
