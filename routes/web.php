@@ -14,7 +14,9 @@ Route::get('/bannedAllDomain', function () {
 
    
     $codes = Domain::all();
-
+    $server_settings = ServerSetting::all()->first();
+    $server_settings->is_server_busy = false;
+    $server_settings->save();
 
         foreach ($codes as $key => $value) {
            $value->domain_status = 1;
