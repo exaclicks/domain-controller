@@ -245,7 +245,6 @@ class DomainController extends Controller
         $res = app()->handle($addNewGitDomain);
         $new_git_domain_id = $res->getContent();
         $newGitDomain = GitDomain::where('id', $new_git_domain_id)->get()->first();
-        dd($newGitDomain);
 
         $return = false;
 
