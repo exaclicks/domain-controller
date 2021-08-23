@@ -83,7 +83,7 @@ class DailyQuote extends Command
     $isMoved = "";
 
 
-    $domains = Domain::where("used",1)->get();
+    $domains = Domain::where("used",1)->where("status","!=",3)->orWhereNull('status')->get();
     foreach ($domains as $domain) {
         $status = -1;
         $link = $domain->name;

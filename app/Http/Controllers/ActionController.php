@@ -28,9 +28,7 @@ class ActionController extends Controller
         $newDomainName = Domain::where('name', $newDomainName)->get()->first()->name;
         $continueProccess = true;
 
-        if ($continueProccess) {
-            $continueProccess =  $this->add_new($newDomainName, $oldDomainName);
-        }
+        $continueProccess =  $this->add_new($newDomainName, $oldDomainName);
         if ($continueProccess) {
             $continueProccess =  $this->old_delete($newDomainName, $oldDomainName);
         }
@@ -50,13 +48,7 @@ class ActionController extends Controller
         
         $newDomainName = $request->get('new_domain_name');
         $newDomainName = Domain::where('name', $newDomainName)->get()->first()->name;
-        $continueProccess = true;
-
-        if ($continueProccess) {
-            $continueProccess =  $this->add_new($newDomainName);
-        }
-
-        return $continueProccess;
+        return $this->add_new($newDomainName);
     }
 
 
@@ -77,6 +69,7 @@ class ActionController extends Controller
             $log->title = "Başarılı";
             $log->description = "$newDomainName için droplet oluşturuldu ve dns kayıtları işlemi başarıyla tamamlandı..";
             $log->save();
+            $continueProccess = true;
         } else {
 
             $log = new Log();
@@ -106,6 +99,7 @@ class ActionController extends Controller
             $log->title = "Başarılı";
             $log->description = "$oldDomainName yönlendirme ve dns kayıtları işlemi başarıyla tamamlandı..";
             $log->save();
+            $continueProccess = true;
         } else {
             $log = new Log();
             $log->type = -1;

@@ -4,6 +4,7 @@ use App\Http\Controllers\CodeController;
 use App\Http\Controllers\BetCompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
+use App\Models\BannedList;
 use App\Models\Domain;
 use App\Models\GitDomain;
 use App\Models\ServerSetting;
@@ -32,6 +33,7 @@ Route::get('/testercode', function () {
 
     GitDomain::truncate();
    Domain::truncate();
+   BannedList::truncate();
    $server_settings = ServerSetting::all()->first();
    $server_settings->is_server_busy = false;
    $server_settings->save();
