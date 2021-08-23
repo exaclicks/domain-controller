@@ -48,14 +48,14 @@ class CheckDomains extends Command
         $server_settings = ServerSetting::all()->first();
         $domains = Domain::where('domain_status', 1)->where('used', 1)->where('status', 3)->where('movable', 1)->get();
         $newDomain = Domain::where('domain_status', 0)->where('used', 0)->where('status', 0)->where('movable', 1)->get()->first();
-        $newDomainName = $newDomain->name;
         $continueProccess = true;
-        if($server_settings->is_server_busy){
+        if ($server_settings->is_server_busy) {
             return 0;
         }
-  /*       $server_settings->is_server_busy = true;
+        $newDomainName = '';
+        /*       $server_settings->is_server_busy = true;
         $server_settings->save(); */
-        
+
         foreach ($domains as $oldDomain) {
 
             if (!$newDomain) {
@@ -66,6 +66,8 @@ class CheckDomains extends Command
                 $log->save();
 
                 $continueProccess = false;
+            } else {
+                $newDomainName = $newDomain->name;
             }
 
             if ($continueProccess) {
@@ -83,7 +85,7 @@ class CheckDomains extends Command
                 $new_add_and_old_deleteResponse = HttpRequest::create('/new_add_and_old_delete_request?new_domain_name=' . $newDomainName . '&old_domain_name=' . $oldDomainName, 'GET');
                 $res = app()->handle($new_add_and_old_deleteResponse);
                 $deleteProccessResponse = $res->getContent();
-                
+
                 if (!$deleteProccessResponse)
                     $continueProccess = false;
             }
@@ -94,10 +96,9 @@ class CheckDomains extends Command
                 $oldDomain->domain_status = 2;
                 $oldDomain->save(); // TAŞINDI.
                 $log = new Log();
-            $log->type = 0;
-            $log->title = "Başarılı";
-            $log->description = $oldDomain->name . " tamamen taşındı ve .".$newDomain->name . " yeni domain kullanıma hazır.";
-        
+                $log->type = 0;
+                $log->title = "Başarılı";
+                $log->description = $oldDomain->name . " tamamen taşındı ve ." . $newDomain->name . " yeni domain kullanıma hazır.";
             }
         }
 
