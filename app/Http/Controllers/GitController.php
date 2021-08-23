@@ -48,11 +48,7 @@ class GitController extends Controller
         }
 
         $minimum_value = min($git_domains_limit_array);
-        dd($minimum_value);
-        $min_limit_git_domain_item= array_flip($git_domains_limit_array[$minimum_value]);
-        $git_id = $codes[$min_limit_git_domain_item]->id;
-
-
+        $git_id = array_search($minimum_value, $git_domains_limit_array);
         
 
 
