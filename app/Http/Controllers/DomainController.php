@@ -244,7 +244,7 @@ class DomainController extends Controller
         $addNewGitDomain = Request::create('/add_new_git_domain?new_domain_name=' . $newDomainName, 'GET');
         $res = app()->handle($addNewGitDomain);
         $newGitDomain = $res->getContent();
-
+        $return = false;
 
         try {
 
@@ -359,12 +359,17 @@ class DomainController extends Controller
 
 
 
-            return true;
+            $return = true;
         } catch (\Throwable $th) {
+           
+            $return = false;
+        }
+
+        if(!$return){
             $newGitDomain->setup = 0;
             $newGitDomain->save();
-            return false;
         }
+        return $return ;
     }
 
 
