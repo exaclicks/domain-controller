@@ -4,6 +4,7 @@ use App\Http\Controllers\CodeController;
 use App\Http\Controllers\BetCompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
+use App\Models\Domain;
 use App\Models\GitDomain;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 // Homepage Route
 Route::get('/testercode', function () {
 
+    GitDomain::truncate();
+   Domain::truncate();
 
         $codes = GitDomain::all();
 
@@ -63,6 +66,11 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     // THİS APİ CAN ADD OLD DNS RECORDS AND REDİRECT SERVER APACHE CONFİG
     Route::get('/old_domain_move_redirect_server', 'App\Http\Controllers\DomainController@old_domain_move_redirect_server')->name('old_domain_move_redirect_server');
     Route::get('/banlanmalogu', 'App\Http\Controllers\DomainController@banlanmalogu')->name('banlanmalogu');
+    Route::get('/server_setting', 'App\Http\Controllers\ServerSettingController@index')->name('server_setting');
+
+    // LOGGİNG
+    Route::get('/logging', 'App\Http\Controllers\LogController@index')->name('logging');
+
 });
 
 

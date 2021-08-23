@@ -16,7 +16,12 @@
                         {!! trans('titles.adminDropdownNav') !!}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item {{ (Request::is('roles') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('laravelroles::roles.index') }}">
+             
+                        <a class="dropdown-item {{ (Request::is('server_setting')) ? 'active' : null }}" href="{{ route('server_setting') }}">
+                           Server Status
+                        </a>
+                        <div class="dropdown-divider"></div>
+                               <a class="dropdown-item {{ (Request::is('roles') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('laravelroles::roles.index') }}">
                             {!! trans('titles.laravelroles') !!}
                         </a>
                         <div class="dropdown-divider"></div>
@@ -35,6 +40,10 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item {{ Request::is('activity') ? 'active' : null }}" href="{{ url('/activity') }}">
                             {!! trans('titles.adminActivity') !!}
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item {{ Request::is('logging') ? 'active' : null }}" href="{{ url('/logging') }}">
+                            Server Logger
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item {{ Request::is('phpinfo') ? 'active' : null }}" href="{{ url('/phpinfo') }}">

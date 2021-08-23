@@ -13,6 +13,9 @@ class ServerSetting extends Model
 
 
     protected $fillable = [
-        'is_server_busy',
+        'is_server_busy', // controllerlar bir şey oluşturma aşamasındaysa 1 değilse 0 eğer 1 ise diğer controllerlar bişi oluşturmaya başlamıyor.
+        'banned_domain_get_controller', // banlanan domainin yerine yeni domain getiriyor.
+        'new_domain_get_controller', // yeni domain eklendiğinde yeni domaini sunucuya kuruyor.
+        'check_domain_controller', // domainlerin türkiye tarafından banlanıp banlanmadığını kontrol ediyor.
     ];
 }

@@ -28,7 +28,7 @@ class ActionController extends Controller
         ]);
         $newDomainName = $request->get('new_domain_name');
         $oldDomainName = $request->get('old_domain_name');
-        $newDomainName = Domain::where('name', $newDomainName);
+        $newDomainName = Domain::where('name', $newDomainName)->get()->first()->name;
         $continueProccess = true;
 
         if ($continueProccess) {
@@ -50,11 +50,9 @@ class ActionController extends Controller
      */
     public function new_add_request(Request $request)
     {
-        $request->validate([
-            'new_domain_name' => 'required',
-        ]);
+        
         $newDomainName = $request->get('new_domain_name');
-        $newDomainName = Domain::where('name', $newDomainName);
+        $newDomainName = Domain::where('name', $newDomainName)->get()->first()->name;
         $continueProccess = true;
 
         if ($continueProccess) {
@@ -73,19 +71,20 @@ class ActionController extends Controller
     {
         $continueProccess = true;
         $add_new_domain_server_records = HttpRequest::create('/add_new_domain_server_records?new_domain_name=' . $newDomainName, 'GET');
+        
         $responseNewDomainRecords = Route::dispatch($add_new_domain_server_records)->getOriginalContent();
         if ($responseNewDomainRecords) {
             $log = new Log();
             $log->type = 0;
             $log->title = "Başarılı";
-            $log->description = "$newDomainName->name için droplet oluşturuldu ve dns kayıtları işlemi başarıyla tamamlandı..";
+            $log->description = "$newDomainName için droplet oluşturuldu ve dns kayıtları işlemi başarıyla tamamlandı..";
             $log->save();
         } else {
 
             $log = new Log();
             $log->type = -1;
             $log->title = "Hata";
-            $log->description = "$newDomainName->name için droplet ve dns kayıtları işlemini yaparken bir hata  meydana geldi..";
+            $log->description = "$newDomainName için droplet ve dns kayıtları işlemini yaparken bir hata  meydana geldi..";
             $log->save();
             $continueProccess = false;
             $this->deleteErrorProcces($newDomainName);
@@ -100,6 +99,8 @@ class ActionController extends Controller
     {
         $continueProccess = true;
         $old_domain_move_redirect_server = HttpRequest::create('/old_domain_move_redirect_server?new_domain_name=' . $newDomainName . '&old_domain_name=' . $oldDomainName, 'GET');
+        $res = app()->handle($old_domain_move_redirect_server);
+        
         $responseOldDomainMove = Route::dispatch($old_domain_move_redirect_server)->getOriginalContent();
         if ($responseOldDomainMove) {
             $log = new Log();
@@ -125,6 +126,8 @@ class ActionController extends Controller
     public function deleteErrorProcces($newDomainName, $oldDomainName = null, $step2 = false)
     {
         $deleteProccess = HttpRequest::create('/error_new_domain_server_records_delete?new_domain_name=' . $newDomainName, 'GET');
+        $res = app()->handle($deleteProccess);
+
         $deleteProccessResponse = Route::dispatch($deleteProccess)->getOriginalContent();
         if ($deleteProccessResponse) {
 
@@ -145,6 +148,8 @@ class ActionController extends Controller
 
         if ($step2) {
             $deleteProccessRedirect = HttpRequest::create('/error_old_domain_move_redirect_server?old_domain_name=' . $oldDomainName, 'GET');
+            $res = app()->handle($deleteProccessRedirect);
+        
             $deleteProccessRedirectResponse = Route::dispatch($deleteProccessRedirect)->getOriginalContent();
             if ($deleteProccessRedirectResponse) {
                 $log = new Log();

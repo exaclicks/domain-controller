@@ -8,8 +8,8 @@ use App\Models\GitDomain;
 use App\Models\Log;
 use App\Models\ServerSetting;
 use Illuminate\Console\Command;
-use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request as HttpRequest;
 
 class AddNewDomain extends Command
 {
@@ -18,14 +18,14 @@ class AddNewDomain extends Command
      *
      * @var string
      */
-    protected $signature = 'quete:addNewDomain';
+    protected $signature = 'quote:addNewDomain';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '2Command description';
 
     /**
      * Create a new command instance.
@@ -50,14 +50,17 @@ class AddNewDomain extends Command
         $git_id = 0;
         $newDomain = Domain::where('domain_status', 0)->where('used', 0)->where('status', 0)->where('movable', 1)->get()->first();
         $server_settings = ServerSetting::all()->first();
+        $server_settings->is_server_busy = false;
+        $server_settings->save();
         if ($server_settings->is_server_busy) {
             return 0;
         }
-
+/* 
         $server_settings->is_server_busy = true;
         $server_settings->save();
-
+ */
         foreach ($codes as $key => $code) {
+
             $git_domains = GitDomain::where("git_id", $code->id)->get();
             $git_domains_lenght = count($git_domains);
             if ($git_id == 0 && $git_domains_lenght < $code->limit) {
@@ -89,8 +92,8 @@ class AddNewDomain extends Command
             }
         }
 
-        if ($continueProccess) {
-            $oldGitDomain =  GitDomain::where("where", $newDomain->id)->get()->first();
+/*         if ($continueProccess) {
+            $oldGitDomain =  GitDomain::where("id", $newDomain->id)->get()->first();
             if ($oldGitDomain)
                 $oldGitDomain->delete();
             $newGitDomain = new GitDomain();
@@ -98,11 +101,18 @@ class AddNewDomain extends Command
             $newGitDomain->domain_id = $newDomain->id;
             $newGitDomain->save();
             $continueProccess = true;
-        }
+        } */
 
         if ($continueProccess) {
-            $new_add_requestResponse = HttpRequest::create('/new_add_request?new_domain_name=' . $newDomain->name, 'GET');
-            $response = Route::dispatch($new_add_requestResponse)->getOriginalContent();
+
+
+            $request = HttpRequest::create('/new_add_request?new_domain_name=' . $newDomain->name, 'GET');
+            $res = app()->handle($request);
+            $response = Route::dispatch($request)->getOriginalContent();
+         
+        
+
+            
             if (!$response)
                 $continueProccess = false;
         }

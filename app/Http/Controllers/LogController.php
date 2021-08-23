@@ -14,7 +14,10 @@ class LogController extends Controller
      */
     public function index()
     {
-        //
+        $logs = Log::all()->sortByDesc('created_at');
+        return view('log.index', compact('logs'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+
     }
 
     /**

@@ -14,7 +14,9 @@ class ServerSettingController extends Controller
      */
     public function index()
     {
-        //
+        $server_settings = ServerSetting::all()->first();
+        return view('server_setting.index', compact('server_settings'));
+
     }
 
     /**

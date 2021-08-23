@@ -8,7 +8,7 @@ use App\Models\Log;
 use App\Models\ServerSetting;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route;
 
 class CheckDomains extends Command
 {
@@ -17,14 +17,14 @@ class CheckDomains extends Command
      *
      * @var string
      */
-    protected $signature = 'quete:checkDomains';
+    protected $signature = 'quote:checkDomains';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '1Command description';
 
     /**
      * Create a new command instance.
@@ -53,8 +53,8 @@ class CheckDomains extends Command
         if($server_settings->is_server_busy){
             return 0;
         }
-        $server_settings->is_server_busy = true;
-        $server_settings->save();
+  /*       $server_settings->is_server_busy = true;
+        $server_settings->save(); */
         
         foreach ($domains as $oldDomain) {
 
@@ -81,6 +81,7 @@ class CheckDomains extends Command
 
             if ($continueProccess) {
                 $new_add_and_old_deleteResponse = HttpRequest::create('/new_add_and_old_delete_request?new_domain_name=' . $newDomainName . '&old_domain_name=' . $oldDomainName, 'GET');
+                $res = app()->handle($new_add_and_old_deleteResponse);
                 $deleteProccessResponse = Route::dispatch($new_add_and_old_deleteResponse)->getOriginalContent();
                 if (!$deleteProccessResponse)
                     $continueProccess = false;

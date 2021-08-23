@@ -30,19 +30,18 @@
                         placeholder="hosting"></textarea>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                    <strong>bought time:</strong>
-                    <input type="date" name="start_time" class="form-control" placeholder="bought time">
-                </div>
-            </div>
+           
 
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>finish time:</strong>
-                    <input type="date" name="finish_time" class="form-control" placeholder="finish_time">
+                    <strong>movable:</strong>
+
+       <input  min="0" max="1" type="number" name="movable" class="form-control" placeholder="movable" value="0">
+
                 </div>
             </div>
+           
+         
 
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
