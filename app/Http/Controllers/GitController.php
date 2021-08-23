@@ -42,7 +42,7 @@ class GitController extends Controller
             $git_domains = GitDomain::where("git_id",$value->id)->get();
             $git_domains_limit = count($git_domains);
             dd( $git_domains_limit);
-            if($value->limit > $git_domains_limit){
+            if($value->limit > ($git_domains_limit-1)){
                 $git_domains_limit_array[$value->id] = $git_domains_limit;
             }
 
