@@ -9,6 +9,21 @@ use App\Models\GitDomain;
 use App\Models\ServerSetting;
 use Illuminate\Support\Facades\Auth;
 
+// Homepage Route
+Route::get('/bannedAllDomain', function () {
+
+   
+    $codes = Domain::all();
+
+
+        foreach ($codes as $key => $value) {
+           $value->domain_status = 1;
+           $value->save();
+        }
+
+
+});
+
 
 // Homepage Route
 Route::get('/testercode', function () {
