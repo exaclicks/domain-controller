@@ -72,7 +72,7 @@ class CheckDomains extends Command
 
             if ($continueProccess) {
                 $oldDomainName = $oldDomain->name;
-                $oldGitDomain =  GitDomain::where("where", $oldDomain->id)->get()->first();
+                $oldGitDomain =  GitDomain::where("id", $oldDomain->id)->get()->first();
                 $newGitDomain = new GitDomain();
                 $newGitDomain->git_id = $oldGitDomain->git_id;
                 $newGitDomain->domain_id = $newDomain->id;
