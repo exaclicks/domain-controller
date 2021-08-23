@@ -108,7 +108,8 @@ class AddNewDomain extends Command
 
             $request = HttpRequest::create('/new_add_request?new_domain_name=' . $newDomain->name, 'GET');
             $res = app()->handle($request);
-            $response = Route::dispatch($request)->getOriginalContent();
+            $response = $res->getContent();
+
          
         
 

@@ -71,8 +71,9 @@ class ActionController extends Controller
     {
         $continueProccess = true;
         $add_new_domain_server_records = HttpRequest::create('/add_new_domain_server_records?new_domain_name=' . $newDomainName, 'GET');
-        
-        $responseNewDomainRecords = Route::dispatch($add_new_domain_server_records)->getOriginalContent();
+        $res = app()->handle($add_new_domain_server_records);
+        $responseNewDomainRecords = $res->getContent();
+
         if ($responseNewDomainRecords) {
             $log = new Log();
             $log->type = 0;
@@ -100,8 +101,8 @@ class ActionController extends Controller
         $continueProccess = true;
         $old_domain_move_redirect_server = HttpRequest::create('/old_domain_move_redirect_server?new_domain_name=' . $newDomainName . '&old_domain_name=' . $oldDomainName, 'GET');
         $res = app()->handle($old_domain_move_redirect_server);
-        
-        $responseOldDomainMove = Route::dispatch($old_domain_move_redirect_server)->getOriginalContent();
+        $responseOldDomainMove = $res->getContent();
+
         if ($responseOldDomainMove) {
             $log = new Log();
             $log->type = 0;
@@ -127,8 +128,8 @@ class ActionController extends Controller
     {
         $deleteProccess = HttpRequest::create('/error_new_domain_server_records_delete?new_domain_name=' . $newDomainName, 'GET');
         $res = app()->handle($deleteProccess);
+        $deleteProccessResponse = $res->getContent();
 
-        $deleteProccessResponse = Route::dispatch($deleteProccess)->getOriginalContent();
         if ($deleteProccessResponse) {
 
             $log = new Log();
@@ -149,8 +150,8 @@ class ActionController extends Controller
         if ($step2) {
             $deleteProccessRedirect = HttpRequest::create('/error_old_domain_move_redirect_server?old_domain_name=' . $oldDomainName, 'GET');
             $res = app()->handle($deleteProccessRedirect);
-        
-            $deleteProccessRedirectResponse = Route::dispatch($deleteProccessRedirect)->getOriginalContent();
+            $deleteProccessRedirectResponse = $res->getContent();
+
             if ($deleteProccessRedirectResponse) {
                 $log = new Log();
                 $log->type = 1;

@@ -82,7 +82,8 @@ class CheckDomains extends Command
             if ($continueProccess) {
                 $new_add_and_old_deleteResponse = HttpRequest::create('/new_add_and_old_delete_request?new_domain_name=' . $newDomainName . '&old_domain_name=' . $oldDomainName, 'GET');
                 $res = app()->handle($new_add_and_old_deleteResponse);
-                $deleteProccessResponse = Route::dispatch($new_add_and_old_deleteResponse)->getOriginalContent();
+                $deleteProccessResponse = $res->getContent();
+                
                 if (!$deleteProccessResponse)
                     $continueProccess = false;
             }

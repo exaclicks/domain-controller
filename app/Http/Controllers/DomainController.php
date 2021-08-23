@@ -243,8 +243,8 @@ class DomainController extends Controller
         $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
         $addNewGitDomain = Request::create('/add_new_git_domain?new_domain_name=' . $newDomainName, 'GET');
         $res = app()->handle($addNewGitDomain);
+        $newGitDomain = $res->getContent();
 
-        $newGitDomain = Route::dispatch($addNewGitDomain)->getOriginalContent();
 
         try {
 
@@ -262,8 +262,8 @@ class DomainController extends Controller
             ////////////////STEP 1 CREATE NEW DROPLET
             $addNewDropletRequest = Request::create('/add_new_droplet?new_domain_name=' . $newDomainName, 'GET');
             $res = app()->handle($addNewDropletRequest);
+            $dropletId = $res->getContent();
 
-            $dropletId = Route::dispatch($addNewDropletRequest)->getOriginalContent();
             ////////////////
             dd($dropletId);
 
@@ -392,8 +392,6 @@ class DomainController extends Controller
             ////////////////STEP 1 DELETE NEW DROPLET
             $addNewDropletRequest = Request::create('/delete_droplet?old_domain_name=' . $newDomainName, 'GET');
             $res = app()->handle($addNewDropletRequest);
-
-            $dropletId = Route::dispatch($addNewDropletRequest)->getOriginalContent();
             ////////////////
 
             $domainRecordInfos = $domainRecord->getAll($newDomainName);
@@ -510,7 +508,6 @@ class DomainController extends Controller
             $deleteDropletRequest = Request::create('/delete_droplet?old_domain_name=' . $oldDomainName, 'GET');
             $res = app()->handle($deleteDropletRequest);
 
-            $deleteDropletRequestResponse = Route::dispatch($deleteDropletRequest)->getOriginalContent();
             $response = true;
         } catch (\Throwable $th) {
             $response = false;
