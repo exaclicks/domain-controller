@@ -265,7 +265,6 @@ class DomainController extends Controller
             $dropletId = $res->getContent();
 
             ////////////////
-            dd($dropletId);
 
 
 
