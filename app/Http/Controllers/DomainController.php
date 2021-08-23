@@ -243,7 +243,10 @@ class DomainController extends Controller
         $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
         $addNewGitDomain = Request::create('/add_new_git_domain?new_domain_name=' . $newDomainName, 'GET');
         $res = app()->handle($addNewGitDomain);
-        $newGitDomain = $res->getContent();
+        $new_git_domain_id = $res->getContent();
+        $newGitDomain = GitDomain::where('id', $new_git_domain_id)->get()->first();
+        dd($newGitDomain);
+
         $return = false;
 
         try {

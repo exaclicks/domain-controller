@@ -59,9 +59,9 @@ class GitController extends Controller
             $new_git_domain->domain_id = $domain_id;
             $new_git_domain->setup = 0;
             $new_git_domain->save();
-            $response = $new_git_domain;
+            $response = $new_git_domain->id;
         }else{
-            $response = $git_domain;
+            $response = $git_domain->id;
         }
 
 
