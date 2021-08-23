@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
 use App\Models\Domain;
 use App\Models\GitDomain;
+use App\Models\ServerSetting;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -14,6 +15,9 @@ Route::get('/testercode', function () {
 
     GitDomain::truncate();
    Domain::truncate();
+   $server_settings = ServerSetting::all()->first();
+   $server_settings->is_server_busy = false;
+   $server_settings->save();
 
         $codes = GitDomain::all();
 
