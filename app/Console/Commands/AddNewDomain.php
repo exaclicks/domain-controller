@@ -92,7 +92,7 @@ class AddNewDomain extends Command
 
        if ($continueProccess) {
 
-            $oldGitDomain =  GitDomain::where("id", $newDomain->id)->get()->first();
+            $oldGitDomain =  GitDomain::where("domain_id", $newDomain->id)->get()->first();
             if ($oldGitDomain)
                 $oldGitDomain->delete();
             $newGitDomain = new GitDomain();
