@@ -362,7 +362,7 @@ class DomainController extends Controller
 
             //SSL CONFİG
             ssh2_exec($connection, 'certbot --apache -d ' . $newDomainName . ' -d www.' . $newDomainName);
-            sleep(30);
+            sleep(60);
             ssh2_exec($connection, '2');
             sleep(10);
 
