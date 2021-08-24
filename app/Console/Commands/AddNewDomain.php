@@ -60,7 +60,7 @@ class AddNewDomain extends Command
 
         foreach ($codes as $key => $code) {
 
-            $git_domains = GitDomain::where("git_id", $code->id)->where("setup",1)->get();
+            $git_domains = GitDomain::where("git_id", $code->id)->get();
             $git_domains_lenght = (count($git_domains));
             if ($git_id == 0 && $git_domains_lenght > $code->limit) {
                 $git_id = $code->id;
