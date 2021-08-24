@@ -285,7 +285,7 @@ class DomainController extends Controller
             }
 
 
-            sleep(30);
+            sleep(100);
 
             $dropletIpAdress = $droplet123->networks[1]->ipAddress;
             $hostingIp = $dropletIpAdress;
