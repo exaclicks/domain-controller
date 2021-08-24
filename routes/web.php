@@ -20,7 +20,6 @@ Route::get('/test_write_git', function () {
     $code_link = $code->git_address;
     $explode_array = explode("/", $code_link);
     $code_document_root = $explode_array[count($explode_array) - 1];
-echo $code_link ;
     $connection = ssh2_connect("157.230.27.85", 22, array('hostkey' => 'ssh-rsa'));
     if (!ssh2_auth_pubkey_file(
         $connection,
@@ -35,9 +34,8 @@ echo $code_link ;
     }
     sleep(10);
 
-
+    ssh2_exec($connection, "cd ..");
     ssh2_exec($connection, "cd /var/www");
-    ssh2_exec($connection, "mkdir testterer");
     ssh2_exec($connection, "rm -r $code_document_root");
     ssh2_exec($connection, "git clone $code_link");
 
