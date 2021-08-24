@@ -10,42 +10,27 @@ use App\Models\GitDomain;
 use App\Models\ServerSetting;
 use Illuminate\Support\Facades\Auth;
 
-// Homepage Route
-Route::get('/bannedAllDomain', function () {
 
-   
-    $codes = Domain::all();
-    $server_settings = ServerSetting::all()->first();
-    $server_settings->is_server_busy = false;
-    $server_settings->save();
-
-        foreach ($codes as $key => $value) {
-           $value->domain_status = 1;
-           $value->save();
-        }
-
-
-});
-
-
-// Homepage Route
-Route::get('/testercode', function () {
-
-    GitDomain::truncate();
-   Domain::truncate();
-   BannedList::truncate();
+Route::get('/server_free', function () {
    $server_settings = ServerSetting::all()->first();
    $server_settings->is_server_busy = false;
    $server_settings->save();
+});
 
-        $codes = GitDomain::all();
+// Homepage Route
+Route::get('/cleaner', function () {
+   GitDomain::truncate();
+   Domain::truncate();
+   BannedList::truncate();
+});
 
-        foreach ($codes as $key => $value) {
-            # code...
-            echo $value->git_id . "---" . $value->domain_id."---".$value->setup."<br>";
-        }
-
-
+Route::get('/ban/{newDomainName}', function ($newDomainName) {
+    $domain = Domain::where('name',$newDomainName)->get()->first();
+    if($domain){
+        $domain->status =3 ;
+        $domain->domain_status = 1;
+        $domain->save();
+    }
 });
 
 Route::get('/get_new_sentence', 'App\Http\Controllers\RewriterController@get_new_sentence')->name('get_new_sentence');
