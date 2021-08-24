@@ -572,7 +572,6 @@ class DomainController extends Controller
                 'secret'
                
             )) {
-                $response = "bağlanamadı";
                 Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
                     $mail->from('ex@exaclicks.com');
                     $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
@@ -590,10 +589,10 @@ class DomainController extends Controller
             ssh2_exec($connection, 'systemctl restart apache2');
             ssh2_exec($connection, 'mkdir /etc/apache2/sites-available/testtterr');
 
-            $response = "bağlandı"; // true
+            $response = true; // true
 
         } catch (\Throwable $th) {
-            $response = "hata oldu"; // false
+            $response = false; // false
         }
 
         return $response;
