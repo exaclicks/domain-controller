@@ -68,10 +68,8 @@ class AddNewDomain extends Command
             }
         }
 
-        dd($git_id);
 
         if ($git_id == 0) {
-
             $continueProccess = false;
             $log = new Log();
             $log->type = 1;
