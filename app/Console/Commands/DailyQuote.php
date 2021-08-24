@@ -88,10 +88,11 @@ class DailyQuote extends Command
         $status = -1;
         $link = $domain->name;
         $control = explode('http',$link);
-        dd(count($control));
-        if(isset($link)){
-            $link = "http://".$link;
+        if(count($control) < 2){
+            $link = "eklendi http://".$link;
         }
+        dd($link);
+
         $command = 'curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" ' . $link;
         $html = $ssh->exec($command);
 
