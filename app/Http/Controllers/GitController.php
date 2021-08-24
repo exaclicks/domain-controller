@@ -41,7 +41,7 @@ class GitController extends Controller
         foreach ($codes as  $value) {
             $git_domains = GitDomain::where("git_id", $value->id)->get();
             $git_domains_limit = count($git_domains);
-            if ($value->limit > ($git_domains_limit - 1)) {
+            if ($value->limit > ($git_domains_limit )) {
                 $git_id = $value->git_id;
                 break;
             }
