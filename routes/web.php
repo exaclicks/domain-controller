@@ -18,7 +18,11 @@ Route::get('/server_free', function () {
 });
 
 Route::get('/gitdomainsalll', function () {
-   dd(GitDomain::all());
+    dd(GitDomain::all());
+  });
+Route::get('/gitdomains/{id}', function ($id) {
+   $domain = GitDomain::where('domain_id',$id)->get()->first();
+
  });
  
 Route::get('/domainsalll', function () {
