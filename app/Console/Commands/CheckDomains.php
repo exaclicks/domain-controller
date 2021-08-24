@@ -72,7 +72,7 @@ $oldDomainName='';
 
             if ($continueProccess) {
                 $oldDomainName = $oldDomain->name;
-                dd($oldDomain);
+                dd(GitDomain::all());
 
                 $oldGitDomain =  GitDomain::where("domain_id", $oldDomain->id)->get()->first();
                 $newGitDomain = new GitDomain();
