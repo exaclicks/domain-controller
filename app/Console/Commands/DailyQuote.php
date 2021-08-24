@@ -87,7 +87,7 @@ class DailyQuote extends Command
     foreach ($domains as $domain) {
         $status = -1;
         $link = $domain->name;
-        $control = explode('htdtp',$link);
+        $control = explode('http',$link);
         dd($control);
         if(isset($link)){
             $link = "http://".$link;
