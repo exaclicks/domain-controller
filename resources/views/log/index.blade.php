@@ -22,6 +22,7 @@
               <th>type</th>
               <th>title</th>
               <th>description</th>
+              <th>created_at</th>
             </tr>
           </thead>
           <tbody>
@@ -30,6 +31,7 @@
               <td class="text">{{$log->type}}</td>
               <td class="text">{{$log->title}}</td>
               <td class="text">{{$log->description}}</td>
+              <td class="text">{{$log->created_at}}</td>
             </tr>
             @endforeach
           </tbody>
