@@ -22,6 +22,7 @@ Route::get('/gitdomainsalll', function () {
   });
 Route::get('/gitdomains/{id}', function ($id) {
    $domain = GitDomain::where('domain_id',$id)->get()->first();
+   $domain->delete();
 
  });
  
