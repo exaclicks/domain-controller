@@ -87,7 +87,7 @@ class DailyQuote extends Command
     foreach ($domains as $domain) {
         $status = -1;
         $link = $domain->name;
-        $control = explode('http',$link);
+        $control = explode('https',$link);
         if(count($control) < 2){
             $link = "eklendi http://".$link;
         }
