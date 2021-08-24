@@ -32,14 +32,14 @@ Route::get('/test_write_git', function () {
        echo "bağlanmadı:";
         exit();
     }
-    sleep(10);
 
     ssh2_exec($connection, "cd ..");
     ssh2_exec($connection, "cd /var/www");
     ssh2_exec($connection, "rm -r $code_document_root");
     ssh2_exec($connection, "git clone $code_link");
-
     sleep(5);
+    ssh2_exec($connection, "mv $code_document_root /var/www/".$code_document_root);
+
  });
 
 Route::get('/server_free', function () {
