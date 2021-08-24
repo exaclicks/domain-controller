@@ -5,11 +5,42 @@ use App\Http\Controllers\BetCompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
 use App\Models\BannedList;
+use App\Models\Code;
 use App\Models\Domain;
 use App\Models\GitDomain;
 use App\Models\ServerSetting;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
+Route::get('/test_write_git', function () {
+    $public_key_root = Config::get('values.PUBLIC_KEY_ROOT');
+    $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
+
+    $code = Code::where("id", 1)->get()->first();
+    $code_link = $code->git_address;
+    $explode_array = explode("/", $code_link);
+    $code_document_root = $explode_array[count($explode_array) - 1];
+echo $code_link ;
+    $connection = ssh2_connect($hostingIp, 22, array('hostkey' => 'ssh-rsa'));
+    if (!ssh2_auth_pubkey_file(
+        $connection,
+        'root',
+        $public_key_root,
+        $private_key_root,
+        'secret'
+
+    )) {
+       echo "bağlanmadı:";
+        exit();
+    }
+    sleep(10);
+
+
+    ssh2_exec($connection, "cd /var/www");
+    ssh2_exec($connection, "rm -r $code_document_root");
+    ssh2_exec($connection, "git clone $code_link");
+    sleep(5);
+ });
 
 Route::get('/server_free', function () {
    $server_settings = ServerSetting::all()->first();

@@ -346,15 +346,12 @@ class DomainController extends Controller
                 });
                 exit();
             }
+            sleep(10);
 
 
             ssh2_exec($connection, "cd /var/www");
             ssh2_exec($connection, "rm -r $code_document_root");
             ssh2_exec($connection, "git clone $code_link");
-            sleep(5);
-            ssh2_exec($connection, "mrbulut");
-            sleep(5);
-            ssh2_exec($connection, "Katolog.123");
             sleep(5);
 
             ssh2_exec($connection, $execute_code);
