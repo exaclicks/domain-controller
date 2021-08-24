@@ -88,7 +88,7 @@ class DailyQuote extends Command
         $status = -1;
         $link = $domain->name;
         $control = explode('http',$link);
-        dd($control);
+        dd(count($control));
         if(isset($link)){
             $link = "http://".$link;
         }
