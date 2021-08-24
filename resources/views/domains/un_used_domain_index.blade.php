@@ -21,6 +21,9 @@
         <th>id</th>
         <th>Name</th>
         <th>Hosting</th>
+        <th>status</th>
+        <th>move status</th>
+
         <th width="280px">Action</th>
     </tr>
     @foreach ($domains as $domain)
@@ -28,6 +31,8 @@
         <td>{{ $domain->id }}</td>
         <td>{{ $domain->name }}</td>
         <td>{{ $domain->hosting }}</td>
+        <td>{{ $domain->status }}</td>
+        <td>{{ $domain->domain_status }}</td>
         <td>
             <form action="{{ route('un_used_domain_delete') }}" method="POST">
                 @csrf
