@@ -33,7 +33,7 @@ Route::get('/test_write_git', function () {
         exit();
     }
     $newDomainName = 'shelaa.com';
-    $exec2 = 'certbot --apache -d ' . $newDomainName . ' -d www.' . $newDomainName;
+    echo $exec2 = 'certbot --apache -d ' . $newDomainName . ' -d www.' . $newDomainName;
  //SSL CONFİG
  ssh2_exec($connection, $exec2);
  sleep(30);
