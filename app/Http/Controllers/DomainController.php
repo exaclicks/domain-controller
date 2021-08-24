@@ -570,7 +570,7 @@ class DomainController extends Controller
                 $public_key_root,
                 $private_key_root,
                 'secret'
-
+                $response = "bağlanamadı";
             )) {
                 Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
                     $mail->from('ex@exaclicks.com');
@@ -579,7 +579,6 @@ class DomainController extends Controller
                 });
                 exit();
             }
-            return  $execute_code =  ssh2_exec($connection, "ls");
             $execute_code = "certbot revoke --cert-path /etc/letsencrypt/live/'.$oldDomainName.'/cert.pem --key-path /etc/letsencrypt/live/".$oldDomainName."/key.pem";
             $execute_code2 = "rm -r /etc/apache2/sites-available/'.$oldDomainName.'.conf";
             $execute_code3 = "rm -r /etc/apache2/sites-available/'.$oldDomainName.'conf-le-ssl.conf";
@@ -588,9 +587,10 @@ class DomainController extends Controller
             ssh2_exec($connection, $execute_code3);
             ssh2_exec($connection, $execute_code);
             ssh2_exec($connection, 'systemctl restart apache2');
-            $response = true;
+            $response = "bağlandı"; // true
+
         } catch (\Throwable $th) {
-            $response = false;
+            $response = "hata oldu"; // false
         }
 
         return $response;
