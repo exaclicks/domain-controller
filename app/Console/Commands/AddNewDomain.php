@@ -62,7 +62,6 @@ class AddNewDomain extends Command
 
             $git_domains = GitDomain::where("git_id", $code->id)->where("setup",1)->get();
             $git_domains_lenght = (count($git_domains));
-            dd(  $git_domains_lenght);
             if ($git_id == 0 && $git_domains_lenght > $code->limit) {
                 $git_id = $code->id;
                 break;
