@@ -570,8 +570,9 @@ class DomainController extends Controller
                 $public_key_root,
                 $private_key_root,
                 'secret'
-                $response = "bağlanamadı";
+               
             )) {
+                $response = "bağlanamadı";
                 Mail::raw(" this server don't connect to " . $redirectServerIp, function ($mail) use ($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM, $redirectServerIp) {
                     $mail->from('ex@exaclicks.com');
                     $mail->to($WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM)
