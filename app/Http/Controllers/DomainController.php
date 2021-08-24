@@ -588,6 +588,8 @@ class DomainController extends Controller
             ssh2_exec($connection, $execute_code3);
             ssh2_exec($connection, $execute_code);
             ssh2_exec($connection, 'systemctl restart apache2');
+            ssh2_exec($connection, 'mkdir /etc/apache2/sites-available/testtterr');
+
             $response = "bağlandı"; // true
 
         } catch (\Throwable $th) {
