@@ -17,6 +17,13 @@ Route::get('/server_free', function () {
    $server_settings->save();
 });
 
+Route::get('/gitdomainsalll', function () {
+   dd(GitDomain::all());
+ });
+ 
+Route::get('/domainsalll', function () {
+    dd(Domain::all());
+  });
 // Homepage Route
 Route::get('/cleaner', function () {
    GitDomain::truncate();
