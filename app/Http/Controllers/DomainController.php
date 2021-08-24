@@ -579,7 +579,7 @@ class DomainController extends Controller
                 });
                 exit();
             }
-            echo $execute_code =  ssh2_exec($connection, "echo 5");
+            return  $execute_code =  ssh2_exec($connection, "ls");
             $execute_code = "certbot revoke --cert-path /etc/letsencrypt/live/'.$oldDomainName.'/cert.pem --key-path /etc/letsencrypt/live/".$oldDomainName."/key.pem";
             $execute_code2 = "rm -r /etc/apache2/sites-available/'.$oldDomainName.'.conf";
             $execute_code3 = "rm -r /etc/apache2/sites-available/'.$oldDomainName.'conf-le-ssl.conf";
