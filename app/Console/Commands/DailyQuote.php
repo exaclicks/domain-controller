@@ -84,6 +84,7 @@ class DailyQuote extends Command
 
 
     $domains = Domain::where("used",1)->where("status","!=",3)->orWhereNull('status')->get();
+    dd(  $domains);
     foreach ($domains as $domain) {
         $status = -1;
         $link = $domain->name;
