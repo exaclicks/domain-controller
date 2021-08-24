@@ -362,9 +362,26 @@ class DomainController extends Controller
 
             //SSL CONFİG
             ssh2_exec($connection, 'certbot --apache -d ' . $newDomainName . ' -d www.' . $newDomainName);
-            sleep(60);
+            sleep(120);
             ssh2_exec($connection, '2');
             sleep(10);
+
+
+            $execute_code_last = 'echo "<VirtualHost *:80>
+            ServerAdmin webmaster@localhost
+            ServerName ' . $newDomainName . '
+            ServerAlias www.' . $newDomainName . '
+            DocumentRoot /var/www/' . $code_document_root . '
+            ErrorLog ${APACHE_LOG_DIR}/error.log
+            CustomLog ${APACHE_LOG_DIR}/access.log combined
+            RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} ^(?:www\.)?(.*)$ [NC]
+RewriteRule (.*) https://%1%{REQUEST_URI} [L,R=301]
+
+        </VirtualHost>" >> /etc/apache2/sites-available/' . $newDomainName . '.conf';
+
+        ssh2_exec($connection, $execute_code_last);
 
 
 
@@ -516,6 +533,9 @@ class DomainController extends Controller
             ssh2_exec($connection, '2');
             ///
 
+
+
+            
             //DELETE OLD DROPLET
 
             $deleteDropletRequest = Request::create('/delete_droplet?old_domain_name=' . $oldDomainName, 'GET');

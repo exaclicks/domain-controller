@@ -32,12 +32,13 @@ Route::get('/test_write_git', function () {
        echo "bağlanmadı:";
         exit();
     }
-
-    ssh2_exec($connection, "rm -r $code_document_root");
-    ssh2_exec($connection, "git clone $code_link");
-    sleep(5);
-    ssh2_exec($connection, "mv $code_document_root /var/www/".$code_document_root);
-
+    $newDomainName = 'shelaa.com';
+    $exec2 = 'certbot --apache -d ' . $newDomainName . ' -d www.' . $newDomainName;
+ //SSL CONFİG
+ ssh2_exec($connection, $exec2);
+ sleep(30);
+ ssh2_exec($connection, '2');
+ sleep(10);
  });
 
 Route::get('/server_free', function () {
