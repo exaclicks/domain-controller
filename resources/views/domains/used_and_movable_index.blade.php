@@ -20,11 +20,16 @@
     <tr>
         <th>id</th>
         <th>Name</th>
+        <th>status</th>
+        <th>move status</th>
+
     </tr>
     @foreach ($domains as $domain)
     <tr>
         <td>{{ $domain->id }}</td>
         <td>{{ $domain->name }}</td>
+        <td>{{ $domain->status }}</td>
+        <td>{{ $domain->domain_status }}</td>
     </tr>
     @endforeach
 </table>
