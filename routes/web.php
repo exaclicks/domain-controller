@@ -21,7 +21,7 @@ Route::get('/test_write_git', function () {
     $explode_array = explode("/", $code_link);
     $code_document_root = $explode_array[count($explode_array) - 1];
 echo $code_link ;
-    $connection = ssh2_connect($hostingIp, 22, array('hostkey' => 'ssh-rsa'));
+    $connection = ssh2_connect("157.230.27.85", 22, array('hostkey' => 'ssh-rsa'));
     if (!ssh2_auth_pubkey_file(
         $connection,
         'root',
