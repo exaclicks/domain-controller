@@ -581,13 +581,13 @@ class DomainController extends Controller
             }
             $execute_code = "certbot revoke --cert-path /etc/letsencrypt/live/".$oldDomainName."/cert.pem --key-path /etc/letsencrypt/live/".$oldDomainName."/key.pem";
              $execute_code2 = "sudo rm -r /etc/apache2/sites-available/".$oldDomainName.".conf";
-            $execute_code3 = "sudo rm -r /etc/apache2/sites-available/".$oldDomainName.".conf-le-ssl.conf";
+            $execute_code3 = "sudo rm -r /etc/apache2/sites-available/".$oldDomainName."-le-ssl.conf";
        
             ssh2_exec($connection, $execute_code2);
             ssh2_exec($connection, $execute_code3);
             ssh2_exec($connection, $execute_code);
             ssh2_exec($connection, 'systemctl restart apache2');
-            $response = $execute_code2; // true
+            $response = $execute_code; // true
 
         } catch (\Throwable $th) {
             $response = false; // false
