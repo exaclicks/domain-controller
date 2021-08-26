@@ -21,7 +21,7 @@
         {{-- Fonts --}}
         @yield('template_linked_fonts')
 <style>
-    #cke_1_contents {
+    #cke_1_contents, #cke_2_contents {
     min-height: 800px !important;
 }
 </style>

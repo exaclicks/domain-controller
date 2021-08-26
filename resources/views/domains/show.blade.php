@@ -8,7 +8,7 @@
                 <h2>  {{ $domain->name }}</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('domains.index') }}" title="Go back"> <i class="fas fa-backward "></i> </a>
+                <a class="btn btn-primary" href="{{ route('domains.index') }}" title="Go back"> Go back </a>
             </div>
         </div>
     </div>

@@ -102,7 +102,8 @@ class WebsitePicker extends Command
                         $content->first_description = $description;
                         $content->first_content = $wp_content;
                         $content->first_category = $category;
-                        $content->website_id = $website->id;
+                        $content->rewriter_title = $title;
+                        $content->rewriter_description =  $description;
                         $content->save();
                     }
                 }

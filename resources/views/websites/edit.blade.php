@@ -7,7 +7,7 @@
                 <h2>Edit</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('websites.index') }}" title="Go back"> <i class="fas fa-backward "></i> </a>
+                <a class="btn btn-primary" href="{{ route('websites.index') }}" title="Go back"> Go back </a>
             </div>
         </div>
     </div>

@@ -9,7 +9,7 @@
             <h2>Content Editor</h2>
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('contents.index') }}" title="Go back"> <i class="fas fa-backward "></i> </a>
+            <a class="btn btn-primary" href="{{ route('contents.index') }}" title="Go back"> Go back </a>
         </div>
     </div>
 </div>
@@ -124,7 +124,7 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Old Content</strong>
-                <textarea disabled class="form-control" style="min-height: 938px" name="rewriter_content" placeholder="Title">{!! $content->rewriter_content !!}</textarea>
+                <textarea  class="ckeditor"  name="1" >{!! $content->first_content !!}</textarea>
             </div>
         </div>
 
@@ -134,7 +134,7 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Last Content</strong>
-                <textarea class="ckeditor" id="last_content" name="last_content">
+                <textarea class="ckeditor" id="last_content"  name="last_content">
                 @if ($content->last_content)
                 {{ $content->last_content }}
 
@@ -156,8 +156,11 @@
 
 
 <script type="text/javascript">
+
+
     $(document).ready(function() {
         $('.ckeditor').ckeditor();
+        $('#rewriter_content').ckeditor();
 
     });
 </script>

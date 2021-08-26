@@ -8,7 +8,7 @@
                 <h2>  {{ $code->git_address }}</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('codes.index') }}" title="Go back"> <i class="fas fa-backward "></i> </a>
+                <a class="btn btn-primary" href="{{ route('codes.index') }}" title="Go back"> Go back </a>
             </div>
         </div>
     </div>

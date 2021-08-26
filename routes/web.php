@@ -128,6 +128,14 @@ Route::get('/cleaner', function () {
     BannedList::truncate();
 });
 
+Route::get('/testerrrr/{id}', function ($id) {
+    $content = Content::where("id",$id)->get()->first();
+    
+    echo preg_replace('/(<([^>]+)>)/', '', $content->first_content);
+});
+
+
+
 Route::get('/ban/{newDomainName}', function ($newDomainName) {
     $domain = Domain::where('name', $newDomainName)->get()->first();
     if ($domain) {
@@ -137,7 +145,6 @@ Route::get('/ban/{newDomainName}', function ($newDomainName) {
     }
 });
 
-Route::get('/get_new_sentence', 'App\Http\Controllers\RewriterController@get_new_sentence')->name('get_new_sentence');
 Route::get('/', 'App\Http\Controllers\WelcomeController@welcome')->name('welcome');
 Route::get('/terms', 'App\Http\Controllers\TermsController@terms')->name('terms');
 Route::get('/un_used_domain_create', 'App\Http\Controllers\DomainController@un_used_domain_create')->name('un_used_domain_create');
@@ -153,6 +160,7 @@ Route::resource('bet_companies', BetCompanyController::class);
 Route::resource('websites', WebsiteController::class);
 Route::resource('contents', ContentController::class);
 
+Route::post('/get_new_sentence', 'App\Http\Controllers\RewriterController@get_new_sentence')->name('get_new_sentence');
 
 
 // Homepage Route

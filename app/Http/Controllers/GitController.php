@@ -6,15 +6,10 @@ use App\Models\Code;
 use App\Models\Domain;
 use App\Models\GitDomain;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Config;
-use DigitalOceanV2\Client;
 
 
 class GitController extends Controller
 {
-
-
     /**
      * Store a newly created resource in storage.
      *
@@ -32,7 +27,6 @@ class GitController extends Controller
 
         $domain_id = $domain->id;
         $codes = Code::all();
-        $git_domains_limit_array = [];
         $git_id = 0;
         $git_domains = [];
 
