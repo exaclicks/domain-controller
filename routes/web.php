@@ -129,7 +129,9 @@ Route::get('/cleaner', function () {
 });
 
 Route::get('/testerrrr/{id}', function ($id) {
-    $content = Content::where("id",$id)->get()->first();
+    $content = Content::all();
+
+    dd($content);
     
     echo preg_replace('/(<([^>]+)>)/', '', $content->first_content);
 });

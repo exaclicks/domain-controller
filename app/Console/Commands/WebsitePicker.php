@@ -124,7 +124,7 @@ class WebsitePicker extends Command
                 $log->description = $website->link . " içerikleri çekerken hata meydana geldi.";
                 $website->status = -1;
                 $website->save();
-
+                $log->save();
                 //Eski kayıtlarıda siliver 
                 Content::where("website_id",$website->id)->delete();
 
