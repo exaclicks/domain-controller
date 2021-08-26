@@ -129,11 +129,22 @@ Route::get('/cleaner', function () {
 });
 
 Route::get('/testerrrr/{id}', function ($id) {
-    $content = Content::all();
+    $part = "/wp-json/wp/v2/posts/";
+    $category_part = "/wp-json/wp/v2/categories";
+    $website=Website::all()->first();
+            $rest_api_link_category_part = $website->link . $category_part;
+            $categories = null;
 
-    dd($content);
-    
-    echo preg_replace('/(<([^>]+)>)/', '', $content->first_content);
+            //KATEGORİLER ÇEKİLDİ
+            $curlSession = curl_init();
+            curl_setopt($curlSession, CURLOPT_URL, $rest_api_link_category_part);
+            curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+            $jsonData = json_decode(curl_exec($curlSession));
+            curl_close($curlSession);
+            if (!isset($jsonData->data->status))
+                $categories = $jsonData;
+                dd($categories);
+            ////
 });
 
 
