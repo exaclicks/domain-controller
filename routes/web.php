@@ -4,13 +4,76 @@ use App\Http\Controllers\CodeController;
 use App\Http\Controllers\BetCompanyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DomainController;
+use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\ContentController;
+
 use App\Models\BannedList;
 use App\Models\Code;
+use App\Models\Content;
 use App\Models\Domain;
 use App\Models\GitDomain;
 use App\Models\ServerSetting;
+use App\Models\Website;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+
+Route::get('/getallwebsites', function () {
+    $website = Website::all()->first();
+    $part = "/wp-json/wp/v2/posts/";
+    $category_part = "/wp-json/wp/v2/categories";
+    $post_id = 1;
+    $rest_api_link = $website->link . $part . $post_id;
+    $rest_api_link_category_part = $website->link . $category_part;
+    $categories = null;
+
+    // GET CATEGORIES
+
+    $curlSession = curl_init();
+    curl_setopt($curlSession, CURLOPT_URL, $rest_api_link_category_part);
+    curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+    $jsonData = json_decode(curl_exec($curlSession));
+    curl_close($curlSession);
+    if (!isset($jsonData->data->status))
+        $categories = $jsonData;
+
+    //
+
+    $curlSession = curl_init();
+    curl_setopt($curlSession, CURLOPT_URL, $rest_api_link);
+    curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+    $jsonData = json_decode(curl_exec($curlSession));
+
+    curl_close($curlSession);
+    if (!isset($jsonData->data->status)) {
+        $link = $jsonData->slug;
+        $title = $jsonData->title->rendered;
+        $wp_content = $jsonData->content->rendered;
+        $description = $jsonData->excerpt->rendered;
+        $category  = '';
+    }
+    if (isset($jsonData->categories[0])) {
+        $cat_id = $jsonData->categories[0];
+        foreach ($categories as $key => $value) {
+            if ($value->id == $cat_id)
+                $category = $value->name;
+        }
+    }
+    $content = new Content();
+    $content->first_link = $link;
+    $content->first_title = $title;
+    $content->first_description = $description;
+    $content->first_content = $wp_content;
+    $content->first_category = $category;
+
+    $content->rewriter_title = $title;
+    $content->rewriter_description = $description;
+    $content->rewriter_content = $wp_content;
+
+    $content->status = 1;
+    
+
+    $content->save();
+});
 
 Route::get('/test_write_git', function () {
     $public_key_root = Config::get('values.PUBLIC_KEY_ROOT');
@@ -29,47 +92,46 @@ Route::get('/test_write_git', function () {
         'secret'
 
     )) {
-       echo "bağlanmadı:";
+        echo "bağlanmadı:";
         exit();
     }
     $newDomainName = 'shelaa.com';
     echo $exec2 = 'certbot --apache -d ' . $newDomainName . ' -d www.' . $newDomainName;
- //SSL CONFİG
- ssh2_exec($connection, $exec2);
- sleep(30);
- ssh2_exec($connection, '2');
- sleep(10);
- });
+    //SSL CONFİG
+    ssh2_exec($connection, $exec2);
+    sleep(30);
+    ssh2_exec($connection, '2');
+    sleep(10);
+});
 
 Route::get('/server_free', function () {
-   $server_settings = ServerSetting::all()->first();
-   $server_settings->is_server_busy = false;
-   $server_settings->save();
+    $server_settings = ServerSetting::all()->first();
+    $server_settings->is_server_busy = false;
+    $server_settings->save();
 });
 
 Route::get('/gitdomainsalll', function () {
     dd(GitDomain::all());
-  });
+});
 Route::get('/gitdomains/{id}', function ($id) {
-   $domain = GitDomain::where('domain_id',$id)->get()->first();
-   $domain->delete();
+    $domain = GitDomain::where('domain_id', $id)->get()->first();
+    $domain->delete();
+});
 
- });
- 
 Route::get('/domainsalll', function () {
     dd(Domain::all());
-  });
+});
 // Homepage Route
 Route::get('/cleaner', function () {
-   GitDomain::truncate();
-   Domain::truncate();
-   BannedList::truncate();
+    GitDomain::truncate();
+    Domain::truncate();
+    BannedList::truncate();
 });
 
 Route::get('/ban/{newDomainName}', function ($newDomainName) {
-    $domain = Domain::where('name',$newDomainName)->get()->first();
-    if($domain){
-        $domain->status =3 ;
+    $domain = Domain::where('name', $newDomainName)->get()->first();
+    if ($domain) {
+        $domain->status = 3;
         $domain->domain_status = 1;
         $domain->save();
     }
@@ -88,6 +150,9 @@ Route::get('/movable_and_used_domain_index', 'App\Http\Controllers\DomainControl
 Route::resource('domains', DomainController::class);
 Route::resource('codes', CodeController::class);
 Route::resource('bet_companies', BetCompanyController::class);
+Route::resource('websites', WebsiteController::class);
+Route::resource('contents', ContentController::class);
+
 
 
 // Homepage Route
@@ -115,17 +180,16 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     Route::get('/add_new_domain_server_records', 'App\Http\Controllers\DomainController@add_new_domain_server_records')->name('add_new_domain_server_records');
     // THİS APİ CAN ADD OLD DNS RECORDS AND REDİRECT SERVER APACHE CONFİG
     Route::get('/old_domain_move_redirect_server', 'App\Http\Controllers\DomainController@old_domain_move_redirect_server')->name('old_domain_move_redirect_server');
-   
+
     Route::get('/error_new_domain_server_records_delete', 'App\Http\Controllers\DomainController@error_new_domain_server_records_delete')->name('error_new_domain_server_records_delete');
-   
+
     Route::get('/error_old_domain_move_redirect_server', 'App\Http\Controllers\DomainController@error_old_domain_move_redirect_server')->name('error_old_domain_move_redirect_server');
-   
+
     Route::get('/banlanmalogu', 'App\Http\Controllers\DomainController@banlanmalogu')->name('banlanmalogu');
     Route::get('/server_setting', 'App\Http\Controllers\ServerSettingController@index')->name('server_setting');
 
     // LOGGİNG
     Route::get('/logging', 'App\Http\Controllers\LogController@index')->name('logging');
-
 });
 
 

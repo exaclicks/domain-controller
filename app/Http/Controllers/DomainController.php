@@ -601,8 +601,8 @@ RewriteRule (.*) https://%1%{REQUEST_URI} [L,R=301]
                 });
                 exit();
             }
-            $execute_code0 = "sudo certbot revoke --cert-path /etc/letsencrypt/live/".$oldDomainName."/cert.pem --key-path /etc/letsencrypt/live/".$oldDomainName."/key.pem";
-            $execute_code1 = "sudo sudo certbot delete –cert-name".$oldDomainName;
+            $execute_code0 = "sudo certbot revoke --cert-path /etc/letsencrypt/live/".$oldDomainName."/cert.pem --key-path /etc/letsencrypt/live/".$oldDomainName."/privkey.pem";
+            $execute_code1 = "sudo sudo certbot delete –cert-name ".$oldDomainName;
           
 
  
@@ -612,6 +612,8 @@ RewriteRule (.*) https://%1%{REQUEST_URI} [L,R=301]
             ssh2_exec($connection, $execute_code2);
             ssh2_exec($connection, $execute_code3);
             ssh2_exec($connection, $execute_code0);
+            sleep(3);
+            ssh2_exec($connection,"yes");
             ssh2_exec($connection, $execute_code1);
             ssh2_exec($connection, 'systemctl restart apache2');
             $response = true; // true

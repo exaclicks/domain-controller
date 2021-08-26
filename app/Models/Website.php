@@ -5,19 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Log extends Model
+class Website extends Model
 {
     use HasFactory;
-    protected $table = 'logs';
     public $timestamps = true;
+
     protected $fillable = [
-        'type', // 0 ise başarılı, -1 ise başarısız. 1 uyarı
-        'title',
-        'description',
-        'which_worker' // 
+        'link',
+        "status", // 0 ise içerikler çekilmemiş. 1 ise çekilmiş // -1 ise çekerken hata var.
     ];
-
-
-
-
 }

@@ -17,6 +17,8 @@ class Kernel extends ConsoleKernel
         Commands\DailyQuote::class,
         Commands\CheckDomains::class,
         Commands\AddNewDomain::class,
+        Commands\WebsitePicker::class,
+
     ];
 
     /**
@@ -32,6 +34,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('quote:everyMinute')->everyMinute();
         $schedule->command('quote:addNewDomain')->everyMinute();
         $schedule->command('quote:checkDomains')->everyMinute();
+        $schedule->command('quote:websitePicker')->everyMinute();
         $schedule->command('activations:clean')->daily();
     }
 

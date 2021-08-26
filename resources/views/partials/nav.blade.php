@@ -95,22 +95,16 @@
                         Contents
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDomainsDropdown">
-                        <a class="dropdown-item {{ (Request::is('un_used_domain_index') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('un_used_domain_index') }}">
-                            Content List
-                        </a>
+                        
+                        <a class="nav-link " href="/contents" role="button" aria-haspopup="true" aria-expanded="false">
+                        Content List
+                </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item {{ (Request::is('un_used_domain_index') || Request::is('permissions')) ? 'active' : null }}" href="{{ route('un_used_domain_index') }}">
-                            Picker
-                        </a>
+                        <a class="nav-link " href="/websites" role="button" aria-haspopup="true" aria-expanded="false">
+                    Website Picker
+                </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item {{ (Request::is('domains') || Request::is('permissions')) ? 'active' : null }}" href="{{ url('/domains') }}">
-                            Manager
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item {{ (Request::is('domains') || Request::is('permissions')) ? 'active' : null }}" href="{{ url('/domains') }}">
-                            Rewriter
-                        </a>
-                        <div class="dropdown-divider"></div>
+                        
 
 
                     </div>

@@ -15,6 +15,7 @@ class BetCompaniesTableSeeder extends Seeder
     public function run()
     {
         $betcompanies =  [
+            ['name' => 'sirketsiz'],
             ['name' => 'tipobet365'],
             ['name' => 'mobilbahis'],
             ['name' => 'jetbahis'],
@@ -29,11 +30,6 @@ class BetCompaniesTableSeeder extends Seeder
             ['name' => 'superbetin'],
             ['name' => 'betwinner'],
             ['name' => 'mobilbahis'],
-            ['name' => 'mobilbahis'],
-            ['name' => 'mobilbahis'],
-            ['name' => 'mobilbahis'],
-            ['name' => 'mobilbahis'],
-
             ['name' => 'supertotobet'],
             ['name' => 'betmatik'],
             ['name' => 'betvole'],
