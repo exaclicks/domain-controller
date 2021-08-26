@@ -140,10 +140,11 @@ Route::get('/testerrrr/{id}', function ($id) {
             curl_setopt($curlSession, CURLOPT_URL, $rest_api_link_category_part);
             curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
             $jsonData = json_decode(curl_exec($curlSession));
+            dd($jsonData);
+
             curl_close($curlSession);
             if (!isset($jsonData->data->status))
                 $categories = $jsonData;
-                dd($categories);
             ////
 });
 
