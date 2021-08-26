@@ -150,8 +150,6 @@ Route::get('/testerrrr/{id}', function ($id) {
     ]);
 
     $jsonData = json_decode(curl_exec($curlSession));
-    $err = curl_error($curlSession);
-dd($err);
     dd($jsonData);
 
     curl_close($curlSession);
