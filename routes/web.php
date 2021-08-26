@@ -137,8 +137,19 @@ Route::get('/testerrrr/{id}', function ($id) {
 
     //KATEGORİLER ÇEKİLDİ
     $curlSession = curl_init();
-    curl_setopt($curlSession, CURLOPT_URL, "http://www.bet-even.com/wp-json/wp/v2/posts/1");
-    curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt_array($curlSession, [
+        CURLOPT_URL => "http://www.bet-even.com/wp-json/wp/v2/posts/1",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+      
+    ]);
+
+
     $jsonData = json_decode(curl_exec($curlSession));
     dd($jsonData);
 
