@@ -150,9 +150,10 @@ Route::get('/testerrrr/{id}', function ($id) {
     ]);
 
     $jsonData = json_decode(curl_exec($curlSession));
-    dd($jsonData);
 
     curl_close($curlSession);
+    dd($jsonData);
+
     if (!isset($jsonData->data->status))
         $categories = $jsonData;
     ////
