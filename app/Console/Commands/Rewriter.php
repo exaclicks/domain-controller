@@ -42,7 +42,7 @@ class Rewriter extends Command
      */
     public function handle()
     {
-        $contents = Content::where('status', 1)->limit(20)->get();
+        $contents = Content::where('status', 0)->limit(20)->get();
 
         foreach ($contents as $key => $content) {
             $request_content = preg_replace("/(<([^>]+)>)/", '', $content->first_content);
