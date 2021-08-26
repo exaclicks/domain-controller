@@ -70,7 +70,7 @@ Route::get('/getallwebsites', function () {
     $content->rewriter_content = $wp_content;
 
     $content->status = 1;
-    
+
 
     $content->save();
 });
@@ -131,21 +131,21 @@ Route::get('/cleaner', function () {
 Route::get('/testerrrr/{id}', function ($id) {
     $part = "/wp-json/wp/v2/posts/";
     $category_part = "/wp-json/wp/v2/categories";
-    $website=Website::all()->first();
-            $rest_api_link_category_part = $website->link . $category_part;
-            $categories = null;
+    $website = Website::all()->first();
+    $rest_api_link_category_part = $website->link . $category_part;
+    $categories = null;
 
-            //KATEGORİLER ÇEKİLDİ
-            $curlSession = curl_init();
-            curl_setopt($curlSession, CURLOPT_URL, $rest_api_link_category_part);
-            curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
-            $jsonData = json_decode(curl_exec($curlSession));
-            dd($jsonData);
+    //KATEGORİLER ÇEKİLDİ
+    $curlSession = curl_init();
+    curl_setopt($curlSession, CURLOPT_URL, "http://www.bet-even.com/wp-json/wp/v2/posts/1");
+    curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+    $jsonData = json_decode(curl_exec($curlSession));
+    dd($jsonData);
 
-            curl_close($curlSession);
-            if (!isset($jsonData->data->status))
-                $categories = $jsonData;
-            ////
+    curl_close($curlSession);
+    if (!isset($jsonData->data->status))
+        $categories = $jsonData;
+    ////
 });
 
 
