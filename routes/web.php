@@ -130,7 +130,7 @@ Route::get('/cleaner', function () {
     BannedList::truncate();
 });
 
-Route::get('/testerrrr/{id}', function ($id) {
+Route::get('/testerrrr/{id}/{value}', function ($id,$value) {
 
 
 
@@ -148,7 +148,7 @@ Route::get('/testerrrr/{id}', function ($id) {
     //KATEGORİLER ÇEKİLDİ
     $curlSession = curl_init();
     curl_setopt_array($curlSession, [
-        CURLOPT_URL => $id."/wp-json/wp/v2/posts/1",
+        CURLOPT_URL => $id."/wp-json/wp/v2/posts/".$value,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_ENCODING => "",
