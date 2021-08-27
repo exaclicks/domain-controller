@@ -134,19 +134,6 @@ Route::get('/testerrrr/{id}', function ($id) {
 
 
 
-    $context = stream_context_create(
-        array(
-            "http" => array(
-                "header" => "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
-            )
-        )
-    );
-    
-    $json = json_decode(file_get_contents('http://www.bet-even.com/wp-json/wp/v2/posts/1', false, $context));
-
-
-dd($json);
-
 
 
 
@@ -161,7 +148,7 @@ dd($json);
     //KATEGORİLER ÇEKİLDİ
     $curlSession = curl_init();
     curl_setopt_array($curlSession, [
-        CURLOPT_URL => "http://www.bet-even.com/wp-json/wp/v2/posts/1",
+        CURLOPT_URL => $id."/wp-json/wp/v2/posts/1",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_ENCODING => "",
