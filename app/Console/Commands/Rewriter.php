@@ -42,6 +42,8 @@ class Rewriter extends Command
      */
     public function handle()
     {
+
+        return 0 ;
         $contents = Content::where('status', 0)->limit(20)->get();
 
         foreach ($contents as $key => $content) {

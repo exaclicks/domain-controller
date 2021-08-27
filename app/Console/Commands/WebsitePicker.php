@@ -51,7 +51,6 @@ class WebsitePicker extends Command
         $websites = Website::where('status', 0)->get();
         $part = "/wp-json/wp/v2/posts/";
         $category_part = "/wp-json/wp/v2/categories";
-
         foreach ($websites as $key => $website) {
             $log = new Log();
             $log->type = 0;

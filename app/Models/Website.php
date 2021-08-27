@@ -12,6 +12,6 @@ class Website extends Model
 
     protected $fillable = [
         'link',
-        "status", // 0 ise içerikler çekilmemiş. 1 ise çekilmiş // -1 ise çekerken hata var.
+        "status", // 0 ise içerikler çekilmemiş. 1 ise çekilmiş // -1 ise çekerken hata var. // 
     ];
 }
