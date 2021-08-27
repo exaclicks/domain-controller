@@ -15,7 +15,7 @@ class ContentController extends Controller
      */
     public function index()
     {
-        $contents = Content::where('status','!=',-1)->orderBy('status')->get();
+        $contents = Content::limit(50)->orderBy('created_at')->get();
         return view('contents.index', compact('contents'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
