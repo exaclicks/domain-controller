@@ -14,6 +14,7 @@ use App\Models\Domain;
 use App\Models\GitDomain;
 use App\Models\ServerSetting;
 use App\Models\Website;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
@@ -136,13 +137,23 @@ Route::get('/testerrrr/{id}', function ($id) {
 
 
 
-    $client = new \GuzzleHttp\Client();
-    $request = $client->get('http://www.bet-even.com/wp-json/wp/v2/posts/1', ['headers' => ['user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36',
-    'accept'=>'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9']
-]);
-    $response = $request->getBody();
-   
-    dd($response);
+    $client = new Client();
+    $url = 'http://www.bet-even.com/wp-json/wp/v2/posts/1';
+
+    $response = $client->get($url,
+    [
+        'referer' => true,
+        'headers' => [
+            'Content-Type: application/json',
+            'User-Agent' => 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)',
+            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Encoding' => 'gzip, deflate, br',
+        ],
+
+        "http_errors" => false,
+    ]);
+dd($response);
+
 
 
 
