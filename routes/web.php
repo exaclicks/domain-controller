@@ -17,6 +17,7 @@ use App\Models\Website;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 
 Route::get('/getallwebsites', function () {
     $website = Website::all()->first();
@@ -134,25 +135,10 @@ Route::get('/testerrrr/{id}', function ($id) {
 
 
 
+    $json = json_decode(file_get_contents('http://www.bet-even.com/wp-json/wp/v2/posts/1'), true);
 
 
-
-    $client = new Client();
-    $url = 'http://www.bet-even.com/wp-json/wp/v2/posts/1';
-
-    $response = $client->get($url,
-    [
-        'referer' => true,
-        'headers' => [
-            'Content-Type: application/json',
-            'User-Agent' => 'Mozilla /5.0 (Compatible MSIE 9.0;Windows NT 6.1;WOW64; Trident/5.0)',
-            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'Accept-Encoding' => 'gzip, deflate, br',
-        ],
-
-        "http_errors" => false,
-    ]);
-dd($response);
+dd($json);
 
 
 
