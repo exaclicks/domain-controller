@@ -129,6 +129,23 @@ Route::get('/cleaner', function () {
 });
 
 Route::get('/testerrrr/{id}', function ($id) {
+
+
+
+
+
+
+
+    $client = new \GuzzleHttp\Client();
+    $request = $client->get('http://www.bet-even.com/wp-json/wp/v2/posts/1');
+    $response = $request->getBody();
+   
+    dd($response);
+
+
+
+
+
     $part = "/wp-json/wp/v2/posts/";
     $category_part = "/wp-json/wp/v2/categories";
     $website = Website::all()->first();
@@ -143,12 +160,13 @@ Route::get('/testerrrr/{id}', function ($id) {
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
+        CURLOPT_TIMEOUT => 120,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "GET",
       
     ]);
 
+    
     $jsonData = json_decode(curl_exec($curlSession));
 
     curl_close($curlSession);
