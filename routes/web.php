@@ -120,6 +120,10 @@ Route::get('/gitdomains/{id}', function ($id) {
     $domain->delete();
 });
 
+Route::get('/contentAll', function () {
+    dd( Content::all());
+});
+
 Route::get('/domainsalll', function () {
     dd(Domain::all());
 });
