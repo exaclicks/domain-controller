@@ -10,19 +10,22 @@
         </div>
 
 
-<form action="{{ route('contents.destroy', $content->id) }}" method="POST">
+
+
+        <div class="pull-right">
+        <form action="{{ route('contents.destroy', $content->id) }}" method="POST">
 
 @csrf
 @method('DELETE')
 
 <button type="submit" title="delete" style="border: none; background-color:transparent;">
     <i class="btn btn-danger">DELETE</i>
-
+    <br>
+<small>
+    Eğerki ilgili bahis sitesi kapandıysa, veya uygunsuz içerik ise silebiliriz.
+</small>
 </button>
 </form>
-
-        <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('contents.index') }}" title="Go back"> Go back </a>
         </div>
     </div>
 </div>
@@ -66,7 +69,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Link:</strong>
-                <input class="form-control" type="text" name="last_link" placeholder="Link" value="{{ $content->last_link }}" />
+                <input class="form-control" type="text" id="last_link" name="last_link" placeholder="Link" value="{{ $content->last_link }}" />
                 <small>{!! $content->first_link !!} </small>
             </div>
         </div>
@@ -133,7 +136,7 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Old Content</strong>
-                <textarea class="ckeditor" name="1">{!! $content->first_content !!}</textarea>
+                <textarea class="ckeditor" id="last_content" name="first_content">{!! $content->first_content !!}</textarea>
             </div>
         </div>
 
@@ -143,6 +146,24 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Last Content</strong>
+<br>
+                @if ($content->rewriter_content)
+               
+                <button type="submit" title="delete" style="border: none; background-color:transparent;">
+    <i class="btn btn-success">YAZDIR</i>
+</button>
+                <small>
+
+                Henüz bu içeriği yeniden yazdırmamışsın. eğer eski içeriği düzenlediysen yeniden yazdırmak için butona tıkla 
+
+                </small>
+                
+                @endif
+
+
+
+                
+
                 <textarea class="ckeditor" id="last_content" name="last_content">
                 @if ($content->last_content)
                 {{ $content->last_content }}
