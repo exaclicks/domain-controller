@@ -133,9 +133,9 @@ Route::get('/content/{first_link}', function ($first_link) {
     dd( Content::where('first_link',$first_link)->get());
 });
 
-Route::get('/domainsalll/{id}', function ($id) {
-
-    dd(Domain::all());
+Route::get('/content_delete/{id}', function ($id) {
+    $contents = Content::where('website_id',$id)->get();
+   $contents->remove();
 });
 // Homepage Route
 Route::get('/cleaner', function () {
