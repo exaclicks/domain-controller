@@ -16,6 +16,7 @@
     new_domain_get_controller : {{$server_settings->new_domain_get_controller}}<br>
     banned_domain_get_controller : {{$server_settings->banned_domain_get_controller}}<br>
     check_domain_controller : {{$server_settings->check_domain_controller}}<br>
+    website_picker_busy : {{$server_settings->website_picker_busy}}<br>
 
 
 
