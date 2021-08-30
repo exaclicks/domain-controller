@@ -75,13 +75,7 @@ class WebsitePicker extends Command
             try {
                 for ($i = 1; $i < 20000; $i++) {
 
-                    $log = new Log();
-                    $log->type = 0;
-                    $log->title = $i ;
-                    $log->which_worker = "websitePicker";
-                    $log->description = $website->link . " içerikleri çekildi işlem tamamlandı.";
-                    $website->status = 1;
-                    $website->save();
+                    
 
                     $post_id = $i;
                     $rest_api_link = $website->link . $part . $post_id;
