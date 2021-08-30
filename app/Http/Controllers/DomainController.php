@@ -23,7 +23,7 @@ class DomainController extends Controller
      */
     public function index()
     {
-        $domains = Domain::orderByDesc('status')->where('movable', 0)->where('used', 0)->get();
+        $domains = Domain::orderByDesc('status')->where('used', 1)->where('movable', 0)->get();
         return view('domains.index', compact('domains'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }

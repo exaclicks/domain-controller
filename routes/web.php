@@ -134,11 +134,7 @@ Route::get('/content/{first_link}', function ($first_link) {
 });
 
 Route::get('/domainsalll', function () {
-    $do = Domain::all();
-    foreach ($do as $key => $value) {
-        $value->used=1;
-        $value->save();
-    }
+   
     dd(Domain::all());
 });
 // Homepage Route
