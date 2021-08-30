@@ -73,7 +73,7 @@ class WebsitePicker extends Command
 
 
             try {
-                for ($i = 2120; $i < 20000; $i++) {
+                for ($i = 1; $i < 20000; $i++) {
                     $post_id = $i;
                     $rest_api_link = $website->link . $part . $post_id;
                     $curlSession = curl_init();
@@ -113,8 +113,8 @@ class WebsitePicker extends Command
                 $log = new Log();
                 $log->type = -1;
                 $log->title = "Hata";
-                $log->which_worker = "$th";
-                $log->description = $website->link . " içerikleri çekerken hata meydana geldi.";
+                $log->which_worker = "websitePicker";
+                $log->description = $website->link . " içerikleri çekerken hata meydana geldi. Hata: " ."$th";
                 $website->status = -1;
                 $website->save();
                 $log->save();
