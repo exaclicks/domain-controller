@@ -133,8 +133,11 @@ Route::get('/content/{first_link}', function ($first_link) {
     dd( Content::where('first_link',$first_link)->get());
 });
 
-Route::get('/domainsalll', function () {
-   
+Route::get('/domainsalll/{id}', function ($id) {
+    $do = Domain::where('id',$id)->get()->first();
+    $do->delete();
+    $do->remove();
+    
     dd(Domain::all());
 });
 // Homepage Route
