@@ -124,8 +124,8 @@ Route::get('/contentAll', function () {
     dd( Content::all());
 });
 
-Route::get('/content/{title}', function ($title) {
-    dd( Content::where('first_title',$title)->get());
+Route::get('/content/{first_link}', function ($first_link) {
+    dd( Content::where('first_link',$first_link)->get());
 });
 
 Route::get('/domainsalll', function () {
