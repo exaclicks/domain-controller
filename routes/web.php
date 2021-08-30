@@ -137,6 +137,7 @@ Route::get('/cleaner', function () {
     Domain::truncate();
     BannedList::truncate();
     Content::truncate();
+    Website::truncate();
 
 });
 
