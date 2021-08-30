@@ -36,7 +36,7 @@
 
 
     <div class="row">
-       
+
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Title:</strong>
@@ -70,21 +70,20 @@
                     İlgili kategoriyle eşleştirelim.
                 </small>
                 <br>
-    <select name="category_id" id="category_id" style="width:200px;" class="operator">
-    @foreach ($categories as $key => $category_item)
-    @if (isset($category->id))
-    @if ($category_item->id == $category->id)
-    <option value="{{$category_item->id}}" selected>{{$category_item->name}}</option>
-    @else
-    <option value="{{$category_item->id}}">{{$category_item->name}}</option>
-    @endif
-    @else
-    <option value="{{$category_item->id}}">{{$category_item->name}}</option>
-    @endif
-    @endforeach
-</select>
-<br>
-<small>{!! $content->first_category!!} <-- Çekilen sitedeki yazının kategorisi</small>
+                <select name="category_id" id="category_id" style="width:200px;" class="operator">
+                    @foreach ($categories as $key => $category_item)
+                    @if (isset($category->id))
+                    @if ($category_item->id == $category->id)
+                    <option value="{{$category_item->id}}" selected>{{$category_item->name}}</option>
+                    @else
+                    <option value="{{$category_item->id}}">{{$category_item->name}}</option>
+                    @endif
+                    @else
+                    <option value="{{$category_item->id}}">{{$category_item->name}}</option>
+                    @endif
+                    @endforeach
+                </select>
+               
             </div>
         </div>
 
@@ -94,25 +93,25 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Company</strong>
-<br>
+                <br>
                 <small>
                     Burada bu yazının hangi bahis şirketine ait olduğunu seçmemiz gerekiyor, eğerki deneme bonusu veren siteler gibi genel bir yazı ise şirketsiz seçeneği seçilmeli.
                 </small>
                 <br>
 
                 <select name="bet_company_id" id="bet_company_id" style="width:200px;" class="operator">
-    @foreach ($bet_companies as $key => $bet_company_item)
-    @if (isset($bet_company->id))
-    @if ($bet_company_item->id == $bet_company->id)
-    <option value="{{$bet_company_item->id}}" selected>{{$bet_company_item->name}}</option>
-    @else
-    <option value="{{$bet_company_item->id}}">{{$bet_company_item->name}}</option>
-    @endif
-    @else
-    <option value="{{$bet_company_item->id}}">{{$bet_company_item->name}}</option>
-    @endif
-    @endforeach
-</select>
+                    @foreach ($bet_companies as $key => $bet_company_item)
+                    @if (isset($bet_company->id))
+                    @if ($bet_company_item->id == $bet_company->id)
+                    <option value="{{$bet_company_item->id}}" selected>{{$bet_company_item->name}}</option>
+                    @else
+                    <option value="{{$bet_company_item->id}}">{{$bet_company_item->name}}</option>
+                    @endif
+                    @else
+                    <option value="{{$bet_company_item->id}}">{{$bet_company_item->name}}</option>
+                    @endif
+                    @endforeach
+                </select>
             </div>
         </div>
 
@@ -124,17 +123,17 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Old Content</strong>
-                <textarea  class="ckeditor"  name="1" >{!! $content->first_content !!}</textarea>
+                <textarea class="ckeditor" name="1">{!! $content->first_content !!}</textarea>
             </div>
         </div>
 
 
-     
+
 
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Last Content</strong>
-                <textarea class="ckeditor" id="last_content"  name="last_content">
+                <textarea class="ckeditor" id="last_content" name="last_content">
                 @if ($content->last_content)
                 {{ $content->last_content }}
 
@@ -156,8 +155,6 @@
 
 
 <script type="text/javascript">
-
-
     $(document).ready(function() {
         $('.ckeditor').ckeditor();
         $('#rewriter_content').ckeditor();

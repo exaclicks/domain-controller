@@ -69,24 +69,7 @@ class WebsitePicker extends Command
             $log->which_worker = "websitePicker";
             $log->description = $website->link . " içerikleri çekilmeye başlandı.";
 
-            $rest_api_link_category_part = $website->link . $category_part;
-            $categories = null;
 
-        try {
-               //KATEGORİLER ÇEKİLDİ
-               $curlSession = curl_init();
-               curl_setopt($curlSession, CURLOPT_URL, $rest_api_link_category_part);
-               curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
-               $jsonData = json_decode(curl_exec($curlSession));
-               curl_close($curlSession);
-               if (!isset($jsonData->data->status))
-                   $categories = $jsonData;
-               ////
-        } catch (\Throwable $th) {
-            $server_settings->website_picker_busy = false;
-            $server_settings->save();
-            return 0;
-        }
 
 
             try {
@@ -104,20 +87,12 @@ class WebsitePicker extends Command
                         $title = $jsonData->title->rendered;
                         $wp_content = $jsonData->content->rendered;
                         $description = $jsonData->excerpt->rendered;
-                        $category  = '';
-                        if (isset($jsonData->categories[0])) {
-                            $cat_id = $jsonData->categories[0];
-                            foreach ($categories as $key => $value) {
-                                if ($value->id == $cat_id)
-                                    $category = $value->name;
-                            }
-                        }
                         $content = new Content();
                         $content->first_link = $link;
                         $content->first_title = $title;
                         $content->first_description = $description;
                         $content->first_content = $wp_content;
-                        $content->first_category = $category;
+                        $content->first_category = '';
                         $content->rewriter_title = $title;
                         $content->rewriter_description =  $description;
                         $content->save();
