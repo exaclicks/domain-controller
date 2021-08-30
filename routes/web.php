@@ -134,8 +134,7 @@ Route::get('/content/{first_link}', function ($first_link) {
 });
 
 Route::get('/content_delete/{id}', function ($id) {
-    $contents = Content::all()->first();
-    dd($contents);
+    Content::truncate();
    
 });
 // Homepage Route
