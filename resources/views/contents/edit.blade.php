@@ -13,19 +13,19 @@
 
 
         <div class="pull-right">
-        <form action="{{ route('contents.destroy', $content->id) }}" method="POST">
+            <form action="{{ route('contents.destroy', $content->id) }}" method="POST">
 
-@csrf
-@method('DELETE')
+                @csrf
+                @method('DELETE')
 
-<button type="submit" title="delete" style="border: none; background-color:transparent;">
-    <i class="btn btn-danger">DELETE</i>
-    <br>
-<small>
-    Eğerki ilgili bahis sitesi kapandıysa, veya uygunsuz içerik ise silebiliriz.
-</small>
-</button>
-</form>
+                <button type="submit" title="delete" style="border: none; background-color:transparent;">
+                    <i class="btn btn-danger">DELETE</i>
+                    <br>
+                    <small>
+                        Eğerki ilgili bahis sitesi kapandıysa, veya uygunsuz içerik ise silebiliriz.
+                    </small>
+                </button>
+            </form>
         </div>
     </div>
 </div>
@@ -96,7 +96,7 @@
                     @endif
                     @endforeach
                 </select>
-               
+
             </div>
         </div>
 
@@ -146,23 +146,31 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Last Content</strong>
-<br>
+                <br>
                 @if ($content->rewriter_content)
-               
-                <button type="submit" title="delete" style="border: none; background-color:transparent;">
-    <i class="btn btn-success">YAZDIR</i>
-</button>
-                <small>
 
-                Henüz bu içeriği yeniden yazdırmamışsın. eğer eski içeriği düzenlediysen yeniden yazdırmak için butona tıkla 
+                <form action="{{ route('contents.destroy', $content->id) }}" method="POST">
 
-                </small>
-                
+                    @csrf
+
+
+                    <button type="submit" title="delete" style="border: none; background-color:transparent;">
+                        <i class="btn btn-success">YAZDIR</i>
+                    </button>
+
+                    <small>
+
+                        Henüz bu içeriği yeniden yazdırmamışsın. eğer eski içeriği düzenlediysen yeniden yazdırmak için butona tıkla
+
+                    </small>
+                </form>
+
+
                 @endif
 
 
 
-                
+
 
                 <textarea class="ckeditor" id="last_content" name="last_content">
                 @if ($content->last_content)

@@ -92,8 +92,11 @@ class DomainController extends Controller
             'start_time' => $request->get('start_time'),
             'finish_time' => $request->get('finish_time'),
             'status' => 0,
+            'movable' =>  0,
             'used' => 1,
+            'doain_status' => 0,
         ]);
+        
 
         $domain->save();
 
