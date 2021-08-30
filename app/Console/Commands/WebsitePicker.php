@@ -112,6 +112,7 @@ class WebsitePicker extends Command
 
                         $wp_content ='';
                         if(isset($jsonData->content)){
+                            $save = true;
                             $wp_content  = $jsonData->content->rendered;
                         }else{
                             $save = false;
