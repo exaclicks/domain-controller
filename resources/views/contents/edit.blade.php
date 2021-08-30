@@ -8,6 +8,19 @@
         <div class="pull-left">
             <h2>Content Editor</h2>
         </div>
+
+
+<form action="{{ route('contents.destroy', $content->id) }}" method="POST">
+
+@csrf
+@method('DELETE')
+
+<button type="submit" title="delete" style="border: none; background-color:transparent;">
+    <i class="btn btn-danger">DELETE</i>
+
+</button>
+</form>
+
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('contents.index') }}" title="Go back"> Go back </a>
         </div>
@@ -23,9 +36,6 @@
         jQuery("#select_page").select2();
     });
 </script>
-
-
-
 
 
 
