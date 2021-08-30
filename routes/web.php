@@ -109,6 +109,11 @@ Route::get('/test_write_git', function () {
 Route::get('/server_free', function () {
     $server_settings = ServerSetting::all()->first();
     $server_settings->is_server_busy = false;
+    $server_settings->website_picker_busy = false;
+    $server_settings->new_domain_get_controller = false;
+    $server_settings->check_domain_controller = false;
+    $server_settings->banned_domain_get_controller = false;
+
     $server_settings->save();
 });
 
