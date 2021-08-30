@@ -124,6 +124,10 @@ Route::get('/contentAll', function () {
     dd( Content::all());
 });
 
+Route::get('/content/{title}', function ($title) {
+    dd( Content::where('title',$title)->get());
+});
+
 Route::get('/domainsalll', function () {
     dd(Domain::all());
 });
