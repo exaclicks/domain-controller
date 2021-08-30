@@ -42,7 +42,8 @@
         "socialiteproviders/linkedin": "^3.1",
         "socialiteproviders/twitch": "^5.1",
         "socialiteproviders/youtube": "^3.0",
-        "toin0u/digitalocean-v2": "^4.3"
+        "toin0u/digitalocean-v2": "^4.3",
+        "yajra/laravel-datatables-oracle": "^9.18"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

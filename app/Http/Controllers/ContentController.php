@@ -1,24 +1,71 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\BetCompany;
 use App\Models\Category;
 use App\Models\Content;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class ContentController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Content::select('*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return '  <a href="/contents/' . $row->id . '/edit">
+                            <i class="fa fa-pencil fa-fw "></i>
+                        </a>';
+                })
+                ->addColumn('status_text', function ($row) {
+                    if ($row->status == 0) {
+                        return '<b >Not Rewritered<</b>';
+                    } else if ($row->status == 1) {
+                        return '<b>Draft</b>';
+                    } else if ($row->status == 2) {
+                        return '<b>Published</b>';
+                    }
+                })
+                ->filter(function ($instance) use ($request) {
+                    if (!empty($request->get('search'))) {
+                        $instance->where(function ($w) use ($request) {
+                            $search = $request->get('search');
+                            $w->orWhere('first_title', 'LIKE', "%$search%")
+                                ->orWhere('rewriter_title', 'LIKE', "%$search%")
+                                ->orWhere('last_title', 'LIKE', "%$search%");
+                        });
+                    }
+                })
+
+                ->make(true);
+        }
+
+        return view('contents.index');
+    }
+
+
+
+
+    /*      public function index()
     {
         $contents = Content::all();
         return view('contents.index', compact('contents'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
+    **/
+
 
     /**
      * Show the form for creating a new resource.
@@ -38,14 +85,14 @@ class ContentController extends Controller
      */
     public function store(Request $request)
     {
-      
+
 
         $content = Content::create([
             'first_link' => $request->get('first_link'),
             'first_title' => $request->get('first_title'),
             'first_description' => $request->get('first_description'),
             'first_content' => $request->get('first_content'),
-            'status'=> 0
+            'status' => 0
         ]);
 
         $content->save();
@@ -76,10 +123,10 @@ class ContentController extends Controller
         $test = 5;
         $bet_companies = BetCompany::all();
         $categories = Category::all();
-        $category = Category::where('id',$content->category_id)->get()->first();
-        $bet_company = BetCompany::where('id',$content->bet_company_id)->get()->first();
+        $category = Category::where('id', $content->category_id)->get()->first();
+        $bet_company = BetCompany::where('id', $content->bet_company_id)->get()->first();
 
-        return view('contents.edit', compact('content','categories','bet_companies','category','bet_company'));
+        return view('contents.edit', compact('content', 'categories', 'bet_companies', 'category', 'bet_company'));
     }
     /**
      * Update the specified resource in storage.
@@ -96,10 +143,10 @@ class ContentController extends Controller
             'last_title' => 'required',
             'last_description' => 'required',
             'last_content' => 'required',
-        
+
         ]);
-        $content->status=2;
-        $content->save();        
+        $content->status = 2;
+        $content->save();
         $content->update($request->all());
 
         return redirect()->route('contents.index')
