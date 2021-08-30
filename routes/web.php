@@ -121,13 +121,11 @@ Route::get('/gitdomains/{id}', function ($id) {
 });
 
 Route::get('/contentAll', function () {
-    $contents = Content::limit(10)->orderBy('created_at')->get();
-
-    dd( $contents);
+    dd( Content::all());
 });
 
 Route::get('/content/{title}', function ($title) {
-    dd( Content::where('title',$title)->get());
+    dd( Content::where('first_title',$title)->get());
 });
 
 Route::get('/domainsalll', function () {
