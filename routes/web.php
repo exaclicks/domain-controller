@@ -121,7 +121,9 @@ Route::get('/gitdomains/{id}', function ($id) {
 });
 
 Route::get('/contentAll', function () {
-    dd( Content::all());
+    $contents = Content::limit(10)->orderBy('created_at')->get();
+
+    dd( $contents);
 });
 
 Route::get('/content/{title}', function ($title) {
