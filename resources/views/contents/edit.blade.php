@@ -147,14 +147,8 @@
             <div class="form-group">
                 <strong>Last Content</strong>
                 <br>
-                @if ($content->rewriter_content)
-
-                <form action="{{ route('contents.destroy', $content->id) }}" method="POST">
-
-                    @csrf
-
-
-                    <button type="submit" title="delete" style="border: none; background-color:transparent;">
+            
+                <button type="submit" title="delete" style="border: none; background-color:transparent;">
                         <i class="btn btn-success">YAZDIR</i>
                     </button>
 
@@ -163,11 +157,6 @@
                         Henüz bu içeriği yeniden yazdırmamışsın. eğer eski içeriği düzenlediysen yeniden yazdırmak için butona tıkla
 
                     </small>
-                </form>
-
-
-                @endif
-
 
 
 
