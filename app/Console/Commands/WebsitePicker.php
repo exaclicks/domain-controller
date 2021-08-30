@@ -86,26 +86,49 @@ class WebsitePicker extends Command
 
                     curl_close($curlSession);
                     if (!isset($jsonData->data->status)) {
+                        $save = true;
                         $link ='';
                         if(isset($jsonData->slug)){
                             $link = $jsonData->slug;
+                        }else{
+                            $save = false;
                         }
+                        
 
                         $description ='';
-                        if(isset($jsonData->slug)){
-                            $jsonData->excerpt->rendered;
+                        if(isset($jsonData->excerpt)){
+                            $description= $jsonData->excerpt->rendered;
+                        }else{
+                            $save = false;
                         }
-                        $title = $jsonData->title->rendered;
-                        $wp_content = $jsonData->content->rendered;
-                        $content = new Content();
-                        $content->first_link = $link;
-                        $content->first_title = $title;
-                        $content->first_description = $description;
-                        $content->first_content = $wp_content;
-                        $content->first_category = '';
-                        $content->rewriter_title = $title;
-                        $content->rewriter_description =  $description;
-                        $content->save();
+                        
+
+                        $title ='';
+                        if(isset($jsonData->title)){
+                           $title=  $jsonData->title->rendered;
+                        }else{
+                            $save = false;
+                        }
+
+                        $wp_content ='';
+                        if(isset($jsonData->content)){
+                            $wp_content  = $jsonData->content->rendered;
+                        }else{
+                            $save = false;
+                        }
+                        
+                        if($save){
+                            $content = new Content();
+                            $content->first_link = $link;
+                            $content->first_title = $title;
+                            $content->first_description = $description;
+                            $content->first_content = $wp_content;
+                            $content->first_category = '';
+                            $content->rewriter_title = $title;
+                            $content->rewriter_description =  $description;
+                            $content->save();
+                        }
+                       
                     }
                 }
 
