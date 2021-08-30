@@ -6,11 +6,7 @@
         <div class="pull-left">
             <h2>Unused Domain List </h2>
         </div>
-        <div class="pull-right">
-            <a class="btn btn-success margin-bottom-1 mb-1" href="{{ route('un_used_domain_create') }}" title="Create a domain">Create</i>
-            </a>
-
-        </div>
+       
     </div>
 </div>
 
