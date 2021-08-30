@@ -88,15 +88,19 @@ class WebsitePicker extends Command
                     if (!isset($jsonData->data->status)) {
                         $save = true;
                         $link ='';
-                        if(isset($jsonData->slug)){
+                        try {
                             $link = $jsonData->slug;
-                        }else{
+                            $save = true;
+
+                        } catch (\Throwable $th) {
                             $save = false;
+                            break;
                         }
                         
 
                         $description ='';
-                        if(isset($jsonData->excerpt)){
+                        if($save){
+                            $save = true;
                             $description= $jsonData->excerpt->rendered;
                         }else{
                             $save = false;
@@ -104,14 +108,15 @@ class WebsitePicker extends Command
                         
 
                         $title ='';
-                        if(isset($jsonData->title)){
-                           $title=  $jsonData->title->rendered;
+                        if($save){
+                            $save = true;
+                            $title=  $jsonData->title->rendered;
                         }else{
                             $save = false;
                         }
 
                         $wp_content ='';
-                        if(isset($jsonData->content)){
+                        if($save){
                             $save = true;
                             $wp_content  = $jsonData->content->rendered;
                         }else{
