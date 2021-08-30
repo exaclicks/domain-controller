@@ -86,10 +86,17 @@ class WebsitePicker extends Command
 
                     curl_close($curlSession);
                     if (!isset($jsonData->data->status)) {
-                        $link = $jsonData->slug;
+                        $link ='';
+                        if(isset($jsonData->slug)){
+                            $link = $jsonData->slug;
+                        }
+
+                        $description ='';
+                        if(isset($jsonData->slug)){
+                            $jsonData->excerpt->rendered;
+                        }
                         $title = $jsonData->title->rendered;
                         $wp_content = $jsonData->content->rendered;
-                        $description = $jsonData->excerpt->rendered;
                         $content = new Content();
                         $content->first_link = $link;
                         $content->first_title = $title;
