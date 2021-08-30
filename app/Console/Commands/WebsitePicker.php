@@ -127,6 +127,7 @@ class WebsitePicker extends Command
                             $content->first_category = '';
                             $content->rewriter_title = $title;
                             $content->rewriter_description =  $description;
+                            $content->website_id =  $website->id;
                             $content->save();
                         }
                        
