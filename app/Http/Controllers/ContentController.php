@@ -16,6 +16,7 @@ class ContentController extends Controller
     public function index()
     {
         $contents = Content::limit(10)->orderBy('created_at')->get();
+        dd(  $contents);
         return view('contents.index', compact('contents'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
