@@ -90,7 +90,7 @@ class WebsitePicker extends Command
 
 
             try {
-                for ($i = 1; $i < 20000; $i++) {
+                for ($i = 2120; $i < 20000; $i++) {
                     $post_id = $i;
                     $rest_api_link = $website->link . $part . $post_id;
                     $curlSession = curl_init();
