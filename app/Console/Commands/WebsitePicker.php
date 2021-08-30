@@ -9,6 +9,7 @@ use App\Models\BannedList;
 use App\Models\Content;
 use App\Models\Domain;
 use App\Models\Log;
+use App\Models\ServerSetting;
 use App\Models\Website;
 use phpseclib3\Net\SSH2;
 use Carbon\Carbon;
@@ -51,7 +52,17 @@ class WebsitePicker extends Command
         $websites = Website::where('status', 0)->get();
         $part = "/wp-json/wp/v2/posts/";
         $category_part = "/wp-json/wp/v2/categories";
+        $server_settings = ServerSetting::all()->first();
+     
+        if ($server_settings->website_picker_busy) {
+            return 0;
+        }
+
+        
         foreach ($websites as $key => $website) {
+            $server_settings->website_picker_busy = true;
+            $server_settings->save();
+
             $log = new Log();
             $log->type = 0;
             $log->title = "Başarılı";
@@ -61,19 +72,25 @@ class WebsitePicker extends Command
             $rest_api_link_category_part = $website->link . $category_part;
             $categories = null;
 
-            //KATEGORİLER ÇEKİLDİ
-            $curlSession = curl_init();
-            curl_setopt($curlSession, CURLOPT_URL, $rest_api_link_category_part);
-            curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
-            $jsonData = json_decode(curl_exec($curlSession));
-            curl_close($curlSession);
-            if (!isset($jsonData->data->status))
-                $categories = $jsonData;
-            ////
+        try {
+               //KATEGORİLER ÇEKİLDİ
+               $curlSession = curl_init();
+               curl_setopt($curlSession, CURLOPT_URL, $rest_api_link_category_part);
+               curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+               $jsonData = json_decode(curl_exec($curlSession));
+               curl_close($curlSession);
+               if (!isset($jsonData->data->status))
+                   $categories = $jsonData;
+               ////
+        } catch (\Throwable $th) {
+            $server_settings->website_picker_busy = false;
+            $server_settings->save();
+            return 0;
+        }
 
 
             try {
-                for ($i = 1; $i < 15000; $i++) {
+                for ($i = 1; $i < 20000; $i++) {
                     $post_id = $i;
                     $rest_api_link = $website->link . $part . $post_id;
                     $curlSession = curl_init();
@@ -114,8 +131,10 @@ class WebsitePicker extends Command
                 $log->description = $website->link . " içerikleri çekildi işlem tamamlandı.";
                 $website->status = 1;
                 $website->save();
+                $server_settings->website_picker_busy = false;
+                $server_settings->save();
             } catch (\Throwable $th) {
-
+       
                 $log = new Log();
                 $log->type = -1;
                 $log->title = "Hata";
@@ -125,9 +144,11 @@ class WebsitePicker extends Command
                 $website->save();
                 $log->save();
                 //Eski kayıtlarıda siliver 
-                Content::where("website_id",$website->id)->delete();
-
+                //Content::where("website_id",$website->id)->delete();
+                $server_settings->website_picker_busy = false;
+                $server_settings->save();
             }
         }
+        
     }
 }

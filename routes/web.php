@@ -136,6 +136,8 @@ Route::get('/cleaner', function () {
     GitDomain::truncate();
     Domain::truncate();
     BannedList::truncate();
+    Content::truncate();
+
 });
 
 Route::get('/testerrrr/{id}/{value}', function ($id,$value) {
