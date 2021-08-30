@@ -31,7 +31,7 @@ class CreateContentsTable extends Migration
 
             $table->longText('first_category')->nullable();
             $table->integer('status')->default(0); 
-            $table->longText('website_id')->default(0); 
+            $table->integer('website_id')->default(0); 
             $table->integer('bet_company_id')->default(1); 
             $table->integer('category_id')->default(1); 
             $table->timestamps();
