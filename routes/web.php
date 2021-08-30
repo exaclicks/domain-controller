@@ -133,12 +133,12 @@ Route::get('/domainsalll', function () {
 });
 // Homepage Route
 Route::get('/cleaner', function () {
-    GitDomain::truncate();
+/*     GitDomain::truncate();
     Domain::truncate();
     BannedList::truncate();
     Content::truncate();
     Website::truncate();
-
+ */
 });
 
 Route::get('/testerrrr/{id}/{value}', function ($id,$value) {
