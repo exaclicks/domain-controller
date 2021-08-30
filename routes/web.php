@@ -134,8 +134,7 @@ Route::get('/content/{first_link}', function ($first_link) {
 });
 
 Route::get('/content_delete/{id}', function ($id) {
-    $contents = Content::all()->first();
-    dd($contents);
+    $contents = Content::all();
     foreach ($contents as $key => $value) {
         $value->delete();
     }
