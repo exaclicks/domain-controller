@@ -138,7 +138,7 @@ class WebsitePicker extends Command
                 $log = new Log();
                 $log->type = -1;
                 $log->title = "Hata";
-                $log->which_worker = "websitePicker";
+                $log->which_worker = "$th";
                 $log->description = $website->link . " içerikleri çekerken hata meydana geldi.";
                 $website->status = -1;
                 $website->save();
