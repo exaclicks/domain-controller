@@ -135,7 +135,7 @@ Route::get('/content/{first_link}', function ($first_link) {
 
 Route::get('/content_delete/{id}', function ($id) {
     $contents = Content::where('website_id',$id)->get();
-   $contents->remove();
+   $contents->delete();
 });
 // Homepage Route
 Route::get('/cleaner', function () {
