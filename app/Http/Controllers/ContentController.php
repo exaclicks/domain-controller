@@ -44,7 +44,7 @@ class ContentController extends Controller
                 ->addColumn('website', function ($row) {
                     $website = Website::where('id',$row->website_id)->get();
                     if(count($website ) > 0){
-                        return $website->first()->link;
+                        return $website->first()->id;
                     }else{
                         return "unknown";
                     }
@@ -53,6 +53,7 @@ class ContentController extends Controller
                     if (!empty($request->get('search'))) {
                         $instance->where(function ($w) use ($request) {
                             $search = $request->get('search');
+                            
                             $w->orWhere('first_title', 'LIKE', "%$search%")
                                 ->orWhere('rewriter_title', 'LIKE', "%$search%")
                                 ->orWhere('last_title', 'LIKE', "%$search%");
