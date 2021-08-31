@@ -152,6 +152,14 @@ Route::get('/delete_website_content/{id}', function ($id) {
     }
 });
 
+Route::get('/wrong_content_delete', function () {
+    
+   for ($i=1093; $i <1433 ; $i++) { 
+       $content = Content::where('id',$id)->get()->first();
+       $content->delete();
+   }
+});
+
 
 Route::get('/testerrrr', function () {
     
