@@ -53,7 +53,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Title:</strong>
-                <textarea class="form-control" style="height:50px" name="last_title" placeholder="Title">{{ $content->last_title }}</textarea>
+                <textarea class="form-control" style="height:50px" name="last_title" maxlength="60" placeholder="Title">{{ $content->last_title }}</textarea>
                 <small>{!! $content->rewriter_title !!}</small>
             </div>
         </div>
@@ -61,7 +61,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Description:</strong>
-                <textarea class="form-control" style="height:100px" name="last_description" placeholder="Description">{{ $content->last_description }}</textarea>
+                <textarea class="form-control" style="height:100px" name="last_description" maxlength="160" placeholder="Description">{{ $content->last_description }}</textarea>
                 <small>{!! $content->rewriter_description !!} </small>
             </div>
         </div>
