@@ -184,7 +184,7 @@ Route::get('/custom_get_content/{id}', function ($id) {
 
     try {
         $timer = 0;
-        for ($i = 1; $i < 15000; $i++) {
+        for ($i = 1; $i < 50000; $i++) {
 
 
 
@@ -195,7 +195,7 @@ Route::get('/custom_get_content/{id}', function ($id) {
             $jsonData = json_decode($html);
 
             if ($timer == 500) {
-                break;
+                //break;
             }
             if (!isset($jsonData->data->status)) {
                 $save = true;
