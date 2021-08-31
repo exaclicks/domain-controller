@@ -144,6 +144,15 @@ Route::get('/change_website_status/{id}', function ($id) {
     $website->save();
 });
 
+Route::get('/delete_website_content/{id}', function ($id) {
+    
+    $contents = Content::where('website_id',$id)->get();
+    foreach ($contents as $key => $value) {
+        $value->delete();
+    }
+});
+
+
 Route::get('/testerrrr', function () {
     
     $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
