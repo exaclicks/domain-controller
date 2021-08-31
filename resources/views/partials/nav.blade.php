@@ -89,6 +89,7 @@
                 </li>
                 @endrole
 
+                @role('admin')
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDomainsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -109,6 +110,7 @@
 
                     </div>
                 </li>
+                @endrole
 
 
             </ul>
