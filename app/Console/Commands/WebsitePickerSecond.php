@@ -52,12 +52,7 @@ class WebsitePickerSecond extends Command
         $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
     $TR_SERVER_SSH_USERNAME = Config::get('values.TR_SERVER_SSH_USERNAME');
     $TR_SERVER_PASSWORD = Config::get('values.TR_SERVER_PASSWORD');
-    $ssh = new SSH2($TR_SERVER_IP);
-    if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
-
-        
-       return 0;
-    }
+  
         $websites = Website::where('status', -2)->get();
         $part = "/wp-json/wp/v2/posts/";
         $category_part = "/wp-json/wp/v2/categories";
@@ -78,7 +73,12 @@ class WebsitePickerSecond extends Command
             $log->which_worker = "websitePickerSecond";
             $log->description = $website->link . " içerikleri çekilmeye başlandı.";
 
-
+            $ssh = new SSH2($TR_SERVER_IP);
+            if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
+        
+                
+               return 0;
+            }
             try {
                 for ($i = 1; $i < 15000; $i++) {
 
