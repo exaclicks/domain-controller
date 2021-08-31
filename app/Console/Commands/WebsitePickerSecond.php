@@ -62,6 +62,12 @@ class WebsitePickerSecond extends Command
             return 0;
         }
 
+        $ssh = new SSH2($TR_SERVER_IP);
+        if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
+    
+            
+           return 0;
+        }
 
         foreach ($websites as $key => $website) {
             $server_settings->website_picker_second_busy = true;
@@ -73,13 +79,9 @@ class WebsitePickerSecond extends Command
             $log->which_worker = "websitePickerSecond";
             $log->description = $website->link . " içerikleri çekilmeye başlandı.";
 
-            $ssh = new SSH2($TR_SERVER_IP);
-            if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
-        
-                
-               return 0;
-            }
+          
             try {
+                $timer = 0;
                 for ($i = 1; $i < 15000; $i++) {
 
 
@@ -88,8 +90,12 @@ class WebsitePickerSecond extends Command
                     $rest_api_link = $website->link . $part . $post_id;
                     $command = 'curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" ' . $rest_api_link;
                     $html = $ssh->exec($command);
+                    sleep(2);
                     $jsonData = json_decode($html);
 
+                    if($timer==500){
+                        break;
+                    }
                     if (!isset($jsonData->data->status)) {
                         $save = true;
                         $link = '';
@@ -98,7 +104,6 @@ class WebsitePickerSecond extends Command
                             $save = true;
                         } catch (\Throwable $th) {
                             $save = false;
-                            break;
                         }
 
 
@@ -138,8 +143,10 @@ class WebsitePickerSecond extends Command
                             $content->rewriter_description =  $description;
                             $content->website_id =  $website->id;
                             $content->save();
+                            $timer == 0;
                         }
                     }
+                    $timer++;
                 }
 
                 $log = new Log();

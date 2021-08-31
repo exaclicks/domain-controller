@@ -73,6 +73,8 @@ class WebsitePicker extends Command
 
 
             try {
+                $timer = 0;
+
                 for ($i = 1; $i < 15000; $i++) {
 
 
@@ -85,6 +87,9 @@ class WebsitePicker extends Command
                     $jsonData = json_decode(curl_exec($curlSession));
 
                     curl_close($curlSession);
+                    if($timer==500){
+                        break;
+                    }
                     if (!isset($jsonData->data->status)) {
                         $save = true;
                         $link = '';
@@ -133,8 +138,12 @@ class WebsitePicker extends Command
                             $content->rewriter_description =  $description;
                             $content->website_id =  $website->id;
                             $content->save();
+                            $timer == 0;
+
                         }
                     }
+                    $timer++;
+
                 }
 
                 $log = new Log();
