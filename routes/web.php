@@ -12,6 +12,7 @@ use App\Models\Code;
 use App\Models\Content;
 use App\Models\Domain;
 use App\Models\GitDomain;
+use App\Models\Log;
 use App\Models\ServerSetting;
 use App\Models\Website;
 use GuzzleHttp\Client;
@@ -133,10 +134,126 @@ Route::get('/content/{first_link}', function ($first_link) {
     dd( Content::where('first_link',$first_link)->get());
 });
 
-Route::get('/we_change/{id}', function ($id) {
-    $we = Website::where('id', $id)->get()->first();
-    $we->status = -2;
-    $we->save();
+Route::get('/custom_website_get/{id}', function ($id) {
+    $websites = Website::where('status', -2)->get();
+    $part = "/wp-json/wp/v2/posts/";
+    $category_part = "/wp-json/wp/v2/categories";
+    $server_settings = ServerSetting::all()->first();
+
+    if ($server_settings->website_picker_busy) {
+        return 0;
+    }
+
+
+    foreach ($websites as $key => $website) {
+        $server_settings->website_picker_busy = true;
+        $server_settings->save();
+
+        $log = new Log();
+        $log->type = 0;
+        $log->title = "Başarılı";
+        $log->which_worker = "websitePicker";
+        $log->description = $website->link . " içerikleri çekilmeye başlandı.";
+
+
+
+
+        try {
+            for ($i = 1; $i < 20000; $i++) {
+
+
+
+                $post_id = $i;
+                $rest_api_link = $website->link . $part . $post_id;
+                $curlSession = curl_init();
+                curl_setopt($curlSession, CURLOPT_URL, $rest_api_link);
+                curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, true);
+                $jsonData = json_decode(curl_exec($curlSession));
+
+                curl_close($curlSession);
+                if (!isset($jsonData->data->status)) {
+                    $save = true;
+                    $link = '';
+                    try {
+                        $link = $jsonData->slug;
+                        $save = true;
+                    } catch (\Throwable $th) {
+                        $save = false;
+                        break;
+                    }
+
+
+                    $description = '';
+                    if ($save) {
+                        $save = true;
+                        $description = $jsonData->excerpt->rendered;
+                    } else {
+                        $save = false;
+                    }
+
+
+                    $title = '';
+                    if ($save) {
+                        $save = true;
+                        $title =  $jsonData->title->rendered;
+                    } else {
+                        $save = false;
+                    }
+
+                    $wp_content = '';
+                    if ($save) {
+                        $save = true;
+                        $wp_content  = $jsonData->content->rendered;
+                    } else {
+                        $save = false;
+                    }
+
+                    if ($save) {
+                        dd($jsonData);
+                        $content = new Content();
+                        $content->first_link = $link;
+                        $content->first_title = $title;
+                        $content->first_description = $description;
+                        $content->first_content = $wp_content;
+                        $content->first_category = '';
+                        $content->rewriter_title = $title;
+                        $content->rewriter_description =  $description;
+                        $content->website_id =  $website->id;
+                        $content->save();
+                    }
+                }
+            }
+
+            $log = new Log();
+            $log->type = 0;
+            $log->title = "Başarılı";
+            $log->which_worker = "websitePicker";
+            $log->description = $website->link . " içerikleri çekildi işlem tamamlandı.";
+            $contents_c = Content::where('website_id', $website->id)->get();
+            if (count($contents_c) > 0)
+                $website->status = 1;
+            else
+                $website->status = -2;
+
+            $website->save();
+            $server_settings->website_picker_busy = false;
+            $server_settings->save();
+        } catch (\Throwable $th) {
+
+            $log = new Log();
+            $log->type = -1;
+            $log->title = "Hata";
+            $log->which_worker = "websitePicker";
+            $log->description = $website->link . " içerikleri çekerken hata meydana geldi. Hata: " . "$th";
+            $website->status = -1;
+            $website->save();
+            $log->save();
+            //Eski kayıtlarıda siliver 
+            //Content::where("website_id",$website->id)->delete();
+            $server_settings->website_picker_busy = false;
+            $server_settings->save();
+        }
+    }
 });
 // Homepage Route
 Route::get('/cleaner', function () {
@@ -151,27 +268,19 @@ Route::get('/cleaner', function () {
 Route::get('/testerrrr/{id}/{value}', function ($id,$value) {
 
 
-
-
-
-
-
     
     $part = "/wp-json/wp/v2/posts/";
     $category_part = "/wp-json/wp/v2/categories";
-    $website = Website::all()->first();
-    $rest_api_link_category_part = $website->link . $category_part;
-    $categories = null;
 
     //KATEGORİLER ÇEKİLDİ
     $curlSession = curl_init();
     curl_setopt_array($curlSession, [
-        CURLOPT_URL => $id."/wp-json/wp/v2/posts/".$value,
+        CURLOPT_URL =>"http://www.".$id. $part .$value,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 120,
+        CURLOPT_TIMEOUT => 10,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => "GET",
       
