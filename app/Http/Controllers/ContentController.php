@@ -53,10 +53,14 @@ class ContentController extends Controller
                     if (!empty($request->get('search'))) {
                         $instance->where(function ($w) use ($request) {
                             $search = $request->get('search');
-                            
+                            $website_id = 0;
+                            $website = Website::where('link','LIKE', "%$search%")->get();
+                            if(count($website) > 0){
+                                $website_id = $website->first()->id;
+                            }
                             $w->orWhere('first_title', 'LIKE', "%$search%")
                                 ->orWhere('rewriter_title', 'LIKE', "%$search%")
-                                ->orWhere('website_id', 'LIKE', "%$search%")
+                                ->orWhere('website_id', $website_id)
                                 ->orWhere('last_title', 'LIKE', "%$search%");
                         });
                     }
