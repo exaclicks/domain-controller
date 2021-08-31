@@ -181,7 +181,7 @@ Route::get('/testerrrr', function () {
     dd($jsonData);
 });
 
-Route::get('/custom_get_content/{$id}', function ($id) {
+Route::get('/custom_get_content/{id}', function ($id) {
 
     $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
     $TR_SERVER_SSH_USERNAME = Config::get('values.TR_SERVER_SSH_USERNAME');
