@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Content;
 use App\Models\Log;
 use App\Models\User;
+use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Yajra\DataTables\Facades\DataTables;
@@ -38,6 +39,14 @@ class ContentController extends Controller
                         return '<b>Draft</b>';
                     } else if ($row->status == 2) {
                         return '<b>Published</b>';
+                    }
+                })
+                ->addColumn('website', function ($row) {
+                    $website = Website::where('id',$row->website_id)->get();
+                    if(count($website ) > 0){
+                        return $website->first()->link;
+                    }else{
+                        return "unknown";
                     }
                 })
                 ->filter(function ($instance) use ($request) {

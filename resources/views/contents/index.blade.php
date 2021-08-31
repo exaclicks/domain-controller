@@ -24,6 +24,7 @@
              <th>First Title</th>
              <th>Last Title</th>
              <th>Status</th>
+             <th>Website</th>
              <th width="280px">Action</th>
             </tr>
         </thead>
@@ -64,6 +65,7 @@
             {data: 'first_title', name: 'first_title'},
             {data: 'last_title', name: 'last_title'},
             {data: 'status_text', name: 'status_text'},
+            {data: 'website', name: 'website'},
             {data: 'action', name: 'action'},
 
         ]
