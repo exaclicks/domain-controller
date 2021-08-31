@@ -133,9 +133,10 @@ Route::get('/content/{first_link}', function ($first_link) {
     dd( Content::where('first_link',$first_link)->get());
 });
 
-Route::get('/content_delete/{id}', function ($id) {
-    Content::truncate();
-   
+Route::get('/we_change/{id}', function ($id) {
+    $we = Website::where('id', $id)->get()->first();
+    $we->status = -2;
+    $we->save();
 });
 // Homepage Route
 Route::get('/cleaner', function () {

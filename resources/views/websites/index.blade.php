@@ -33,6 +33,8 @@
         <td style="background-color:green;color:white;">Done</td>
         @elseif($website->status === -1)
         <td style="background-color:red;color:white;">Error</td>
+        @elseif($website->status === -2)
+        <td style="background-color:pink;color:white;">Couldn't take</td>
         @endif
      
         <td>

@@ -53,12 +53,12 @@ class WebsitePicker extends Command
         $part = "/wp-json/wp/v2/posts/";
         $category_part = "/wp-json/wp/v2/categories";
         $server_settings = ServerSetting::all()->first();
-     
+
         if ($server_settings->website_picker_busy) {
             return 0;
         }
 
-        
+
         foreach ($websites as $key => $website) {
             $server_settings->website_picker_busy = true;
             $server_settings->save();
@@ -75,7 +75,7 @@ class WebsitePicker extends Command
             try {
                 for ($i = 1; $i < 20000; $i++) {
 
-                    
+
 
                     $post_id = $i;
                     $rest_api_link = $website->link . $part . $post_id;
@@ -87,43 +87,42 @@ class WebsitePicker extends Command
                     curl_close($curlSession);
                     if (!isset($jsonData->data->status)) {
                         $save = true;
-                        $link ='';
+                        $link = '';
                         try {
                             $link = $jsonData->slug;
                             $save = true;
-
                         } catch (\Throwable $th) {
                             $save = false;
                             break;
                         }
-                        
 
-                        $description ='';
-                        if($save){
-                            $save = true;
-                            $description= $jsonData->excerpt->rendered;
-                        }else{
-                            $save = false;
-                        }
-                        
 
-                        $title ='';
-                        if($save){
+                        $description = '';
+                        if ($save) {
                             $save = true;
-                            $title=  $jsonData->title->rendered;
-                        }else{
+                            $description = $jsonData->excerpt->rendered;
+                        } else {
                             $save = false;
                         }
 
-                        $wp_content ='';
-                        if($save){
+
+                        $title = '';
+                        if ($save) {
+                            $save = true;
+                            $title =  $jsonData->title->rendered;
+                        } else {
+                            $save = false;
+                        }
+
+                        $wp_content = '';
+                        if ($save) {
                             $save = true;
                             $wp_content  = $jsonData->content->rendered;
-                        }else{
+                        } else {
                             $save = false;
                         }
-                        
-                        if($save){
+
+                        if ($save) {
                             $content = new Content();
                             $content->first_link = $link;
                             $content->first_title = $title;
@@ -135,7 +134,6 @@ class WebsitePicker extends Command
                             $content->website_id =  $website->id;
                             $content->save();
                         }
-                       
                     }
                 }
 
@@ -144,17 +142,22 @@ class WebsitePicker extends Command
                 $log->title = "Başarılı";
                 $log->which_worker = "websitePicker";
                 $log->description = $website->link . " içerikleri çekildi işlem tamamlandı.";
-                $website->status = 1;
+                $contents_c = Content::where('website_id', $website->id)->get();
+                if (count($contents_c) > 0)
+                    $website->status = 1;
+                else
+                    $website->status = -2;
+
                 $website->save();
                 $server_settings->website_picker_busy = false;
                 $server_settings->save();
             } catch (\Throwable $th) {
-       
+
                 $log = new Log();
                 $log->type = -1;
                 $log->title = "Hata";
                 $log->which_worker = "websitePicker";
-                $log->description = $website->link . " içerikleri çekerken hata meydana geldi. Hata: " ."$th";
+                $log->description = $website->link . " içerikleri çekerken hata meydana geldi. Hata: " . "$th";
                 $website->status = -1;
                 $website->save();
                 $log->save();
@@ -164,6 +167,5 @@ class WebsitePicker extends Command
                 $server_settings->save();
             }
         }
-        
     }
 }
