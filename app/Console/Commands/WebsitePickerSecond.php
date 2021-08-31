@@ -151,7 +151,7 @@ class WebsitePickerSecond extends Command
                 if (count($contents_c) > 0)
                     $website->status = 1;
                 else
-                    $website->status = -2;
+                    $website->status = -1;
 
                 $website->save();
                 $server_settings->website_picker_second_busy = false;
