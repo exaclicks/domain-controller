@@ -123,13 +123,13 @@ Route::get('/server_free', function () {
 
 
 Route::get('/content/{first_link}', function ($first_link) {
-    dd( Content::where('first_link',$first_link)->get());
+    dd(Content::where('first_link', $first_link)->get());
 });
 
 
 // Homepage Route
 Route::get('/cleaner', function () {
-/*     GitDomain::truncate();
+    /*     GitDomain::truncate();
     Domain::truncate();
     BannedList::truncate();
     Content::truncate();
@@ -138,15 +138,15 @@ Route::get('/cleaner', function () {
 });
 
 Route::get('/change_website_status/{id}', function ($id) {
-    
-    $website = Website::where('id',$id)->get()->first();
+
+    $website = Website::where('id', $id)->get()->first();
     $website->status = -2;
     $website->save();
 });
 
 Route::get('/delete_website_content/{id}', function ($id) {
-    
-    $contents = Content::where('website_id',$id)->get();
+
+    $contents = Content::where('website_id', $id)->get();
     foreach ($contents as $key => $value) {
         $value->delete();
     }
@@ -154,15 +154,15 @@ Route::get('/delete_website_content/{id}', function ($id) {
 
 Route::get('/wrong_content_delete', function () {
     dd(5);
-   for ($i=1093; $i <1433 ; $i++) { 
-       $content = Content::where('id',$i)->get()->first();
-       $content->delete();
-   }
+    for ($i = 1093; $i < 1433; $i++) {
+        $content = Content::where('id', $i)->get()->first();
+        $content->delete();
+    }
 });
 
 
 Route::get('/testerrrr', function () {
-    
+
     $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
     $TR_SERVER_SSH_USERNAME = Config::get('values.TR_SERVER_SSH_USERNAME');
     $TR_SERVER_PASSWORD = Config::get('values.TR_SERVER_PASSWORD');
@@ -170,16 +170,142 @@ Route::get('/testerrrr', function () {
     $ssh = new SSH2($TR_SERVER_IP);
     if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
 
-        
+
         dd("hata");
     }
-    
-    $link ="http://rosaluxspba.org/wp-json/wp/v2/categories";
+
+    $link = "http://rosaluxspba.org/wp-json/wp/v2/categories";
     $command = 'curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" ' . $link;
     $html = $ssh->exec($command);
     $jsonData = json_decode($html);
     dd($jsonData);
-  
+});
+
+Route::get('/custom_get_content/{$id}', function ($id) {
+
+    $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
+    $TR_SERVER_SSH_USERNAME = Config::get('values.TR_SERVER_SSH_USERNAME');
+    $TR_SERVER_PASSWORD = Config::get('values.TR_SERVER_PASSWORD');
+
+    $part = "/wp-json/wp/v2/posts/";
+    $category_part = "/wp-json/wp/v2/categories";
+   
+
+    $ssh = new SSH2($TR_SERVER_IP);
+    if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
+
+
+        return 0;
+    }
+
+
+    $website = Website::where('id', $id)->get()->first();
+
+ 
+
+    $log = new Log();
+    $log->type = 0;
+    $log->title = "Başarılı";
+    $log->which_worker = "websitePickerSecond";
+    $log->description = $website->link . " içerikleri çekilmeye başlandı.";
+
+
+    try {
+        $timer = 0;
+        for ($i = 1; $i < 15000; $i++) {
+
+
+
+            $post_id = $i;
+            $rest_api_link = $website->link . $part . $post_id;
+            $command = 'curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" ' . $rest_api_link;
+            $html = $ssh->exec($command);
+            sleep(3);
+            $jsonData = json_decode($html);
+
+            if ($timer == 500) {
+                break;
+            }
+            if (!isset($jsonData->data->status)) {
+                $save = true;
+                $link = '';
+                try {
+                    $link = $jsonData->slug;
+                    $save = true;
+                } catch (\Throwable $th) {
+                    $save = false;
+                }
+
+
+                $description = '';
+                if ($save) {
+                    $save = true;
+                    $description = $jsonData->excerpt->rendered;
+                } else {
+                    $save = false;
+                }
+
+
+                $title = '';
+                if ($save) {
+                    $save = true;
+                    $title =  $jsonData->title->rendered;
+                } else {
+                    $save = false;
+                }
+
+                $wp_content = '';
+                if ($save) {
+                    $save = true;
+                    $wp_content  = $jsonData->content->rendered;
+                } else {
+                    $save = false;
+                }
+
+                if ($save) {
+                    $content = new Content();
+                    $content->first_link = $link;
+                    $content->first_title = $title;
+                    $content->first_description = $description;
+                    $content->first_content = $wp_content;
+                    $content->first_category = '';
+                    $content->rewriter_title = $title;
+                    $content->rewriter_description =  $description;
+                    $content->website_id =  $website->id;
+                    $content->save();
+                    $timer == 0;
+                }
+            }
+            $timer++;
+        }
+
+        $log = new Log();
+        $log->type = 0;
+        $log->title = "Başarılı";
+        $log->which_worker = "websitePickerSecond";
+        $log->description = $website->link . " içerikleri çekildi işlem tamamlandı.";
+        $contents_c = Content::where('website_id', $website->id)->get();
+        if (count($contents_c) > 0)
+            $website->status = 1;
+        else
+            $website->status = -1;
+
+        $website->save();
+     
+    } catch (\Throwable $th) {
+
+        $log = new Log();
+        $log->type = -1;
+        $log->title = "Hata";
+        $log->which_worker = "websitePickerSecond";
+        $log->description = $website->link . " içerikleri çekerken hata meydana geldi. Hata: " . "$th";
+        $website->status = -1;
+        $website->save();
+        $log->save();
+        //Eski kayıtlarıda siliver 
+        //Content::where("website_id",$website->id)->delete();
+      
+    }
 });
 
 
