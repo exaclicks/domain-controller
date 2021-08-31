@@ -184,7 +184,7 @@ Route::get('/custom_get_content/{id}', function ($id) {
 
     try {
         $timer = 0;
-        for ($i = 1; $i < 1000; $i++) {
+        for ($i = 1; $i < 15000; $i++) {
 
 
 
