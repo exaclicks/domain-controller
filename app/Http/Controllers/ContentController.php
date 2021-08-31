@@ -56,6 +56,7 @@ class ContentController extends Controller
                             
                             $w->orWhere('first_title', 'LIKE', "%$search%")
                                 ->orWhere('rewriter_title', 'LIKE', "%$search%")
+                                ->orWhere('website_id', 'LIKE', "%$search%")
                                 ->orWhere('last_title', 'LIKE', "%$search%");
                         });
                     }
