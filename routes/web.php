@@ -79,34 +79,6 @@ Route::get('/getallwebsites', function () {
     $content->save();
 });
 
-Route::get('/test_write_git', function () {
-    $public_key_root = Config::get('values.PUBLIC_KEY_ROOT');
-    $private_key_root = Config::get('values.PRIVATE_KEY_ROOT');
-
-    $code = Code::where("id", 1)->get()->first();
-    $code_link = $code->git_address;
-    $explode_array = explode("/", $code_link);
-    $code_document_root = $explode_array[count($explode_array) - 1];
-    $connection = ssh2_connect("138.68.103.40", 22, array('hostkey' => 'ssh-rsa'));
-    if (!ssh2_auth_pubkey_file(
-        $connection,
-        'root',
-        $public_key_root,
-        $private_key_root,
-        'secret'
-
-    )) {
-        echo "bağlanmadı:";
-        exit();
-    }
-    $newDomainName = 'shelaa.com';
-    echo $exec2 = 'certbot --apache -d ' . $newDomainName . ' -d www.' . $newDomainName;
-    //SSL CONFİG
-    ssh2_exec($connection, $exec2);
-    sleep(30);
-    ssh2_exec($connection, '2');
-    sleep(10);
-});
 
 Route::get('/server_free', function () {
     $server_settings = ServerSetting::all()->first();
@@ -212,7 +184,7 @@ Route::get('/custom_get_content/{id}', function ($id) {
 
     try {
         $timer = 0;
-        for ($i = 1; $i < 15000; $i++) {
+        for ($i = 1; $i < 1000; $i++) {
 
 
 
