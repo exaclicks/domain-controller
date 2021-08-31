@@ -17,5 +17,7 @@ class ServerSetting extends Model
         'banned_domain_get_controller', // banlanan domainin yerine yeni domain getiriyor.
         'new_domain_get_controller', // yeni domain eklendiğinde yeni domaini sunucuya kuruyor.
         'check_domain_controller', // domainlerin türkiye tarafından banlanıp banlanmadığını kontrol ediyor.
+        'website_picker_busy',
+        'website_picker_second_busy',
     ];
 }

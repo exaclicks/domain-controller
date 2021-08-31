@@ -19,6 +19,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
+use phpseclib3\Net\SSH2;
 
 Route::get('/getallwebsites', function () {
     $website = Website::all()->first();
@@ -111,6 +112,7 @@ Route::get('/server_free', function () {
     $server_settings = ServerSetting::all()->first();
     $server_settings->is_server_busy = false;
     $server_settings->website_picker_busy = false;
+    $server_settings->website_picker_second_busy = false;
     $server_settings->new_domain_get_controller = false;
     $server_settings->check_domain_controller = false;
     $server_settings->banned_domain_get_controller = false;
@@ -265,36 +267,26 @@ Route::get('/cleaner', function () {
  */
 });
 
-Route::get('/testerrrr/{id}/{value}', function ($id,$value) {
-
-
+Route::get('/testerrrr', function () {
     
-    $part = "/wp-json/wp/v2/posts/";
-    $category_part = "/wp-json/wp/v2/categories";
+    $TR_SERVER_IP = Config::get('values.TR_SERVER_IP');
+    $TR_SERVER_SSH_USERNAME = Config::get('values.TR_SERVER_SSH_USERNAME');
+    $TR_SERVER_PASSWORD = Config::get('values.TR_SERVER_PASSWORD');
 
-    //KATEGORİLER ÇEKİLDİ
-    $curlSession = curl_init();
-    curl_setopt_array($curlSession, [
-        CURLOPT_URL =>"http://www.".$id. $part .$value,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "GET",
-      
-    ]);
+    $ssh = new SSH2($TR_SERVER_IP);
+    if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
 
+        
+        dd("hata");
+    }
     
-    $jsonData = json_decode(curl_exec($curlSession));
-
-    curl_close($curlSession);
+    
+    $link ="http://sportsmela.com/wp-json/wp/v2/categories";
+    $command = 'curl -s -H "Proxy-Connection: keep-alive"  -H "Cache-Control: max-age=0"   -H "Upgrade-Insecure-Requests: 1" -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"  -H "Accept-Language: tr-TR,tr;q=0.9,tr;q=0.8" ' . $link;
+    $html = $ssh->exec($command);
+    $jsonData = json_decode($html);
     dd($jsonData);
-
-    if (!isset($jsonData->data->status))
-        $categories = $jsonData;
-    ////
+  
 });
 
 
