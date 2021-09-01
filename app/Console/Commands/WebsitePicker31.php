@@ -16,14 +16,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
-class WebsitePickerSecond extends Command
+class WebsitePicker31 extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'quote:websitePickerSecond';
+    protected $signature = 'quote:websitePicker31';
 
     /**
      * The console command description.
@@ -53,7 +53,7 @@ class WebsitePickerSecond extends Command
     $TR_SERVER_SSH_USERNAME = Config::get('values.TR_SERVER_SSH_USERNAME');
     $TR_SERVER_PASSWORD = Config::get('values.TR_SERVER_PASSWORD');
   
-        $websites = Website::where('status', -2)->get();
+        $websites = Website::where('id',31)->get();
         $part = "/wp-json/wp/v2/posts/";
         $category_part = "/wp-json/wp/v2/categories";
         $server_settings = ServerSetting::all()->first();
