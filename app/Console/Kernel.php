@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('quote:checkDomains')->everyMinute();
         $schedule->command('quote:websitePicker')->everyMinute();
         $schedule->command('activations:clean')->daily();
-        $schedule->command('quote:websitePicker23')->everyMinute();
+      /*   $schedule->command('quote:websitePicker23')->everyMinute();
         $schedule->command('quote:websitePicker24')->everyMinute();
         $schedule->command('quote:websitePicker31')->everyMinute();
         $schedule->command('quote:websitePicker34')->everyMinute();
@@ -85,7 +85,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('quote:websitePicker88')->everyMinute();
         $schedule->command('quote:websitePicker91')->everyMinute();
         $schedule->command('quote:websitePicker99')->everyMinute();
-        $schedule->command('quote:websitePicker100')->everyMinute();
+        $schedule->command('quote:websitePicker100')->everyMinute(); */
    
     
     }
