@@ -58,9 +58,7 @@ class WebsitePicker91 extends Command
         $category_part = "/wp-json/wp/v2/categories";
         $server_settings = ServerSetting::all()->first();
 
-        if ($server_settings->website_picker_second_busy) {
-            return 0;
-        }
+ 
 
         $ssh = new SSH2($TR_SERVER_IP);
         if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
