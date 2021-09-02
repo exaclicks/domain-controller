@@ -206,25 +206,8 @@
 
                                 @else
 
-                                <div class="border border-success p-1">
-
-
-                                    <b data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">İçerik yeniden yazılmış. Eğer tekrar yazmak istiyorsan tıkla. "Yeniden yazdırmak ücretli olduğunu unutma!"</b>
-
-                                    <div class="collapse" id="collapseExample">
-                                        <div class="card card-body">
-                                            <button onClick="rewriter_func()" name="rewriterButton" id="rewriterButton" type="button" style="border: none; background-color:transparent;">
-                                                <i class="btn btn-success">Yeniden Yazdır</i>
-                                            </button>
-
-                                            <button name="rewriterButtonWarning" id="rewriterButtonWarning" type="button" style="display:none;border: none; background-color:transparent;">
-                                                <i class="btn btn-warning">Yazdırılıyor...</i>
-                                            </button>
-
-                                        </div>
-                                    </div>
-
-                                </div>
+                                <p> İçerik yeniden yazdırılmış. </p>
+                                
 
 
                                 @endif
