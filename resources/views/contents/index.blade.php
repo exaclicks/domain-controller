@@ -31,7 +31,6 @@
              <th>Last Link</th>
              <th>Last Description</th>
              <th width="10px">Status</th>
-             <th width="10px">Website</th>
              <th width="10px">Action</th>
             </tr>
         </thead>
@@ -82,7 +81,6 @@
             {data: 'last_link', name: 'last_link'},
             {data: 'last_description', name: 'last_description'},
             {data: 'statustext', name: 'statustext'},
-            {data: 'website', name: 'website'},
             {data: 'action', name: 'action'},
 
         ]
