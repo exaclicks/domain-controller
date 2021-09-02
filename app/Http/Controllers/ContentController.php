@@ -312,10 +312,18 @@ class ContentController extends Controller
                 'response' => $err
             );
         } else {
-            $responseArray = array(
-                'err' => false,
-                'response' => $json->rewrite
-            );
+            if(!isset($json->rewrite)){
+                $responseArray = array(
+                    'err' => true,
+                    'response' => $json
+                );
+            }else{
+                $responseArray = array(
+                    'err' => false,
+                    'response' => $json->rewrite
+                );
+            }
+            
         }
 
         return $responseArray;
