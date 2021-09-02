@@ -27,8 +27,8 @@
             <tr>
              <th>id</th>
              <th>First Title</th>
-             <th>Last Title</th>
              <th>Last Link</th>
+             <th>Last Title</th>
              <th>Last Description</th>
              <th width="10px">Status</th>
              <th width="10px">Action</th>
@@ -77,8 +77,8 @@
         columns: [
             {data: 'id', name: 'id'},
             {data: 'first_title', name: 'first_title'},
-            {data: 'last_title', name: 'last_title'},
             {data: 'last_link', name: 'last_link'},
+            {data: 'last_title', name: 'last_title'},
             {data: 'last_description', name: 'last_description'},
             {data: 'statustext', name: 'statustext'},
             {data: 'action', name: 'action'},
