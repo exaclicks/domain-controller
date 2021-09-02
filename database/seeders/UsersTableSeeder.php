@@ -19,18 +19,17 @@ class UsersTableSeeder extends Seeder
     {
         $profile = new Profile();
         $adminRole = Role::whereName('Admin')->first();
-        $userRole = Role::whereName('User')->first();
 
         // Seed test admin
-        $seededAdminEmail = 'admin@admin.com';
+        $seededAdminEmail = 'bahisrator@gmail.com';
         $user = User::where('email', '=', $seededAdminEmail)->first();
         if ($user === null) {
             $user = User::create([
                 'name'                           => 'Admin',
-                'first_name'                     => 'Harry',
-                'last_name'                      => 'Potter',
+                'first_name'                     => 'Admin',
+                'last_name'                      => 'Admin',
                 'email'                          => $seededAdminEmail,
-                'password'                       => Hash::make('password'),
+                'password'                       => Hash::make('bahisrator1234!'),
                 'token'                          => str_random(64),
                 'activated'                      => true,
                 'signup_confirmation_ip_address' => '127.0.0.1',
@@ -42,25 +41,7 @@ class UsersTableSeeder extends Seeder
             $user->save();
         }
 
-        // Seed test user
-        $user = User::where('email', '=', 'user@user.com')->first();
-        if ($user === null) {
-            $user = User::create([
-                'name'                           => 'User',
-                'first_name'                     => 'Hermione',
-                'last_name'                      => 'Granger',
-                'email'                          => 'user@user.com',
-                'password'                       => Hash::make('password'),
-                'token'                          => str_random(64),
-                'activated'                      => true,
-                'signup_ip_address'              => '127.0.0.1',
-                'signup_confirmation_ip_address' => '127.0.0.1',
-            ]);
-
-            $user->profile()->save(new Profile());
-            $user->attachRole($userRole);
-            $user->save();
-        }
+       
 
         // Seed test users
         // $user = factory(App\Models\Profile::class, 5)->create();

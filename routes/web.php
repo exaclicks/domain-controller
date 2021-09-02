@@ -305,7 +305,7 @@ Route::resource('bet_companies', BetCompanyController::class);
 Route::resource('websites', WebsiteController::class);
 Route::resource('contents', ContentController::class);
 
-Route::post('/get_new_sentence', 'App\Http\Controllers\RewriterController@get_new_sentence')->name('get_new_sentence');
+Route::post('/rewriter', 'App\Http\Controllers\ContentController@rewriter')->name('rewriter');
 
 
 // Homepage Route

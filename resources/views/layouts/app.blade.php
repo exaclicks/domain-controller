@@ -64,7 +64,7 @@
 
             @include('partials.nav')
 
-            <main class="container">
+            <main class="pl-5 pr-5">
 
                 <div class="container">
                     <div class="row">

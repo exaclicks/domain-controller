@@ -12,6 +12,11 @@
         <div class="pull-left">
             <h2>Content List </h2>
         </div>
+        <div class="pull-right">
+        <button onclick="getContent('Düzenlenmemiş');" class="btn btn-danger">Düzenlenmemiş</button>
+        <button onclick="getContent('Taslak');"class="btn btn-warning">Taslak</button>
+        <button onclick="getContent('Yayınlanmış');"class="btn btn-success">Yayınlanmış</button>
+        </div>
     </div>
 </div>
 
@@ -23,9 +28,11 @@
              <th>id</th>
              <th>First Title</th>
              <th>Last Title</th>
-             <th>Status</th>
-             <th>Website</th>
-             <th width="280px">Action</th>
+             <th>Last Link</th>
+             <th>Last Description</th>
+             <th width="10px">Status</th>
+             <th width="10px">Website</th>
+             <th width="10px">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -46,9 +53,17 @@
 
     
     <script type="text/javascript">
-    $.noConflict();
-  $(function () {
+     function getContent(type) {
+        $('.data-table').dataTable().fnFilter(type);
+
+    }
       
+    $.noConflict();
+   
+  $(function () {
+
+
+  
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
@@ -64,7 +79,9 @@
             {data: 'id', name: 'id'},
             {data: 'first_title', name: 'first_title'},
             {data: 'last_title', name: 'last_title'},
-            {data: 'status_text', name: 'status_text'},
+            {data: 'last_link', name: 'last_link'},
+            {data: 'last_description', name: 'last_description'},
+            {data: 'statustext', name: 'statustext'},
             {data: 'website', name: 'website'},
             {data: 'action', name: 'action'},
 
