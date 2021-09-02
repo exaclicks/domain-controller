@@ -73,7 +73,9 @@ class ContentController extends Controller
                             $duzenlenmemis = "Düzenlenmemiş";
                             $taslak = "Taslak";
                             $yayinlanmis = "Yayınlanmış";
+
                             $search = $request->get('search');
+                           
                             $status = -1;
                             if ($search == $duzenlenmemis) $status = 0;
                             if ($search == $taslak) $status = 1;
@@ -304,17 +306,10 @@ class ContentController extends Controller
                 'response' => $err
             );
         } else {
-            if(!isset($json->rewrite)){
-                $responseArray = array(
-                    'err' => true,
-                    'response' => $json
-                );
-            }else{
-                $responseArray = array(
-                    'err' => false,
-                    'response' => $json->rewrite
-                );
-            }
+            $responseArray = array(
+                'err' => false,
+                'response' => $json->rewrite
+            );
             
         }
 
