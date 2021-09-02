@@ -323,9 +323,6 @@
 
         var first_content = $('#first_content').val();
 
-        alert(first_content.length);
-
-
         if(first_content.length > 9999){
             alert('ilk içerik 10000 karakterden büyük!');
             exit();
