@@ -105,7 +105,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Link:</strong>
-                                <input class="form-control" type="text" id="last_link" name="last_link" placeholder="Link" value="{{ $content->last_link }}" />
+                                <input  class="form-control" type="text" id="last_link" name="last_link" placeholder="Link" value="{{ $content->last_link }}" />
                                 <small>{!! $content->first_link !!} </small>
                             </div>
                         </div>
@@ -221,7 +221,7 @@
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>İlk İçerik </strong>
-                                <textarea class="ckeditor" id="first_content" name="first_content">{!! $content->first_content !!}</textarea>
+                                <textarea class="ckeditor" id="first_content"   name="first_content">{!! $content->first_content !!}</textarea>
                             </div>
                         </div>
 
@@ -233,11 +233,12 @@
                                 <strong>Yayınlanacak İçerik</strong>
 
                                 <p>
-                                    1. Eğer link koymak istiyorsan <b>#-Görüntülenecek Yazı-#</b> şeklinde yazman gerekir.
+                                    1. Eğer site içine gidicek bir link koymak istiyorsan <b>#-Görüntülenecek Yazı-#</b> şeklinde yazman gerekir.<br>
+                                    2. Eğer site dışına gidicek bir link koymak istiyorsan <b>&-Görüntülenecek Yazı-&</b> şeklinde yazman gerekir.
+
                                     <br> Örneğin;<br>
-                                    #-Canli Bahis-# <br>
-                                    #-1xbet-giris-adresi-# <br>
-                                    #-GoldenBahis-#
+                                    #-Canli Bahis-# <br> 
+                                    &-1xbet-giris-adresi-& <br>
                                 </p>
 
 
@@ -282,30 +283,78 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        $('#last_link').change(function() {
+            friststr = $('#last_link').val();
+            str = $('#last_link').val();
+
+            str = str.replace(/^\s+|\s+$/g, ''); // trim
+            str = str.toLowerCase();
+
+            // remove accents, swap ñ for n, etc
+            var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+            var to = "aaaaaeeeeeiiiiooooouuuunc------";
+            for (var i = 0, l = from.length; i < l; i++) {
+                str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+            }
+
+            str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                .replace(/-+/g, '-'); // collapse dashes
+
+
+            $('#last_link').val(str);
+
+            if(friststr!=str){
+                alert('linki dogru şekilde tekrardan yaz');
+            }
+        });
+
 
     });
 
+
+
+
+  
     function rewriter_func() {
+
+
 
 
         var first_content = $('#first_content').val();
 
-        var content_id = $('#content_id').val();
+        alert(first_content.length);
 
+
+        if(first_content.length > 9999){
+            alert('ilk içerik 10000 karakterden büyük!');
+            exit();
+        }
+
+        var content_id = $('#content_id').val();
         $("#rewriterButton").attr("style", "display:none");
         $("#rewriterButtonWarning").attr("style", "display:block");
+
+
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                contentType: 'application/json; charset=utf-8'
+            }
+        });
 
         $.ajax({
             type: "POST",
             cache: false,
-            dataType: "json",
             url: "/rewriter",
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
                 first_content: first_content,
                 content_id: content_id,
             },
             success: function(data) {
+                console.log(data);
+
                 if (data['status'] == 1) {
                     text = data['text'];
                     $("#rewriter_area").attr("style", "display:none");

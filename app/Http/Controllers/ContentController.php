@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Symfony\Component\Console\Input\Input;
 use Yajra\DataTables\Facades\DataTables;
 
 class ContentController extends Controller
@@ -210,12 +211,16 @@ class ContentController extends Controller
      */
     public function rewriter(Request $request)
     {
+        $first_content = $request->get('first_content');
+        $content_id = $request->get('content_id');
 
-        $content = Content::where('id', $request->content_id)->get()->first();
+
+
+        $content = Content::where('id', $content_id)->get()->first();
 
         //$request_content = preg_replace("/(<([^>]+)>)/", '', $request->first_content);
 
-        $response_content = $this->get_new_sentence($request->first_content);
+        $response_content = $this->get_new_sentence($first_content);
 
 
         if (!$response_content['err']) {
@@ -270,22 +275,24 @@ class ContentController extends Controller
         $curl = curl_init();
 
 
-
-        // $text = preg_replace('/\s+/u', ' ', $text);
+      $text = preg_replace('/\s+/u', ' ', $text);
 
         curl_setopt_array($curl, [
             CURLOPT_URL => $rewriterApiUrl,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_ENCODING => "",
+            CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 120,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => "{
-            \"language\": \"tr\",
-            \"strength\": 3,
-            \"text\": \"$text\"}",
+                \"language\": \"tr\",
+                \"strength\": 3,
+                \"text\": \"$text\"
+            }",
+
+          
             CURLOPT_HTTPHEADER => [
                 "content-type: application/json",
                 "x-rapidapi-host: rewriter-paraphraser-text-changer-multi-language.p.rapidapi.com",
