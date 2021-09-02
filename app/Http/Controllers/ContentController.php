@@ -73,13 +73,7 @@ class ContentController extends Controller
                             $duzenlenmemis = "Düzenlenmemiş";
                             $taslak = "Taslak";
                             $yayinlanmis = "Yayınlanmış";
-
                             $search = $request->get('search');
-                            $website_id = 0;
-                            $website = Website::where('link', 'LIKE', "%$search%")->get();
-                            if (count($website) > 0) {
-                                $website_id = $website->first()->id;
-                            }
                             $status = -1;
                             if ($search == $duzenlenmemis) $status = 0;
                             if ($search == $taslak) $status = 1;
@@ -87,13 +81,11 @@ class ContentController extends Controller
                             if ($status == -1) {
                                 $w->orWhere('first_title', 'LIKE', "%$search%")
                                     ->orWhere('rewriter_title', 'LIKE', "%$search%")
-                                    ->orWhere('website_id', $website_id)
                                     ->orWhere('last_title', 'LIKE', "%$search%");
                             } else {
                                 $w->orWhere('first_title', 'LIKE', "%$search%")
                                     ->orWhere('rewriter_title', 'LIKE', "%$search%")
-                                    ->orWhere('website_id', $website_id)
-                                    ->where('status', $status)
+                                    ->orWhere('status', $status)
                                     ->orWhere('last_title', 'LIKE', "%$search%");
                             }
                         });
