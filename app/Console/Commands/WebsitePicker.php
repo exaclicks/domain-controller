@@ -87,9 +87,7 @@ class WebsitePicker extends Command
                     $jsonData = json_decode(curl_exec($curlSession));
 
                     curl_close($curlSession);
-                    if($timer==500){
-                        break;
-                    }
+                    
                     if (!isset($jsonData->data->status)) {
                         $save = true;
                         $link = '';
