@@ -332,7 +332,7 @@
                     $("#rewriterButtonWarning").attr("style", "display:none");
                     CKEDITOR.instances['last_content'].setData(text);
                 } else {
-                    alert("Yeniden yazdırmada sorun var, lütfen geliştirici ile iletişime geçin.");
+                    alert("Yeniden yazdırmada sorun var, lütfen geliştirici ile iletişime geçin.\n " + data['msg']['message']);
                     console.log(data['msg']);
                 }
 
