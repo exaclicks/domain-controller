@@ -206,9 +206,6 @@
 
                                 @else
 
-                                <p> İçerik yeniden yazdırılmış. </p>
-                                
-
 
                                 @endif
 
@@ -236,11 +233,11 @@
                                 <strong>Yayınlanacak İçerik</strong>
 
                                 <p>
-                                   1. Eğer link koymak istiyorsan <b>#-Görüntülenecek Yazı-#</b> şeklinde yazman gerekir. 
-                                  <br> Örneğin;<br>
-                                   #-Canli Bahis-# <br>
-                                   #-1xbet-giris-adresi-# <br>
-                                   #-GoldenBahis-# 
+                                    1. Eğer link koymak istiyorsan <b>#-Görüntülenecek Yazı-#</b> şeklinde yazman gerekir.
+                                    <br> Örneğin;<br>
+                                    #-Canli Bahis-# <br>
+                                    #-1xbet-giris-adresi-# <br>
+                                    #-GoldenBahis-#
                                 </p>
 
 
@@ -301,6 +298,7 @@
         $.ajax({
             type: "POST",
             cache: false,
+            dataType: "json",
             url: "/rewriter",
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content'),
