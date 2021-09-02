@@ -308,7 +308,7 @@ class ContentController extends Controller
         } else {
             $responseArray = array(
                 'err' => false,
-                'response' => $json
+                'response' => $json->rewrite
             );
             
         }
