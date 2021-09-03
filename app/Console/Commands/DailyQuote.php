@@ -144,7 +144,7 @@ class DailyQuote extends Command
 
 
 
-                if ($bannedItem->how_many_times > 30) {
+                if ($bannedItem->how_many_times > 55) {
 
                     if ($ACTION_TYPE == 0) {
                         $domain->save();
