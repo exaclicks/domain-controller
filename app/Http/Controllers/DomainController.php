@@ -118,6 +118,10 @@ class DomainController extends Controller
             'movable' => 'required',
         ]);
 
+        $used = 0;
+        if($request->get('movable')==0){
+            $used = 1;
+        }
         $domain = Domain::create([
             'name' => $request->get('name'),
             'hosting' => $request->get('hosting'),
@@ -125,7 +129,7 @@ class DomainController extends Controller
             'finish_time' => $request->get('finish_time'),
             'status' => 0,
             'movable' =>  $request->get('movable'),
-            'used' => 0,
+            'used' => $used,
             'doain_status' => 0,
         ]);
 
