@@ -62,6 +62,12 @@ class DailyQuote extends Command
     $WHICH_MAIL_FOR_BANNED = Config::get('values.WHICH_MAIL_FOR_BANNED');
     $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
 
+    $hour = date("h");
+    if($hour < 5 )
+    return 0;
+    if($hour > 18 )
+    return 0;
+
     $ssh = new SSH2($TR_SERVER_IP);
     if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
 
@@ -79,6 +85,7 @@ class DailyQuote extends Command
         exit();
     }
 
+    
     $moved_text = "The document has moved ";
     $isMoved = "";
 
@@ -128,7 +135,7 @@ class DailyQuote extends Command
                     $bannedItem  = $getBannedItem->first();
                     $bannedItem->how_many_times = $bannedItem->how_many_times + 1;
                     $diff = $todayDate->diffInMinutes($bannedItem->banned_time);
-                    if ($diff >= 130) {
+                    if ($diff >= 120) {
                         $bannedItem->how_many_times = 1;
                     }
 
@@ -144,7 +151,7 @@ class DailyQuote extends Command
 
 
 
-                if ($bannedItem->how_many_times > 60) {
+                if ($bannedItem->how_many_times > 30) {
 
                     if ($ACTION_TYPE == 0) {
                         $domain->save();
