@@ -93,7 +93,6 @@ class BetCompanyController extends Controller
          
         ]);
 
-
         $bet_company->update($request->all());
 
         return redirect()->route('bet_companies.index')

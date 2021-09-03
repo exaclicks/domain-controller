@@ -15,6 +15,20 @@ class BetCompany extends Model
     protected $fillable = [
         'name',
         'status',
+        'sort',
+        'free_bonus',
+        'first_deposit',
+        'second_deposit',
+        'thirth_deposit',
+        'casino_bonus',
+        'link',
+        'rating',
+        'btc',
+        'credit_card',
+        'live_tv',
+        'cash_out',
+        'papara',
+        'havale',
         "type"
     ];
 }

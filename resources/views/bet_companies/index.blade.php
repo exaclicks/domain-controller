@@ -41,12 +41,12 @@
                         </a>
 
                         @csrf
-                        @method('DELETE')
+                       <!--  @method('DELETE')
 
                         <button type="submit" title="delete" style="border: none; background-color:transparent;">
                             <i class="fa fa-trash-o fa-fw text-danger"></i>
 
-                        </button>
+                        </button> -->
                     </form>
                 </td>
             </tr>
