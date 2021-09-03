@@ -13,8 +13,8 @@ class BetCompanyController extends Controller
      */
     public function index()
     {
-        $bet_companies = BetCompany::all();
-       
+        $bet_companies = BetCompany::orderBy('type', 'DESC')->get();
+
         return view('bet_companies.index', compact('bet_companies'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
