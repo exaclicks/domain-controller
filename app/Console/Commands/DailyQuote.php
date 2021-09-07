@@ -62,7 +62,7 @@ class DailyQuote extends Command
     $WHICH_MAIL_FOR_BANNED = Config::get('values.WHICH_MAIL_FOR_BANNED');
     $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
 
-    echo $hour = date("h:i:s");
+    echo $hour = date("H");
 
     if($hour < 5 ){
     
