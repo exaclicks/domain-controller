@@ -63,17 +63,10 @@ class DailyQuote extends Command
     $WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM = Config::get('values.WHICH_MAIL_FOR_SSH_CONNECT_PROBLEM');
 
     $hour = date("h");
-    
-    if($hour > 5 ){
-        echo 5;
+    if($hour < 5 )
     return 0;
-
-    }
-    if($hour > 18 ){
-        echo 18;
+    if($hour > 18 )
     return 0;
-
-    }
 
     $ssh = new SSH2($TR_SERVER_IP);
     if (!$ssh->login($TR_SERVER_SSH_USERNAME, $TR_SERVER_PASSWORD)) {
