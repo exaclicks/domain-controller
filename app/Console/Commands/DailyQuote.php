@@ -64,11 +64,14 @@ class DailyQuote extends Command
 
     $hour = date("h");
     if($hour < 5 ){
+        echo   $hour ;
     
         return 0;
 
     }
     if($hour > 18 ){
+        echo   $hour ;
+
         return 0;
 
     }
