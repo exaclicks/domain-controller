@@ -179,7 +179,8 @@ class ContentController extends Controller
         $response_content = $this->cleanContent($content->first_content);
 
         $content->first_content = $response_content;
-
+        $content->save();
+        
         $bet_companies = BetCompany::all();
         $categories = Category::all();
         $category = Category::where('id', $content->category_id)->get()->first();
@@ -192,8 +193,8 @@ class ContentController extends Controller
     {
 
         $response_content = $this->cleanContentTag($first_content, "img", true);
-        $response_content = $this->cleanContentTag($first_content, "table", true);
-        $response_content = $this->cleanContentTag($first_content, "tbody", true);
+        $response_content = $this->cleanContentTag($response_content, "table", true);
+        $response_content = $this->cleanContentTag($response_content, "tbody", true);
         
         return $response_content;
     }
