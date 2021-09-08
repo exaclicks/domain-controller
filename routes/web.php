@@ -110,9 +110,8 @@ Route::get('/cleaner', function () {
 });
 
 Route::get('/change_website_status/{id}', function ($id) {
-
     $website = Website::where('id', $id)->get()->first();
-    $website->status = -2;
+    $website->status = -1;
     $website->save();
 });
 
@@ -123,6 +122,7 @@ Route::get('/delete_website_content/{id}', function ($id) {
         $value->delete();
     }
 });
+
 
 Route::get('/wrong_content_delete', function () {
     dd(5);
