@@ -221,7 +221,7 @@
 
 
 
-                                <textarea class="ckeditor" @if($content->status==0) disabled @endif  id="last_content" name="last_content">
+                                <textarea class="ckeditor"   id="last_content" name="last_content">
              
              
              
