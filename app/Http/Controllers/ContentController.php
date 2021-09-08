@@ -176,7 +176,7 @@ class ContentController extends Controller
     public function edit(Content $content)
     {
 
-        $response_content = $this->cleanContent($content->first_content);
+        $response_content = $this->cleanContent($content);
 
         $content->first_content = $response_content;
         $content->save();
@@ -189,10 +189,12 @@ class ContentController extends Controller
         return view('contents.edit', compact('content', 'categories', 'bet_companies', 'category', 'bet_company'));
     }
 
-    public function cleanContent($first_content)
+    public function cleanContent($content)
     {
 
-        $response_content = $this->cleanContentTag($first_content, "img", true);
+        
+        $this->changeHref($content);
+        $response_content = $this->cleanContentTag($content->first_content, "img", true);
         $response_content = $this->cleanContentTag($response_content, "table", true);
         $response_content = $this->cleanContentTag($response_content, "tbody", true);
         
@@ -229,6 +231,19 @@ class ContentController extends Controller
 
 
         return $response_content;
+    }
+
+    public function changeHref($content)
+    {
+        $website = Website::where("id",$content->website_id)->get();
+        if(count($website) > 0){
+            $link = $website->first()->link;
+            $link = trim($link,"https://");
+            $link = trim($link,"http://");
+            $link = trim($link,"www.");
+            $content->first_content = str_replace($link,"domain.com",$content->first_content);
+            $content->save();
+        }
     }
     /**
      * Update the specified resource in storage.
