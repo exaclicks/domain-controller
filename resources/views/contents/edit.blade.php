@@ -6,6 +6,7 @@
 <br>
 
 
+
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
@@ -105,62 +106,11 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Link:</strong>
-                                <input  class="form-control" type="text" id="last_link" name="last_link" placeholder="Link" value="{{ $content->last_link }}" />
+                                <input class="form-control" type="text" id="last_link" name="last_link" placeholder="Link" value="{{ $content->last_link }}" />
                                 <small>{!! $content->first_link !!} </small>
                             </div>
                         </div>
 
-
-                        <!--                    
-                              <div class="col-xs-12 col-sm-12 col-md-12">
-                             <div class="form-group">
-                                <strong>Kategori</strong>
-                                <br>
-                                <small>
-                                    İlgili kategoriyle eşleştirelim.
-                                </small>
-                                <br>
-                                <select name="category_id" id="category_id" style="width:200px;" class="operator">
-                                    @foreach ($categories as $key => $category_item)
-                                    @if (isset($category->id))
-                                    @if ($category_item->id == $category->id)
-                                    <option value="{{$category_item->id}}" selected>{{$category_item->name}}</option>
-                                    @else
-                                    <option value="{{$category_item->id}}">{{$category_item->name}}</option>
-                                    @endif
-                                    @else
-                                    <option value="{{$category_item->id}}">{{$category_item->name}}</option>
-                                    @endif
-                                    @endforeach
-                                </select>
-
-                            </div>
-
-                            <div class="form-group">
-                                <strong>Bahis Şirketi</strong>
-                                <br>
-                                <small>
-                                    Burada bu yazının hangi bahis şirketine ait olduğunu seçmemiz gerekiyor, eğerki deneme bonusu veren siteler gibi genel bir yazı ise şirketsiz seçeneği seçilmeli.
-                                </small>
-                                <br>
-
-                                <select name="bet_company_id" id="bet_company_id" style="width:200px;" class="operator">
-                                    @foreach ($bet_companies as $key => $bet_company_item)
-                                    @if (isset($bet_company->id))
-                                    @if ($bet_company_item->id == $bet_company->id)
-                                    <option value="{{$bet_company_item->id}}" selected>{{$bet_company_item->name}}</option>
-                                    @else
-                                    <option value="{{$bet_company_item->id}}">{{$bet_company_item->name}}</option>
-                                    @endif
-                                    @else
-                                    <option value="{{$bet_company_item->id}}">{{$bet_company_item->name}}</option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                            </div> 
-                    
-                    -->
                     </div>
 
 
@@ -184,7 +134,35 @@
                             <div class="form-group">
                                 <br>
                                 @if($content->status==0)
-                                <div class="border border-danger p-1">
+
+
+
+                                <div class="card">
+                                    <div class="card-header" id="rewriterdiv">
+                                        <h5 class="mb-0">
+                                            <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#rewriterdivarea" aria-expanded="true" aria-controls="rewriterdivarea">
+                                                Yeniden Yazdırma Alanı  ( @if($content->status==0)
+                               <b style="color:red;"> YENİDEN YAZDIRILMAMIŞ!</b>
+                                @endif)
+                                            </button>
+                                        </h5>
+                                    </div>
+
+                                    <div id="rewriterdivarea" class="collapse show" aria-labelledby="rewriterdiv" >
+                                        <div class="card-body">
+
+                                     
+                                        <iframe id="iframearea" name="iframearea" width="100%" height="800" src="https://seotoolscentre.com/article-rewriter-tool" title="İçerik Yeniden Yazdırma Alanı"></iframe>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <!--   <div class="border border-danger p-1">
 
                                     <b>Henüz içerik yeniden yazılmamış!</b>
 
@@ -203,7 +181,7 @@
                                     <small><b>Bu işlemi bir kere yapabilirsin. İlk içeriği temizlediğinden emin ol</b></small>
 
                                 </div>
-
+ -->
                                 @else
 
 
@@ -221,7 +199,7 @@
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>İlk İçerik </strong>
-                                <textarea class="ckeditor" id="first_content"   name="first_content">{!! $content->first_content !!}</textarea>
+                                <textarea class="ckeditor" id="first_content" name="first_content">{!! $content->first_content !!}</textarea>
                             </div>
                         </div>
 
@@ -237,7 +215,7 @@
                                     2. Eğer site dışına gidicek bir link koymak istiyorsan <b>&-Görüntülenecek Yazı-&</b> şeklinde yazman gerekir.
 
                                     <br> Örneğin;<br>
-                                    #-Canli Bahis-# <br> 
+                                    #-Canli Bahis-# <br>
                                     &-1xbet-giris-adresi-& <br>
                                 </p>
 
@@ -247,7 +225,8 @@
              
              
              
-                                @if($content->status==0)
+                               <!-- 
+                                    @if($content->status==0)
                                 BU ALANI KULLANABİLMEK İÇİN İLK İÇERİĞİN YENİDEN YAZDIRILMASI GEREKİYOR.!
 
                                 @else
@@ -257,6 +236,7 @@
                                 {{ $content->rewriter_content }}
                                 @endif
                                 @endif
+                             -->
                             </textarea>
                             </div>
                         </div>
@@ -304,7 +284,7 @@
 
             $('#last_link').val(str);
 
-            if(friststr!=str){
+            if (friststr != str) {
                 alert('linki dogru şekilde tekrardan yaz');
             }
         });
@@ -315,7 +295,7 @@
 
 
 
-  
+
     function rewriter_func() {
 
 
@@ -323,7 +303,7 @@
 
         var first_content = $('#first_content').val();
 
-        if(first_content.length > 9999){
+        if (first_content.length > 9999) {
             alert('ilk içerik 10000 karakterden büyük!');
             exit();
         }
