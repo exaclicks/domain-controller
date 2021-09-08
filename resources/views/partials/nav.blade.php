@@ -95,7 +95,7 @@
                 </li>
                 @endrole
 
-                @role('admin')
+                @role('user')
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDomainsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -199,6 +199,16 @@
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>İlk İçerik </strong>
+                                <p style="opacity: 0;">
+                                    1. Eğer site içine gidicek bir link koymak istiyorsan <b>#-Görüntülenecek Yazı-#</b> şeklinde yazman gerekir.<br>
+                                    2. Eğer site dışına gidicek bir link koymak istiyorsan <b>&-Görüntülenecek Yazı-&</b> şeklinde yazman gerekir.
+
+                                    <br> Örneğin;<br>
+                                    #-Canli Bahis-# <br>
+                                    &-1xbet-giris-adresi-& <br>
+                                </p>
+
+
                                 <textarea class="ckeditor" id="first_content" name="first_content">{!! $content->first_content !!}</textarea>
                             </div>
                         </div>
