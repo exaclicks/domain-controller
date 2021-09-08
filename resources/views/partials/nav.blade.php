@@ -117,6 +117,29 @@
                     </div>
                 </li>
                 @endrole
+                @role('admin')
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDomainsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Contents
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDomainsDropdown">
+                        
+                        <a class="nav-link " href="/contents" role="button" aria-haspopup="true" aria-expanded="false">
+                        Content List
+                </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-link " href="/websites" role="button" aria-haspopup="true" aria-expanded="false">
+                    Website Picker
+                </a>
+                        <div class="dropdown-divider"></div>
+                        
+
+
+                    </div>
+                </li>
+                @endrole
+
 
 
             </ul>
