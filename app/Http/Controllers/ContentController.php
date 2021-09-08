@@ -179,7 +179,6 @@ class ContentController extends Controller
         $response_content = $this->cleanContent($content->first_content);
 
         $content->first_content = $response_content;
-        $content->save();
 
         $bet_companies = BetCompany::all();
         $categories = Category::all();
