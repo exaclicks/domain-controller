@@ -75,7 +75,7 @@ class WebsitePicker extends Command
             try {
                 $timer = 0;
 
-                for ($i = 1; $i < 100000; $i++) {
+                for ($i = 1; $i < 15000; $i++) {
 
 
 
