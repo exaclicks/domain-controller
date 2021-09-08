@@ -49,7 +49,7 @@ class WebsitePicker extends Command
      */
     public function handle()
     {
-        $websites = Website::where('status', 0)->get();
+        $websites = Website::where('status', -1)->get();
         $part = "/wp-json/wp/v2/posts/";
         $category_part = "/wp-json/wp/v2/categories";
         $server_settings = ServerSetting::all()->first();
