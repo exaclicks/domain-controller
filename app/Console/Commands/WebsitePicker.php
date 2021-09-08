@@ -75,7 +75,7 @@ class WebsitePicker extends Command
             try {
                 $timer = 0;
 
-                for ($i = 1; $i < 15000; $i++) {
+                for ($i = 1; $i < 100000; $i++) {
 
 
 
@@ -87,9 +87,7 @@ class WebsitePicker extends Command
                     $jsonData = json_decode(curl_exec($curlSession));
 
                     curl_close($curlSession);
-                    if($timer==5000){
-                        break;
-                    }
+               
                     if (!isset($jsonData->data->status)) {
                         $save = true;
                         $link = '';
