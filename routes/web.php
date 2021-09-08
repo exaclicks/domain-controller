@@ -122,7 +122,9 @@ Route::get('/delete_website_content/{id}', function ($id) {
         $value->delete();
     }
 });
-
+Route::get('/clean_content_all', function () {
+    Content::truncate();
+});
 
 Route::get('/wrong_content_delete', function () {
     dd(5);
