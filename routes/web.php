@@ -122,8 +122,11 @@ Route::get('/delete_website_content/{id}', function ($id) {
         $value->delete();
     }
 });
-Route::get('/clean_content_all', function () {
-    Content::truncate();
+Route::get('/clean_content_websitesi', function () {
+    $website = Website::where('status',-1)->get();
+    foreach ($website as $key => $value) {
+        $value->delete();
+    }
 });
 
 Route::get('/wrong_content_delete', function () {
