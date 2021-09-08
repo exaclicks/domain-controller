@@ -66,7 +66,6 @@
                 </a>
                 @endrole
                 @auth
-                @role('admin')
                 <a class="nav-link " href="/bet_companies" role="button" aria-haspopup="true" aria-expanded="false">
                     Bet Companies
                 </a>
