@@ -178,7 +178,9 @@ class ContentController extends Controller
 
         $response_content = $this->cleanContent($content->first_content);
 
-       // $content->first_content = $response_content;
+        $content->first_content = $response_content;
+        $content->save();
+
         $bet_companies = BetCompany::all();
         $categories = Category::all();
         $category = Category::where('id', $content->category_id)->get()->first();
