@@ -193,7 +193,6 @@ class ContentController extends Controller
     {
 
         
-        $this->changeHref($content);
         $response_content = $this->cleanContentTag($content->first_content, "img", true);
         $response_content = $this->cleanContentTag($response_content, "table", true);
         $response_content = $this->cleanContentTag($response_content, "tbody", true);
@@ -233,18 +232,7 @@ class ContentController extends Controller
         return $response_content;
     }
 
-    public function changeHref($content)
-    {
-        $website = Website::where("id",$content->website_id)->get();
-        if(count($website) > 0){
-            $link = $website->first()->link;
-            $link = trim($link,"https://");
-            $link = trim($link,"http://");
-            $link = trim($link,"www.");
-            $content->first_content = str_replace($link,"domain.com",$content->first_content);
-            $content->save();
-        }
-    }
+   
     /**
      * Update the specified resource in storage.
      *
