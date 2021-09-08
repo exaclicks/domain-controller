@@ -175,12 +175,58 @@ class ContentController extends Controller
      */
     public function edit(Content $content)
     {
+
+        $response_content = $this->cleanContent($content->first_content);
+
+       // $content->first_content = $response_content;
         $bet_companies = BetCompany::all();
         $categories = Category::all();
         $category = Category::where('id', $content->category_id)->get()->first();
         $bet_company = BetCompany::where('id', $content->bet_company_id)->get()->first();
 
         return view('contents.edit', compact('content', 'categories', 'bet_companies', 'category', 'bet_company'));
+    }
+
+    public function cleanContent($first_content)
+    {
+
+        $response_content = $this->cleanContentTag($first_content, "img", true);
+        $response_content = $this->cleanContentTag($first_content, "table", true);
+        $response_content = $this->cleanContentTag($first_content, "tbody", true);
+        
+        return $response_content;
+    }
+
+    public function cleanContentTag($text, $tag, $type)
+    {
+
+        $response_content = $text;
+        $tagStart = "<$tag";
+        if (!$type)
+            $tagEnd = "</$tag>";
+        else
+            $tagEnd = "/>";
+        for ($i = 0; $i <= 10; $i++) {
+            $tagStartPos = strpos($response_content, $tagStart);
+            $tagEndtPos = strpos($response_content, $tagEnd);
+            $endPosition = strlen($response_content);
+            if ($tagStartPos) {
+
+                $start_text = substr($response_content, 0, $tagStartPos);
+                $tagLenght = 5;
+                if ($type)
+                    $tagLenght = 2;
+                $end_text = substr($response_content, $tagEndtPos + $tagLenght, $endPosition);
+                $response_content = $start_text . $end_text;
+            }
+        }
+
+
+
+
+
+
+        return $response_content;
     }
     /**
      * Update the specified resource in storage.

@@ -148,7 +148,7 @@
                                         </h5>
                                     </div>
 
-                                    <div id="rewriterdivarea" class="collapse show" aria-labelledby="rewriterdiv" >
+                                    <div id="rewriterdivarea" class="collapse" aria-labelledby="rewriterdiv" >
                                         <div class="card-body">
 
                                      
