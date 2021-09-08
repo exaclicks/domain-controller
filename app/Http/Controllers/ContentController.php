@@ -76,7 +76,13 @@ class ContentController extends Controller
                             $yayinlanmis = "Yayınlanmış";
 
                             $search = $request->get('search');
-                           
+
+                            $website_id = 0;
+                            $website = Website::where('link', 'LIKE', $search)->get();
+                            if (count($website) > 0) {
+                                $website_id = $website->first()->id;
+                            }
+
                             $status = -1;
                             if ($search == $duzenlenmemis) $status = 0;
                             if ($search == $taslak) $status = 1;
@@ -84,11 +90,13 @@ class ContentController extends Controller
                             if ($status == -1) {
                                 $w->orWhere('first_title', 'LIKE', "%$search%")
                                     ->orWhere('rewriter_title', 'LIKE', "%$search%")
-                                    ->orWhere('last_title', 'LIKE', "%$search%");
+                                    ->orWhere('last_title', 'LIKE', "%$search%")
+                                    ->orWhere('website_id', $website_id);
                             } else {
                                 $w->orWhere('first_title', 'LIKE', "%$search%")
                                     ->orWhere('rewriter_title', 'LIKE', "%$search%")
                                     ->orWhere('status', $status)
+                                    ->orWhere('website_id', $website_id)
                                     ->orWhere('last_title', 'LIKE', "%$search%");
                             }
                         });
@@ -275,7 +283,7 @@ class ContentController extends Controller
         $curl = curl_init();
 
 
-      $text = preg_replace('/\s+/u', ' ', $text);
+        $text = preg_replace('/\s+/u', ' ', $text);
 
         curl_setopt_array($curl, [
             CURLOPT_URL => $rewriterApiUrl,
@@ -292,7 +300,7 @@ class ContentController extends Controller
                 \"text\": \"$text\"
             }",
 
-          
+
             CURLOPT_HTTPHEADER => [
                 "content-type: application/json",
                 "x-rapidapi-host: rewriter-paraphraser-text-changer-multi-language.p.rapidapi.com",
@@ -317,7 +325,6 @@ class ContentController extends Controller
                 'err' => false,
                 'response' => $json->rewrite
             );
-            
         }
 
         return $responseArray;
