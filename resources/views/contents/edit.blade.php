@@ -142,6 +142,7 @@
                                             <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#rewriterdivarea" aria-expanded="true" aria-controls="rewriterdivarea">
                                                 Yeniden Yazdırma Alanı  ( @if($content->status==0)
                                <b style="color:red;"> YENİDEN YAZDIRILMAMIŞ!</b>
+                                @endif)
                                             </button>
                                         </h5>
                                     </div>
@@ -180,10 +181,7 @@
 
                                 </div>
  -->
-                                @else
-
-
-                                @endif
+                               
 
 
                             </div>
