@@ -231,18 +231,7 @@
              
                                 {{ $content->last_content }}
              
-                               <!-- 
-                                    @if($content->status==0)
-                                BU ALANI KULLANABİLMEK İÇİN İLK İÇERİĞİN YENİDEN YAZDIRILMASI GEREKİYOR.!
-
-                                @else
-                                @if ($content->last_content)
-                                {{ $content->last_content }}
-                                @else
-                                {{ $content->rewriter_content }}
-                                @endif
-                                @endif
-                             -->
+                              
                             </textarea>
                             </div>
                         </div>
