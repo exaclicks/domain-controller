@@ -152,7 +152,7 @@
                                         <div class="card-body">
 
                                      
-                                        <iframe id="iframearea" name="iframearea" width="100%" height="800" src="https://aiarticlespinner.co/tr" title="İçerik Yeniden Yazdırma Alanı"></iframe>
+                                        <iframe id="iframearea" name="iframearea" width="100%" height="800" src="https://aiarticlespinner.co" title="İçerik Yeniden Yazdırma Alanı"></iframe>
 
 
                                         </div>
