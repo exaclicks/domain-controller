@@ -133,7 +133,6 @@
                         <div name="rewriter_area" id="rewriter_area" class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <br>
-                                @if($content->status==0)
 
 
 
@@ -143,7 +142,6 @@
                                             <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#rewriterdivarea" aria-expanded="true" aria-controls="rewriterdivarea">
                                                 Yeniden Yazdırma Alanı  ( @if($content->status==0)
                                <b style="color:red;"> YENİDEN YAZDIRILMAMIŞ!</b>
-                                @endif)
                                             </button>
                                         </h5>
                                     </div>
@@ -233,7 +231,7 @@
 
                                 <textarea class="ckeditor"   id="last_content" name="last_content">
              
-             
+                                {{ $content->last_content }}
              
                                <!-- 
                                     @if($content->status==0)
