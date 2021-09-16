@@ -97,10 +97,58 @@ Route::get('/server_free', function () {
 Route::get('/content/{first_link}', function ($first_link) {
     dd(Content::where('first_link', $first_link)->get());
 });
+use Laravel\Dusk\Browser;
+
 
 
 // Homepage Route
-Route::get('/cleaner', function () {
+Route::get('/cleanerdd', function () {
+
+$text = '<p>T&uuml;rkiye bahis piyasasında bulunan ve en eski bahis sitelerinden biri olarak bilinen <strong>Tipobet</strong> bahis sitesi, bug&uuml;ne kadar s&uuml;rekliliğini devam ettirmiş ve b&uuml;nyesindeki bahis severlerin b&uuml;y&uuml;k bir &ccedil;oğunluğundan olumlu yorumlar almış ender <a href="https://www.domain.comt/"><em><strong>ka&ccedil;ak&nbsp;bahis siteleri</strong></em></a>nden biridir.</p>
+
+<p>Her ne kadar k&uuml;&ccedil;&uuml;k bir kesimden bazı kısımları adına şikayet alsa da, genel anlamda diğer bir&ccedil;ok bahis sitesinden daha &uuml;st&uuml;n olanakları ve avantajları ile memnun etmektedir. <strong>Tipobet365</strong> Almanya k&ouml;kenli olarak kurulmuştur ve lisansını Curacao elde etmiştir.</p>
+
+<p>G&uuml;&ccedil;l&uuml; bir mali kaynak ile <a href="https://www.domain.comt/" target="_blank"><strong>bedava bahis</strong></a> d&uuml;nyasında bulunan <strong>tipobet bahis sitesi</strong>, lisansı adına t&uuml;m kriterleri yerine getirmiş ve &uuml;stelik s&uuml;rekli olarak denetlenen birisi olarak &ouml;n plana &ccedil;ıkmaktadır.</p>
+
+<p><strong>Tipobet&rsquo;e &uuml;ye</strong> olarak sizlerde iyi kazan&ccedil;lar sağlayabilirsiniz. En yeni ma&ccedil;lar ve bahislerle beraber kazanma şansınızı arttırın. Avrupanın en iyi bahis sitesinde oynama keyfini sizde &ccedil;ıkartın.</p>
+
+<p>&nbsp;</p>
+
+<p><a href="http://girarmut.xyz/go/tipobet" target="_blank">HEMEN &Uuml;YE OL</a></p>
+
+<h2>Tipobet Bahis</h2>
+
+<p>2008 yılından bu yana d&uuml;nya bahis piyasası ile birlikte T&uuml;rkiye bahis piyasasında bulunan <strong>tipobet şikayet</strong>, T&uuml;rk&ccedil;e dil desteği sayesinde kullanışlı bir ara y&uuml;z&uuml; sunarak zengin bir bahis se&ccedil;eneği ile &ccedil;ok uzun bir s&uuml;redir g&uuml;venilir bir hizmet vermektedir.</p>
+
+<p>&nbsp;</p>
+
+<h2><strong>Tipobet G&uuml;venilir mi?</strong></h2>
+
+<p>Masa&uuml;st&uuml; versiyonu ile birlikte <a href="https://www.domain.comt/tipobet-mobil.html"><strong>Tipobet mobil</strong></a> versiyon sistemini de b&uuml;nyesinde bulunduran <strong>Tipobet365 bahis sitesi giriş</strong> i&ccedil;in her iki se&ccedil;eneği de rahatlıkla kullanabilirsiniz. İş yerinden, evden veya dışarıda herhangi bir noktadan kolayca ve herhangi bir bağlantı sorun yaşamadan mobil hizmeti sayesinde t&uuml;m bahis oyunlarına keyifle oynayabilirsiniz.</p>
+
+<p><strong>Tipobet giriş</strong> ayrıca 2008 yılından beri canlı destek hizmetini 7/24 sağlayarak b&uuml;nyesindeki t&uuml;m bahis severlerin sorunlarına doğrudan iletişim kurup &ccedil;&ouml;z&uuml;mlemektedir. &Ouml;zellikle g&uuml;n ge&ccedil;tik&ccedil;e artan y&uuml;ksek oranları ile canlı bahis fırsatı, spor bahis olanakları ve t&uuml;m <strong>Tipobet canlı casino</strong> oyunlarını da sitenin ana sayfası &uuml;zerinden olabilir ve <strong>Tipobet bahis sitesi&nbsp;</strong>b&uuml;nyesinde iyi kazan&ccedil;lar elde edebilirsiniz.</p>
+
+<h2><strong>Tipobet365 bahis se&ccedil;enekleri</strong></h2>
+
+<p>Her anlamda bug&uuml;ne kadar b&uuml;nyesine kattığı bahis severlere kaliteli ve g&uuml;venilir hizmet sunmaya devam eden <strong>tipobet bahis sitesi</strong>, zengin bir se&ccedil;enek altında <a href="https://www.domain.comt/tipobet-para-yatirma.html"><strong>Tipobet365 para yatırma</strong></a> ve <a href="https://www.domain.comt/tipobet-para-cekme.html"><strong>Tipobet para &ccedil;ekme</strong></a> işlemlerini de hem normal sistemler hem de sanal işlemler kapsamında her bahis severin kişisel tercihlerine g&ouml;re sunmaktadır.</p>
+
+<p>&Ouml;zellikle bookie altyapı b&uuml;nyesinde &ccedil;ok uzun bir s&uuml;redir sorunsuz bir bağlantı sunan <strong>tipobet365 giriş </strong>ile aynı zamanda bir&ccedil;ok değişik bonus se&ccedil;eneklerini de değerlendirebilirsiniz. <strong>Tipobet şikayet</strong> sitesi b&uuml;nyesinde en &ccedil;ok ilgi &ccedil;ekenlerden biri 365 TL değerindeki 0 gibi bir geri d&ouml;n&uuml;ş sayesinde bahis severlere sunulan hoş geldin bonusudur.</p>
+
+<p><strong>Tipobet365</strong> d&uuml;nyanın en iyi sitelerinden birisi olduğunu verdiği bonuslar ve bedava bahislerle belli ediyor. Sizlerde bu harika siteden para kazanmak istiyorsanız &uuml;ye olup bedava bonus imkanlarından yararlanabilirsiniz.</p>
+
+<p>Basit birka&ccedil; &ccedil;evrim şartını yerine getirdikten sonra &uuml;ye olurken bu bonus &ccedil;eşidini kolaylıkla elde edebilirsiniz. Ayrıca daha &ouml;nce iyi olmuş bahis severler i&ccedil;in de yeni site b&uuml;nyesinde farklı boncuk &ccedil;eşitleri s&uuml;rekli olarak g&uuml;ncellenmiş hali de sunulmaktadır.</p>
+
+<p><a href="http://girarmut.xyz/go/tipobet365" target="_blank">HEMEN &Uuml;YE OL</a></p>
+';
+echo strpos($text, '<h2>')."<br>";
+echo strpos($text, '</h2>');
+
+/* ; ilk h yi bul 
+bu h den </h< ye kadar al bu başlık
+ilk h konumundan ikinci h ye kadar içerik
+
+başlık ve içerik kaydet 
+ */
     /*     GitDomain::truncate();
     Domain::truncate();
     BannedList::truncate();

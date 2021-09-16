@@ -12,6 +12,7 @@ use App\Models\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\Console\Input\Input;
+use Tests\Browser\LoginTest;
 use Yajra\DataTables\Facades\DataTables;
 
 class ContentController extends Controller
@@ -176,11 +177,11 @@ class ContentController extends Controller
     public function edit(Content $content)
     {
 
-        $response_content = $this->cleanContent($content);
 
-        $content->first_content = $response_content;
-        $content->save();
-        
+
+
+
+
         $bet_companies = BetCompany::all();
         $categories = Category::all();
         $category = Category::where('id', $content->category_id)->get()->first();
@@ -189,50 +190,9 @@ class ContentController extends Controller
         return view('contents.edit', compact('content', 'categories', 'bet_companies', 'category', 'bet_company'));
     }
 
-    public function cleanContent($content)
-    {
-
-        
-        $response_content = $this->cleanContentTag($content->first_content, "img", true);
-        $response_content = $this->cleanContentTag($response_content, "table", true);
-        $response_content = $this->cleanContentTag($response_content, "tbody", true);
-        
-        return $response_content;
-    }
-
-    public function cleanContentTag($text, $tag, $type)
-    {
-
-        $response_content = $text;
-        $tagStart = "<$tag";
-        if (!$type)
-            $tagEnd = "</$tag>";
-        else
-            $tagEnd = "/>";
-        for ($i = 0; $i <= 10; $i++) {
-            $tagStartPos = strpos($response_content, $tagStart);
-            $tagEndtPos = strpos($response_content, $tagEnd);
-            $endPosition = strlen($response_content);
-            if ($tagStartPos) {
-
-                $start_text = substr($response_content, 0, $tagStartPos);
-                $tagLenght = 5;
-                if ($type)
-                    $tagLenght = 2;
-                $end_text = substr($response_content, $tagEndtPos + $tagLenght, $endPosition);
-                $response_content = $start_text . $end_text;
-            }
-        }
 
 
 
-
-
-
-        return $response_content;
-    }
-
-   
     /**
      * Update the specified resource in storage.
      *
